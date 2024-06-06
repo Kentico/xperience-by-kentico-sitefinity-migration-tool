@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Migration.Tookit.Sitefinity</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kentico.Xperience.UMT\Kentico.Xperience.UMT.csproj" />
+    <ProjectReference Include="..\Migration.Toolkit.Sitefinity.Data\Migration.Toolkit.Sitefinity.Data.csproj" />
+  </ItemGroup>
+
+</Project>
