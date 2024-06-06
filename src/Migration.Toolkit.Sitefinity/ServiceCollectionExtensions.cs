@@ -19,6 +19,7 @@ public static class ServiceCollectionExtensions
         services.AddUniversalMigrationToolkit();
         services.AddSitefinityData(toolkitConfiguration);
 
+        services.AddTransient<IUserImportService, UserImportService>();
         services.AddTransient<ISitefinityImportService, SitefinityImportService>();
 
         return services;
