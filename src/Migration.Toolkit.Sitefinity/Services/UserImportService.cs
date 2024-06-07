@@ -1,4 +1,4 @@
-﻿using CMS.Helpers;
+using CMS.Helpers;
 
 using Kentico.Xperience.UMT.Model;
 using Kentico.Xperience.UMT.Services;
@@ -12,6 +12,7 @@ internal class UserImportService(IImportService kenticoImportService, IUserProvi
     public IEnumerable<UserInfoModel> Get()
     {
         var users = userProvider.GetUsers();
+        var random = new Random();
 
         return users.Select(user => new UserInfoModel
         {
@@ -20,7 +21,7 @@ internal class UserImportService(IImportService kenticoImportService, IUserProvi
             Email = user.Email,
             FirstName = user.FirstName,
             LastName = user.LastName,
-            UserPassword = "ImportTemp",
+            UserPassword = SecurityHelper.GetSHA2Hash("ImportTemp" + random.Next()),
             UserEnabled = true,
             UserIsPendingRegistration = false,
             UserIsExternal = false,
