@@ -2,6 +2,16 @@
   "version": 2,
   "dependencies": {
     "net8.0": {
+      "Kentico.Xperience.UMT": {
+        "type": "Direct",
+        "requested": "[1.0.5, )",
+        "resolved": "1.0.5",
+        "contentHash": "KX9nP3u+1hsFKk8+aXVBjvbbxsfaO5+yBM4MbnxYZPPYSFkOMksmdGtUZFVps46agjoMtjnKjri9b40mikVKHQ==",
+        "dependencies": {
+          "Kentico.Xperience.Core": "29.1.0",
+          "Microsoft.Bcl.AsyncInterfaces": "8.0.0"
+        }
+      },
       "SonarAnalyzer.CSharp": {
         "type": "Direct",
         "requested": "[9.23.0.88079, )",
@@ -521,13 +531,6 @@
         "type": "Transitive",
         "resolved": "4.5.4",
         "contentHash": "zteT+G8xuGu6mS+mzDzYXbzS7rd3K6Fjb9RiZlYlJPam2/hU7JCBZBVEcywNuR+oZ1ncTvc/cq0faRr3P01OVg=="
-      },
-      "kentico.xperience.umt": {
-        "type": "Project",
-        "dependencies": {
-          "Kentico.Xperience.Core": "[29.1.0, )",
-          "Microsoft.Bcl.AsyncInterfaces": "[8.0.0, )"
-        }
       },
       "migration.toolkit.sitefinity.data": {
         "type": "Project",

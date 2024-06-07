@@ -599,17 +599,10 @@
         "resolved": "4.5.4",
         "contentHash": "zteT+G8xuGu6mS+mzDzYXbzS7rd3K6Fjb9RiZlYlJPam2/hU7JCBZBVEcywNuR+oZ1ncTvc/cq0faRr3P01OVg=="
       },
-      "kentico.xperience.umt": {
-        "type": "Project",
-        "dependencies": {
-          "Kentico.Xperience.Core": "[29.1.0, )",
-          "Microsoft.Bcl.AsyncInterfaces": "[8.0.0, )"
-        }
-      },
       "migration.toolkit.sitefinity": {
         "type": "Project",
         "dependencies": {
-          "Kentico.Xperience.UMT": "[1.0.0-prerelease-1, )",
+          "Kentico.Xperience.UMT": "[1.0.5, )",
           "Migration.Toolkit.Sitefinity.Data": "[1.0.0-prerelease-1, )"
         }
       },
@@ -652,6 +645,16 @@
           "Mono.Cecil": "0.11.5",
           "Newtonsoft.Json": "13.0.3",
           "System.CodeDom": "8.0.0"
+        }
+      },
+      "Kentico.Xperience.UMT": {
+        "type": "CentralTransitive",
+        "requested": "[1.0.5, )",
+        "resolved": "1.0.5",
+        "contentHash": "KX9nP3u+1hsFKk8+aXVBjvbbxsfaO5+yBM4MbnxYZPPYSFkOMksmdGtUZFVps46agjoMtjnKjri9b40mikVKHQ==",
+        "dependencies": {
+          "Kentico.Xperience.Core": "29.1.0",
+          "Microsoft.Bcl.AsyncInterfaces": "8.0.0"
         }
       },
       "Microsoft.Bcl.AsyncInterfaces": {
