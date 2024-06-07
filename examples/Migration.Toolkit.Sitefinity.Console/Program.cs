@@ -60,84 +60,10 @@ importObserver.ImportedInfo += (model, info) => Console.WriteLine($"{model.Print
 importObserver.Exception += (model, uniqueId, exception) => Console.WriteLine($"Error in model {model.PrintMe()}: '{uniqueId}': {exception}");
 
 // initiate import
-var observer = importService.StartImportUsers(importObserver);
+//var observer = importService.StartImportUsers(importObserver);
 
 // wait until import finishes
-await observer.ImportCompletedTask;
-//importService.StartImport(users);
-
-//// sample data
-//List<IUmtModel> sourceData = null!;
-
-//sourceData = importService.FromJsonString(SampleJson.FULL_SAMPLE)?.ToList() ?? [];
-
-//bool variantWithObserver = false;
-//if (variantWithObserver)
-//{
-//    // simplified usage for streamlined import
-
-//    // create observer to track import state
-//    var importObserver = new ImportStateObserver();
-
-//    // listen to validation errors
-//    //importObserver.ValidationError += (model, uniqueId, errors) =>
-//    //{
-//    //    Console.WriteLine($"Validation error in model '{model.PrintMe()}': {JsonSerializer.Serialize(errors)}");
-//    //};
-
-//    //// listen to successfully adapted and persisted objects
-//    //importObserver.ImportedInfo += (model, info) =>
-//    //{
-//    //    Console.WriteLine($"{model.PrintMe()} imported");
-//    //};
-
-//    //// listen for exception occurence
-//    //importObserver.Exception += (model, uniqueId, exception) =>
-//    //{
-//    //    Console.WriteLine($"Error in model {model.PrintMe()}: '{uniqueId}': {exception}");
-//    //};
-
-//    // initiate import
-//    var observer = importService.StartImport(sourceData, importObserver);
-
-//    // wait until import finishes
-//    await observer.ImportCompletedTask;
-//}
-//else
-//{
-//    // sample with more control over process
-//    var importer = serviceProvider.GetRequiredService<IImporter>();
-//    foreach (var umtModel in sourceData)
-//    {
-//        var result = await importer.ImportAsync(umtModel);
-//        switch (result)
-//        {
-//            // OK
-//            case { Success: true }:
-//            {
-//                Console.WriteLine($"{umtModel.PrintMe()} imported");
-//                break;
-//            }
-//            // some exception was thrown when importing
-//            case { Success: false, Exception: { } exception }:
-//            {
-//                Console.WriteLine($"Error in model {umtModel.PrintMe()}: {exception}");
-//                break;
-//            }
-//            // validation error were found on input model
-//            case { Success: false, ModelValidationResults: { } validationResults }:
-//            {
-//                Console.WriteLine($"Validation error in model '{umtModel.PrintMe()}': {JsonSerializer.Serialize(validationResults)}");
-//                break;
-//            }
-//            default:
-//            {
-//                Console.WriteLine($"UNEXPECTED CASE occured on model: {umtModel.PrintMe()}");
-//                break;
-//            }
-//        }
-//    }
-//}
+//await observer.ImportCompletedTask;
 
 Console.WriteLine("Finished!");
 
