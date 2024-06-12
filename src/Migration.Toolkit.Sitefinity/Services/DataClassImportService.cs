@@ -1,12 +1,12 @@
 ﻿using Kentico.Xperience.UMT.Model;
 using Kentico.Xperience.UMT.Services;
 
-using Migration.Tookit.Data.Core.Providers;
-using Migration.Tookit.Data.Models;
-using Migration.Tookit.Sitefinity.Abstractions;
-using Migration.Tookit.Sitefinity.Core.Services;
+using Migration.Toolkit.Data.Core.Providers;
+using Migration.Toolkit.Data.Models;
+using Migration.Toolkit.Sitefinity.Abstractions;
+using Migration.Toolkit.Sitefinity.Core.Services;
 
-namespace Migration.Tookit.Sitefinity.Services;
+namespace Migration.Toolkit.Sitefinity.Services;
 internal class DataClassImportService(IImportService kenticoImportService, ITypeProvider typeProvider, IUmtAdapter<SitefinityType, DataClassModel> mapper) : IDataClassImportService
 {
     public IEnumerable<DataClassModel> Get()

@@ -1,8 +1,8 @@
 ﻿using Kentico.Xperience.UMT.Model;
 
-using Migration.Tookit.Data.Models;
+using Migration.Toolkit.Data.Models;
 
-namespace Migration.Tookit.Sitefinity.Abstractions;
+namespace Migration.Toolkit.Sitefinity.Abstractions;
 public interface IUmtAdapter<in TSourceModel, out TTargetModel> where TSourceModel : ISitefinityModel where TTargetModel : IUmtModel
 {
     IEnumerable<TTargetModel> Adapt(IEnumerable<TSourceModel> source);

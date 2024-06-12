@@ -3,14 +3,14 @@ using Kentico.Xperience.UMT.Model;
 
 using Microsoft.Extensions.DependencyInjection;
 
-using Migration.Tookit.Data.Configuration;
-using Migration.Tookit.Data.Models;
-using Migration.Tookit.Sitefinity.Abstractions;
-using Migration.Tookit.Sitefinity.Configuration;
-using Migration.Tookit.Sitefinity.Core.Services;
-using Migration.Tookit.Sitefinity.Mappers;
-using Migration.Tookit.Sitefinity.Services;
+using Migration.Toolkit.Data.Configuration;
+using Migration.Toolkit.Data.Models;
+using Migration.Toolkit.Sitefinity.Abstractions;
+using Migration.Toolkit.Sitefinity.Adapters;
+using Migration.Toolkit.Sitefinity.Configuration;
+using Migration.Toolkit.Sitefinity.Core.Services;
 using Migration.Toolkit.Sitefinity.Data;
+using Migration.Toolkit.Sitefinity.Services;
 
 namespace Migration.Toolkit.Sitefinity;
 

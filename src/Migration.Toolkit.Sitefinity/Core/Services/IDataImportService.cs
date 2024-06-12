@@ -1,4 +1,4 @@
-namespace Migration.Tookit.Sitefinity.Core.Services;
+namespace Migration.Toolkit.Sitefinity.Core.Services;
 /// <summary>
 /// Base class for all import services
 /// </summary>

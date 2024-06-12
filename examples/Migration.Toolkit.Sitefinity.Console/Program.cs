@@ -5,7 +5,6 @@ using System.Text.Json;
 
 using CMS.Core;
 using CMS.DataEngine;
-
 //using CMS.DataEngine;
 
 //using Kentico.Xperience.UMT;
@@ -15,18 +14,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-using Migration.Tookit.Data.Configuration;
-using Migration.Tookit.Sitefinity.Configuration;
-using Migration.Tookit.Sitefinity.Core.Services;
-
-
-
-
-
-
+using Migration.Toolkit.Data.Configuration;
 //using Microsoft.Extensions.Logging;
 
 using Migration.Toolkit.Sitefinity;
+using Migration.Toolkit.Sitefinity.Configuration;
+using Migration.Toolkit.Sitefinity.Core.Services;
 
 var root = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", false)

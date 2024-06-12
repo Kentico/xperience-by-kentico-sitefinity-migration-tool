@@ -1,6 +1,6 @@
 ﻿using Kentico.Xperience.UMT.Services;
 
-namespace Migration.Tookit.Sitefinity.Core.Services;
+namespace Migration.Toolkit.Sitefinity.Core.Services;
 /// <summary>
 /// Main service for importing objects and content from Sitefintiy to XbyK site. Handles all import operations.
 /// </summary>

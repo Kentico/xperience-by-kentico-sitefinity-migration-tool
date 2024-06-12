@@ -7,5 +7,5 @@ public class SitefinityDataConfiguration
     public required string SitefinityConnectionString { get; set; }
     public required string SitefinityRestApiUrl { get; set; }
     public string? SitefinityRestApiKey { get; set; }
-        public required string SitefinityModuleDeploymentFolderPath { get; set; }
+    public required string SitefinityModuleDeploymentFolderPath { get; set; }
 }

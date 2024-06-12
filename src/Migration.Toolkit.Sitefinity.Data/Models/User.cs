@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Migration.Tookit.Data.Models;
+namespace Migration.Toolkit.Data.Models;
 /// <summary>
 /// Model of user table in Sitefinity database. Table "sf_users".
 /// </summary>

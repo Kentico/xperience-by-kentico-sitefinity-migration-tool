@@ -2,9 +2,9 @@
 
 using Microsoft.Extensions.Logging;
 
-using Migration.Tookit.Data.Models;
+using Migration.Toolkit.Data.Models;
 
-namespace Migration.Tookit.Sitefinity.Abstractions;
+namespace Migration.Toolkit.Sitefinity.Abstractions;
 public abstract class UmtAdapterBase<TSourceModel, TTargetModel>(ILogger logger) : IUmtAdapter<TSourceModel, TTargetModel> where TSourceModel : ISitefinityModel where TTargetModel : IUmtModel
 {
     public IEnumerable<TTargetModel> Adapt(IEnumerable<TSourceModel> source)

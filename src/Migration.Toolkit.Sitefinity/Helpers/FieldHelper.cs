@@ -1,4 +1,4 @@
-﻿namespace Migration.Tookit.Sitefinity.Helpers;
+﻿namespace Migration.Toolkit.Sitefinity.Helpers;
 public static class FieldHelper
 {
     public static string MapControlType(string? sitefinityControlType)

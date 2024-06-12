@@ -2,11 +2,11 @@
 
 using Microsoft.Extensions.Logging;
 
-using Migration.Tookit.Data.Configuration;
-using Migration.Tookit.Data.Core.Providers;
-using Migration.Tookit.Data.Models;
+using Migration.Toolkit.Data.Configuration;
+using Migration.Toolkit.Data.Core.Providers;
+using Migration.Toolkit.Data.Models;
 
-namespace Migration.Tookit.Data.Providers;
+namespace Migration.Toolkit.Data.Providers;
 internal class TypeProvider(SitefinityDataConfiguration configuration, ILogger<TypeProvider> logger) : ITypeProvider
 {
     private readonly string[] excludedFileNames = new string[] { "version.sf", "configs.sf", "widgetTemplates.sf" };

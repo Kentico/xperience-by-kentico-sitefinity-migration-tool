@@ -1,4 +1,4 @@
-﻿namespace Migration.Tookit.Sitefinity.Configuration
+﻿namespace Migration.Toolkit.Sitefinity.Configuration
 {
     public class PageContentType
     {

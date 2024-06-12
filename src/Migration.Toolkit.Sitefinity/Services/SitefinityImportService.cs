@@ -1,8 +1,8 @@
 ﻿using Kentico.Xperience.UMT.Services;
 
-using Migration.Tookit.Sitefinity.Core.Services;
+using Migration.Toolkit.Sitefinity.Core.Services;
 
-namespace Migration.Tookit.Sitefinity.Services;
+namespace Migration.Toolkit.Sitefinity.Services;
 internal class SitefinityImportService(IUserImportService userImportService,
                                         IDataClassImportService contentTypeImportService) : ISitefinityImportService
 {
