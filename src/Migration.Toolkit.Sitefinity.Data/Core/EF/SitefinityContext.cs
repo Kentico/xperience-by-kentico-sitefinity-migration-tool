@@ -3,6 +3,9 @@
 using Migration.Tookit.Data.Models;
 
 namespace Migration.Tookit.Data.Core.EF;
+/// <summary>
+/// Entity Framework Context for Sitefinity database
+/// </summary>
 public partial class SitefinityContext : DbContext
 {
     public SitefinityContext() { }
