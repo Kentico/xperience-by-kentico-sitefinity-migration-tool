@@ -12,5 +12,5 @@ public interface ISitefinityImportService
     /// <param name="observer">Observer used to log any errors or warnings during the import</param>
     /// <returns>Task, that will return object that represents import state</returns>
     ImportStateObserver StartImportUsers(ImportStateObserver observer);
-    ImportStateObserver StartImportDynamicTypes(ImportStateObserver observer);
+    ImportStateObserver StartImportContentTypes(ImportStateObserver observer);
 }

@@ -9,5 +9,5 @@ internal class SitefinityImportService(IUserImportService userImportService,
     public ImportStateObserver StartImportUsers(ImportStateObserver observer) => userImportService.StartImport(observer);
 
 
-    public ImportStateObserver StartImportDynamicTypes(ImportStateObserver observer) => contentTypeImportService.StartImport(observer);
+    public ImportStateObserver StartImportContentTypes(ImportStateObserver observer) => contentTypeImportService.StartImport(observer);
 }
