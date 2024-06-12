@@ -2,6 +2,9 @@
 using Kentico.Xperience.UMT.Services;
 
 namespace Migration.Tookit.Sitefinity.Core.Services;
+/// <summary>
+/// Service for importing users from Sitefinity to XbyK site
+/// </summary>
 internal interface IUserImportService : IDataImportService<UserInfoModel>
 {
     ImportStateObserver StartImport(ImportStateObserver observer);

@@ -16,9 +16,11 @@ namespace Migration.Toolkit.Sitefinity.Data;
 public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// 
+    /// Adding the required dependencies and providers to the service collection for pulling data from Sitefinity site
     /// </summary>
-    /// <param name="services"></param>
+    /// <param name="services">Service collection</param>
+    /// <param name="configuration">Sitefinity data configuration used for connections</param>
+    /// <returns>Service collection</returns>
     public static IServiceCollection AddSitefinityData(this IServiceCollection services, SitefinityDataConfiguration configuration) =>
         RegisterServices(services, configuration);
 
