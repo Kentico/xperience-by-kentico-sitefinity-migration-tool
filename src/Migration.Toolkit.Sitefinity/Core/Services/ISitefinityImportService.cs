@@ -4,4 +4,5 @@ namespace Migration.Tookit.Sitefinity.Core.Services;
 public interface ISitefinityImportService
 {
     ImportStateObserver StartImportUsers(ImportStateObserver observer);
+    ImportStateObserver StartImportDynamicTypes(ImportStateObserver observer);
 }

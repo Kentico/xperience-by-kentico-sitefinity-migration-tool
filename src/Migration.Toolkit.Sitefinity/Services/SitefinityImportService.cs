@@ -3,13 +3,11 @@
 using Migration.Tookit.Sitefinity.Core.Services;
 
 namespace Migration.Tookit.Sitefinity.Services;
-public class SitefinityImportService(IImportService kenticoImportService,
-                                        IUserImportService userProvider) : ISitefinityImportService
+internal class SitefinityImportService(IUserImportService userImportService,
+                                        IDataClassImportService contentTypeImportService) : ISitefinityImportService
 {
-    public ImportStateObserver StartImportUsers(ImportStateObserver observer)
-    {
-        var users = userProvider.Get();
+    public ImportStateObserver StartImportUsers(ImportStateObserver observer) => userImportService.StartImport(observer);
 
-        return kenticoImportService.StartImport(users, observer);
-    }
+
+    public ImportStateObserver StartImportDynamicTypes(ImportStateObserver observer) => contentTypeImportService.StartImport(observer);
 }

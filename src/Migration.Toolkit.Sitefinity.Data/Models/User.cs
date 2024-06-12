@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Migration.Tookit.Data.Models;
 [Table("sf_users")]
-public partial class User
+public partial class User : ISitefinityModel
 {
     [Key]
     [Column("id")]

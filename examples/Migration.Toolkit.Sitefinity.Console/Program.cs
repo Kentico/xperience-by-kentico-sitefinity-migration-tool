@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 using Migration.Tookit.Data.Configuration;
+using Migration.Tookit.Sitefinity.Configuration;
 using Migration.Tookit.Sitefinity.Core.Services;
 
 
@@ -39,10 +40,15 @@ CMSApplication.Init();
 
 var services = new ServiceCollection();
 services.AddLogging(b => b.AddDebug().AddSimpleConsole(options => options.SingleLine = true).AddConfiguration(root.GetSection("Logging")));
-services.AddSitefinityMigrationToolkit(new SitefinityToolkitConfiguration
+services.AddSitefinityMigrationToolkit(new SitefinityDataConfiguration
 {
     SitefinityConnectionString = root.GetValue<string>("ConnectionStrings:SitefinityConnectionString") ?? "",
-    SitefinityRestApiUrl = root.GetValue<string>("SitefinityRestApiUrl") ?? "",
+    SitefinityRestApiUrl = root.GetValue<string>("Sitefinity:Url") ?? "" + root.GetValue<string>("Sitefinity:WebServicePath") ?? "",
+    SitefinityModuleDeploymentFolderPath = root.GetValue<string>("Sitefinity:ModuleDeploymentFolderPath") ?? "",
+}, new SitefinityImportConfiguration
+{
+    SitefinityCodeNamePrefix = root.GetValue<string>("Sitefinity:CodeNamePrefix") ?? "",
+    PageContentTypes = root.GetSection("Sitefinity:PageContentTypes").Get<List<PageContentType>>()
 });
 
 var serviceProvider = services.BuildServiceProvider();
@@ -60,10 +66,10 @@ importObserver.ImportedInfo += (model, info) => Console.WriteLine($"{model.Print
 importObserver.Exception += (model, uniqueId, exception) => Console.WriteLine($"Error in model {model.PrintMe()}: '{uniqueId}': {exception}");
 
 // initiate import
-//var observer = importService.StartImportUsers(importObserver);
+var observer = importService.StartImportDynamicTypes(importObserver);
 
 // wait until import finishes
-//await observer.ImportCompletedTask;
+await observer.ImportCompletedTask;
 
 Console.WriteLine("Finished!");
 

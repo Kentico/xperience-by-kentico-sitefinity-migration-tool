@@ -19,11 +19,13 @@ public static class ServiceCollectionExtensions
     /// 
     /// </summary>
     /// <param name="services"></param>
-    public static IServiceCollection AddSitefinityData(this IServiceCollection services, SitefinityToolkitConfiguration configuration) =>
+    public static IServiceCollection AddSitefinityData(this IServiceCollection services, SitefinityDataConfiguration configuration) =>
         RegisterServices(services, configuration);
 
-    private static IServiceCollection RegisterServices(IServiceCollection services, SitefinityToolkitConfiguration configuration)
+    private static IServiceCollection RegisterServices(IServiceCollection services, SitefinityDataConfiguration configuration)
     {
+        services.AddSingleton(configuration);
+
         services.AddHttpClient("sfservice", (servicesProvider, client) =>
         {
             client.BaseAddress = new Uri(configuration.SitefinityRestApiUrl);
@@ -48,6 +50,7 @@ public static class ServiceCollectionExtensions
 
         services.AddDbContextFactory<SitefinityContext>(options => options.UseSqlServer(configuration.SitefinityConnectionString));
         services.AddTransient<IUserProvider, UserProvider>();
+        services.AddTransient<ITypeProvider, TypeProvider>();
 
         return services;
     }

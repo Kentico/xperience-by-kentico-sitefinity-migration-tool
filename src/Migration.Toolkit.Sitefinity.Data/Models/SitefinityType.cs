@@ -1,0 +1,11 @@
+﻿namespace Migration.Tookit.Data.Models
+{
+    public abstract class SitefinityType : ISitefinityModel
+    {
+        public string? DisplayName { get; set; }
+        public abstract string? Name { get; }
+        public Guid Id { get; set; }
+        public List<Field>? Fields { get; set; }
+        public DateTime? LastModified { get; set; }
+    }
+}
