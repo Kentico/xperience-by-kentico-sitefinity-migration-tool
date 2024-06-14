@@ -2,19 +2,23 @@
 
 using Migration.Toolkit.Data.Core.Providers;
 using Migration.Toolkit.Data.Models;
+using Migration.Toolkit.Sitefinity.Abstractions;
 using Migration.Toolkit.Sitefinity.Core;
 
 namespace Migration.Toolkit.Sitefinity.FieldTypes;
-public class RelatedDataFieldType : IFieldType
+/// <summary>
+/// Field type for Sitefinity RelatedData field: "Telerik.Sitefinity.Web.UI.Fields.RelatedDataField"
+/// </summary>
+public class RelatedDataFieldType : FieldTypeBase, IFieldType
 {
     private readonly IEnumerable<SitefinityType> sitefinityTypes;
+
     public string SitefinityWidgetTypeName => "Telerik.Sitefinity.Web.UI.Fields.RelatedDataField";
 
     public RelatedDataFieldType(ITypeProvider typeProvider) => sitefinityTypes = typeProvider.GetAllTypes();
 
-    public string? GetColumnSize(Field sitefinityField) => sitefinityField.DBLength;
-    public string GetColumnType(Field sitefinityField) => "contentitemreference";
-    public FormFieldSettings GetSettings(Field sitefinityField)
+    public override string GetColumnType(Field sitefinityField) => "contentitemreference";
+    public override FormFieldSettings GetSettings(Field sitefinityField)
     {
         var allowedType = sitefinityTypes.FirstOrDefault(x => $"{x.ClassNamespace}.{x.Name}".Equals(sitefinityField.RelatedDataType));
 

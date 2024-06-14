@@ -25,7 +25,8 @@ public static class ServiceCollectionExtensions
     /// Adding Sitefinity Migration Toolkit services to the service collection to use the importer
     /// </summary>
     /// <param name="services">Service collection</param>
-    /// <param name="toolkitConfiguration">Sitefinity toolkit configuration used for connections</param>
+    /// <param name="dataConfiguration">Sitefinity data configuration used for connections</param>
+    /// <param name="importConfiguration">Sitefinity import configuration used for importing objects and content</param>
     /// <returns>Service collection</returns>
     public static IServiceCollection AddSitefinityMigrationToolkit(this IServiceCollection services, SitefinityDataConfiguration dataConfiguration, SitefinityImportConfiguration importConfiguration) =>
         RegisterServices(services, dataConfiguration, importConfiguration);

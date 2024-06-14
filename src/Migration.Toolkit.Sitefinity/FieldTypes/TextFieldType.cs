@@ -4,6 +4,9 @@ using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Sitefinity.Core;
 
 namespace Migration.Toolkit.Sitefinity.FieldTypes;
+/// <summary>
+/// Field type for Sitefinity Text field: "Telerik.Sitefinity.Web.UI.Fields.TextField"
+/// </summary>
 public class TextFieldType : IFieldType
 {
     public string SitefinityWidgetTypeName => "Telerik.Sitefinity.Web.UI.Fields.TextField";

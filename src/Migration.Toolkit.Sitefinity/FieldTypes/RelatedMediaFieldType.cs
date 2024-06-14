@@ -1,16 +1,19 @@
 ﻿using Kentico.Xperience.UMT.Model;
 
 using Migration.Toolkit.Data.Models;
+using Migration.Toolkit.Sitefinity.Abstractions;
 using Migration.Toolkit.Sitefinity.Core;
 
 namespace Migration.Toolkit.Sitefinity.FieldTypes;
-public class RelatedMediaFieldType : IFieldType
+/// <summary>
+/// Field type for Sitefinity Related Media field: "Telerik.Sitefinity.Web.UI.Fields.RelatedMediaField"
+/// </summary>
+public class RelatedMediaFieldType : FieldTypeBase, IFieldType
 {
     public string SitefinityWidgetTypeName => "Telerik.Sitefinity.Web.UI.Fields.RelatedMediaField";
 
-    public string? GetColumnSize(Field sitefinityField) => sitefinityField.DBLength;
-    public string GetColumnType(Field sitefinityField) => "assets";
-    public FormFieldSettings GetSettings(Field sitefinityField) => new()
+    public override string GetColumnType(Field sitefinityField) => "assets";
+    public override FormFieldSettings GetSettings(Field sitefinityField) => new()
     {
         ControlName = "Kentico.Administration.AssetSelector",
         CustomProperties = new()
