@@ -7,8 +7,6 @@ using Migration.Tookit.Data.Core.EF;
 using Progress.Sitefinity.RestSdk;
 using Progress.Sitefinity.RestSdk.Client;
 
-//using Progress.Sitefinity.AspNetCore;
-
 namespace Migration.Toolkit.Sitefinity.Data
 {
     /// <summary>
