@@ -5,11 +5,13 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Migration.Toolkit.Data.Configuration;
 using Migration.Toolkit.Data.Models;
-using Migration.Toolkit.Sitefinity.Abstractions;
 using Migration.Toolkit.Sitefinity.Adapters;
 using Migration.Toolkit.Sitefinity.Configuration;
+using Migration.Toolkit.Sitefinity.Core.Adapters;
+using Migration.Toolkit.Sitefinity.Core.Factories;
 using Migration.Toolkit.Sitefinity.Core.Services;
 using Migration.Toolkit.Sitefinity.Data;
+using Migration.Toolkit.Sitefinity.Factories;
 using Migration.Toolkit.Sitefinity.Services;
 
 namespace Migration.Toolkit.Sitefinity;
@@ -36,9 +38,19 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IDataClassImportService, DataClassImportService>();
         services.AddTransient<ISitefinityImportService, SitefinityImportService>();
 
-        // Mappers
+        // Adapters
         services.AddTransient<IUmtAdapter<User, UserInfoModel>, UserInfoModelAdapter>();
         services.AddTransient<IUmtAdapter<SitefinityType, DataClassModel>, DataClassModelAdapter>();
+
+        // Factories
+        services.AddSingleton<IFieldTypeFactory, FieldTypeFactory>();
+
+        // Field Types
+        var fieldTypes = FieldTypeFactory.GetTypes();
+        foreach (var fieldType in fieldTypes)
+        {
+            services.AddTransient(fieldType);
+        }
 
         return services;
     }

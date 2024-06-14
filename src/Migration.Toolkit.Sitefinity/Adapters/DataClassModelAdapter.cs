@@ -7,10 +7,10 @@ using Microsoft.Extensions.Logging;
 using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Sitefinity.Abstractions;
 using Migration.Toolkit.Sitefinity.Configuration;
-using Migration.Toolkit.Sitefinity.Helpers;
+using Migration.Toolkit.Sitefinity.Core.Factories;
 
 namespace Migration.Toolkit.Sitefinity.Adapters;
-internal class DataClassModelAdapter(ILogger<DataClassModelAdapter> logger, SitefinityImportConfiguration configuration) : UmtAdapterBase<SitefinityType, DataClassModel>(logger)
+internal class DataClassModelAdapter(ILogger<DataClassModelAdapter> logger, SitefinityImportConfiguration configuration, IFieldTypeFactory fieldTypeFactory) : UmtAdapterBase<SitefinityType, DataClassModel>(logger)
 {
     protected override DataClassModel AdaptInternal(SitefinityType source)
     {
@@ -47,17 +47,19 @@ internal class DataClassModelAdapter(ILogger<DataClassModelAdapter> logger, Site
 
         foreach (var field in fields)
         {
+            var fieldType = fieldTypeFactory.CreateFieldType(field.WidgetTypeName);
+
             formFields.Add(new FormField
             {
                 AllowEmpty = !field.IsRequired,
                 Column = !string.IsNullOrEmpty(field.ColumnName) ? field.ColumnName : field.Name,
-                ColumnType = FieldHelper.MapColumnType(field.DBType),
+                ColumnType = fieldType.GetColumnType(field),
                 Enabled = true,
                 Guid = field.Id,
                 Visible = true,
                 Properties = MapProperties(field),
-                Settings = MapSettings(field),
-                ColumnSize = ValidationHelper.GetInteger(!string.IsNullOrEmpty(field.DBLength) ? field.DBLength : "200", 200),
+                Settings = fieldType.GetSettings(field),
+                ColumnSize = ValidationHelper.GetInteger(fieldType.GetColumnSize(field), 255),
             });
         }
 
@@ -67,10 +69,5 @@ internal class DataClassModelAdapter(ILogger<DataClassModelAdapter> logger, Site
     private FormFieldProperties MapProperties(Field field) => new()
     {
         FieldCaption = field.Title
-    };
-
-    private FormFieldSettings MapSettings(Field field) => new()
-    {
-        ControlName = FieldHelper.MapControlType(field.WidgetTypeName),
     };
 }

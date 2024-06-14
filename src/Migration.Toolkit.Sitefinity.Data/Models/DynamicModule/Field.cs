@@ -10,6 +10,8 @@
         public int SpecialType { get; set; }
         public string? MediaType { get; set; }
         public string? FieldTypeDisplayName { get; set; }
+        public string? MinNumberRange { get; set; }
+        public string? MaxNumberRange { get; set; }
         public bool IsRequired { get; set; }
         public string? LengthValidationMessage { get; set; }
         public bool CanCreateItemsWhileSelecting { get; set; }
@@ -30,6 +32,7 @@
         public string? ParentSectionId { get; set; }
         public string? TypeUIName { get; set; }
         public bool IsLocalizable { get; set; }
+        public string? RelatedDataType { get; set; }
         public Guid Id { get; set; }
         public DateTime? LastModified { get; set; }
     }

@@ -5,4 +5,5 @@ public interface ITypeProvider
 {
     IEnumerable<SitefinityType> GetDynamicModuleTypes();
     IEnumerable<SitefinityType> GetSitefinityTypes();
+    IEnumerable<SitefinityType> GetAllTypes();
 }

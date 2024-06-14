@@ -7,5 +7,6 @@
         public Guid Id { get; set; }
         public List<Field>? Fields { get; set; }
         public DateTime? LastModified { get; set; }
+        public abstract string? ClassNamespace { get; }
     }
 }

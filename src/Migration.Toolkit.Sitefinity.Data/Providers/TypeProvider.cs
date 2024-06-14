@@ -13,6 +13,16 @@ internal class TypeProvider(SitefinityDataConfiguration configuration, ILogger<T
     private readonly string[] sitefinityTypeDirectories = new string[] { "Blogs", "Events", "Lists", "News" };
     private readonly string staticSitefinityTypesPath = Environment.CurrentDirectory + "\\SitefinityTypes.json";
 
+    public IEnumerable<SitefinityType> GetAllTypes()
+    {
+        var sitefinityTypes = new List<SitefinityType>();
+
+        sitefinityTypes.AddRange(GetDynamicModuleTypes());
+        sitefinityTypes.AddRange(GetSitefinityTypes());
+
+        return sitefinityTypes;
+    }
+
     public IEnumerable<SitefinityType> GetDynamicModuleTypes()
     {
         string dynamicModulesPath = Environment.CurrentDirectory + configuration.SitefinityModuleDeploymentFolderPath + "\\Dynamic modules";
@@ -50,11 +60,6 @@ internal class TypeProvider(SitefinityDataConfiguration configuration, ILogger<T
             }
 
             dynamicTypes.AddRange(module.Types);
-        }
-
-        foreach (var dynamicType in dynamicTypes)
-        {
-            logger.LogInformation($"Found dynamic type {dynamicType.DisplayName}.");
         }
 
         return dynamicTypes;
@@ -100,8 +105,6 @@ internal class TypeProvider(SitefinityDataConfiguration configuration, ILogger<T
 
         foreach (var sitefinityType in sitefinityTypes)
         {
-            logger.LogInformation($"Found sitefinity type {sitefinityType.DisplayName}.");
-
             var existingType = staticSitefinityTypes.FirstOrDefault(x => x.Name == sitefinityType.Name);
 
             if (existingType != null && existingType.Fields != null && sitefinityType.Fields != null)

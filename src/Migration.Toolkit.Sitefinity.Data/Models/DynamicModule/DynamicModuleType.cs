@@ -11,5 +11,6 @@
         public string? PageId { get; set; }
         public IEnumerable<Section>? Sections { get; set; }
         public override string? Name => TypeName;
+        public override string? ClassNamespace => TypeNamespace;
     }
 }
