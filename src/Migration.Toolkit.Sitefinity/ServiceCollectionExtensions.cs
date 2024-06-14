@@ -9,6 +9,9 @@ using Migration.Toolkit.Sitefinity.Data;
 
 namespace Migration.Toolkit.Sitefinity;
 
+/// <summary>
+/// Extension methods for registering Sitefinity Migration Toolkit services
+/// </summary>
 public static class ServiceCollectionExtensions
 {
     /// <summary>
