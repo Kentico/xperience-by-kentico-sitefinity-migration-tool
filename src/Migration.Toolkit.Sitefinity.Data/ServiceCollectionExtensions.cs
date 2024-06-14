@@ -10,8 +10,9 @@ using Progress.Sitefinity.RestSdk;
 using Progress.Sitefinity.RestSdk.Client;
 
 namespace Migration.Toolkit.Sitefinity.Data;
+
 /// <summary>
-/// 
+/// Extension methods for adding Sitefinity data services to the service collection
 /// </summary>
 public static class ServiceCollectionExtensions
 {
