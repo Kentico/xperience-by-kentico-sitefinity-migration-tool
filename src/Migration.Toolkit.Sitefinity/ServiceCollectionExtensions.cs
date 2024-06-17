@@ -41,10 +41,12 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IUserImportService, UserImportService>();
         services.AddTransient<IDataClassImportService, DataClassImportService>();
         services.AddTransient<ISitefinityImportService, SitefinityImportService>();
+        services.AddTransient<IMediaLibraryImportService, MediaLibraryImportService>();
 
         // Adapters
         services.AddTransient<IUmtAdapter<User, UserInfoModel>, UserInfoModelAdapter>();
         services.AddTransient<IUmtAdapter<SitefinityType, DataClassModel>, DataClassModelAdapter>();
+        services.AddTransient<IUmtAdapter<Library, MediaLibraryModel>, MediaLibraryModelAdapter>();
 
         // Factories
         services.AddSingleton<IFieldTypeFactory, FieldTypeFactory>();
