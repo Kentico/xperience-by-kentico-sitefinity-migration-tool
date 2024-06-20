@@ -25,7 +25,7 @@ internal class UserImportService(IImportService kenticoImportService,
 
         return new SitefinityImportResult<UserInfoModel>
         {
-            ImportedModels = importedModels,
+            ImportedModels = importedModels.ToDictionary(x => x.UserGUID),
             Observer = kenticoImportService.StartImport(importedModels, observer)
         };
     }

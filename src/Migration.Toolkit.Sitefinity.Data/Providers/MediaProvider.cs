@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 using Migration.Tookit.Data.Models;
 using Migration.Toolkit.Data.Abstractions;
@@ -9,8 +10,9 @@ using Migration.Toolkit.Data.Models;
 using Progress.Sitefinity.RestSdk;
 
 namespace Migration.Toolkit.Data.Providers;
-internal class MediaProvider(IRestClient restClient, IDbContextFactory<SitefinityContext> sitefinityContext) : RestSdkBase(restClient), IMediaProvider
+internal class MediaProvider(IRestClient restClient, IDbContextFactory<SitefinityContext> sitefinityContext, ILogger<MediaProvider> logger) : RestSdkBase(restClient), IMediaProvider
 {
+    private Dictionary<Guid, SitefinityMediaContent>? mediaItems;
     public IEnumerable<Library> GetDocumentLibraries()
     {
         var getAllArgs = new GetAllArgs
@@ -25,9 +27,6 @@ internal class MediaProvider(IRestClient restClient, IDbContextFactory<Sitefinit
 
     public IEnumerable<Media> GetDocuments()
     {
-        using var context = sitefinityContext.CreateDbContext();
-        var mediaItems = context.MediaContent.ToList();
-
         var getAllArgs = new GetAllArgs
         {
             Type = RestClientContentTypes.Documents
@@ -35,16 +34,7 @@ internal class MediaProvider(IRestClient restClient, IDbContextFactory<Sitefinit
 
         var documents = GetUsingBatches<Media>(getAllArgs);
 
-        foreach (var document in documents)
-        {
-            var foundDocument = mediaItems.Find(x => x.Id == document.Id);
-
-            if (foundDocument != null)
-            {
-                document.LastModifiedBy = foundDocument.LastModifiedBy;
-                document.CreatedBy = foundDocument.Owner;
-            }
-        }
+        SetUserInfo(documents);
 
         return documents;
     }
@@ -63,9 +53,6 @@ internal class MediaProvider(IRestClient restClient, IDbContextFactory<Sitefinit
 
     public IEnumerable<Media> GetImages()
     {
-        using var context = sitefinityContext.CreateDbContext();
-        var mediaItems = context.MediaContent.ToList();
-
         var getAllArgs = new GetAllArgs
         {
             Type = RestClientContentTypes.Images
@@ -73,16 +60,7 @@ internal class MediaProvider(IRestClient restClient, IDbContextFactory<Sitefinit
 
         var images = GetUsingBatches<Image>(getAllArgs);
 
-        foreach (var image in images)
-        {
-            var foundImage = mediaItems.Find(x => x.Id == image.Id);
-
-            if (foundImage != null)
-            {
-                image.LastModifiedBy = foundImage.LastModifiedBy;
-                image.CreatedBy = foundImage.Owner;
-            }
-        }
+        SetUserInfo(images);
 
         return images;
     }
@@ -101,9 +79,6 @@ internal class MediaProvider(IRestClient restClient, IDbContextFactory<Sitefinit
 
     public IEnumerable<Media> GetVideos()
     {
-        using var context = sitefinityContext.CreateDbContext();
-        var mediaItems = context.MediaContent.ToList();
-
         var getAllArgs = new GetAllArgs
         {
             Type = RestClientContentTypes.Videos
@@ -111,17 +86,30 @@ internal class MediaProvider(IRestClient restClient, IDbContextFactory<Sitefinit
 
         var videos = GetUsingBatches<Media>(getAllArgs);
 
-        foreach (var video in videos)
-        {
-            var foundVideo = mediaItems.Find(x => x.Id == video.Id);
-
-            if (foundVideo != null)
-            {
-                video.LastModifiedBy = foundVideo.LastModifiedBy;
-                video.CreatedBy = foundVideo.Owner;
-            }
-        }
+        SetUserInfo(videos);
 
         return videos;
+    }
+
+    private void SetUserInfo(IEnumerable<Media> restMediaItems)
+    {
+        if (mediaItems == null)
+        {
+            using var context = sitefinityContext.CreateDbContext();
+            mediaItems = context.MediaContent.ToDictionary(x => x.Id);
+        }
+
+        foreach (var restMediaItem in restMediaItems)
+        {
+            if (mediaItems.TryGetValue(restMediaItem.Id, out var foundDocument))
+            {
+                restMediaItem.LastModifiedBy = foundDocument.LastModifiedBy;
+                restMediaItem.CreatedBy = foundDocument.Owner;
+            }
+            else
+            {
+                logger.LogWarning($"Document with id {restMediaItem.Id} not found in Sitefinity database. Could not add LastModifiedBy or Owner");
+            }
+        }
     }
 }

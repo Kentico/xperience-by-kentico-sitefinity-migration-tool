@@ -30,7 +30,7 @@ internal class MediaLibraryImportService(IImportService kenticoImportService,
 
         return new SitefinityImportResult<MediaLibraryModel>
         {
-            ImportedModels = importedModels,
+            ImportedModels = importedModels.ToDictionary(x => x.LibraryGUID),
             Observer = kenticoImportService.StartImport(importedModels, observer)
         };
     }

@@ -1,4 +1,6 @@
-﻿using Kentico.Xperience.UMT.Model;
+﻿using CMS.Helpers;
+
+using Kentico.Xperience.UMT.Model;
 using Kentico.Xperience.UMT.Services;
 
 using Migration.Tookit.Data.Models;
@@ -42,7 +44,7 @@ internal class MediaImportService(IImportService kenticoImportService,
 
         return new SitefinityImportResult<MediaFileModel>
         {
-            ImportedModels = mediaFiles,
+            ImportedModels = mediaFiles.ToDictionary(x => x.FileGUID),
             Observer = kenticoImportService.StartImport(mediaFiles, userResult.Observer)
         };
     }

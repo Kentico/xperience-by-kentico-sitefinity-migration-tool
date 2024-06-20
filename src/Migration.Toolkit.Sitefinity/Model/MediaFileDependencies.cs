@@ -6,7 +6,7 @@ namespace Migration.Toolkit.Sitefinity.Model
 {
     internal class MediaFileDependencies : IImportDependencies
     {
-        public required IEnumerable<MediaLibraryModel> MediaLibraries { get; set; }
-        public required IEnumerable<UserInfoModel> Users { get; set; }
+        public required IDictionary<Guid, MediaLibraryModel> MediaLibraries { get; set; }
+        public required IDictionary<Guid, UserInfoModel> Users { get; set; }
     }
 }

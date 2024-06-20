@@ -29,7 +29,7 @@ internal class DataClassImportService(IImportService kenticoImportService, IType
 
         return new SitefinityImportResult<DataClassModel>
         {
-            ImportedModels = importedModels,
+            ImportedModels = importedModels.ToDictionary(x => x.ClassGUID),
             Observer = kenticoImportService.StartImport(importedModels, observer)
         };
     }
