@@ -16,7 +16,7 @@ internal class MediaModelAdapter(ILogger<MediaLibraryModelAdapter> logger, Sitef
     {
         var mediaLibraries = mediaFileDependencies.MediaLibraries;
 
-        if (mediaLibraries.TryGetValue(ValidationHelper.GetGuid(source.ParentId, Guid.Empty), out var library) || library == null)
+        if (!mediaLibraries.TryGetValue(ValidationHelper.GetGuid(source.ParentId, Guid.Empty), out var library))
         {
             logger.LogWarning($"Media library with GUID {source.ParentId} not found. Skipping media file {source.ItemDefaultUrl}.");
             return default;
@@ -24,13 +24,13 @@ internal class MediaModelAdapter(ILogger<MediaLibraryModelAdapter> logger, Sitef
 
         var users = mediaFileDependencies.Users;
 
-        if (users.TryGetValue(ValidationHelper.GetGuid(source.CreatedBy, Guid.Empty), out var createdByUser) || createdByUser == null)
+        if (!users.TryGetValue(ValidationHelper.GetGuid(source.CreatedBy, Guid.Empty), out var createdByUser))
         {
             logger.LogWarning($"Created By User with GUID {source.CreatedBy} not found. Skipping media file {source.ItemDefaultUrl}.");
             return default;
         }
 
-        if (users.TryGetValue(ValidationHelper.GetGuid(source.LastModifiedBy, Guid.Empty), out var modifiedByUser) || modifiedByUser == null)
+        if (!users.TryGetValue(ValidationHelper.GetGuid(source.LastModifiedBy, Guid.Empty), out var modifiedByUser))
         {
             logger.LogWarning($"Modified By User with GUID {source.CreatedBy} not found. Skipping media file {source.ItemDefaultUrl}.");
             return default;
