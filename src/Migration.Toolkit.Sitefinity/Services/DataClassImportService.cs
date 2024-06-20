@@ -23,9 +23,14 @@ internal class DataClassImportService(IImportService kenticoImportService, IType
         return dataClassModels;
     }
 
-    public SitefinityImportResult<DataClassModel> StartImport(ImportStateObserver observer) => new()
+    public SitefinityImportResult<DataClassModel> StartImport(ImportStateObserver observer)
     {
-        ImportedModels = Get(),
-        Observer = kenticoImportService.StartImport(Get(), observer)
-    };
+        var importedModels = Get();
+
+        return new SitefinityImportResult<DataClassModel>
+        {
+            ImportedModels = importedModels,
+            Observer = kenticoImportService.StartImport(importedModels, observer)
+        };
+    }
 }

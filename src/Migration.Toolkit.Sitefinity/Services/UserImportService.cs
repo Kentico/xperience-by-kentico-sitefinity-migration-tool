@@ -19,9 +19,14 @@ internal class UserImportService(IImportService kenticoImportService,
         return mapper.Adapt(users);
     }
 
-    public SitefinityImportResult<UserInfoModel> StartImport(ImportStateObserver observer) => new()
+    public SitefinityImportResult<UserInfoModel> StartImport(ImportStateObserver observer)
     {
-        ImportedModels = Get(),
-        Observer = kenticoImportService.StartImport(Get(), observer)
-    };
+        var importedModels = Get();
+
+        return new SitefinityImportResult<UserInfoModel>
+        {
+            ImportedModels = importedModels,
+            Observer = kenticoImportService.StartImport(importedModels, observer)
+        };
+    }
 }

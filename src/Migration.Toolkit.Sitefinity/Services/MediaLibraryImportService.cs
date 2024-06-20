@@ -24,9 +24,14 @@ internal class MediaLibraryImportService(IImportService kenticoImportService,
 
         return adapter.Adapt(libraries);
     }
-    public SitefinityImportResult<MediaLibraryModel> StartImport(ImportStateObserver observer) => new()
+    public SitefinityImportResult<MediaLibraryModel> StartImport(ImportStateObserver observer)
     {
-        ImportedModels = Get(),
-        Observer = kenticoImportService.StartImport(Get(), observer)
-    };
+        var importedModels = Get();
+
+        return new SitefinityImportResult<MediaLibraryModel>
+        {
+            ImportedModels = importedModels,
+            Observer = kenticoImportService.StartImport(importedModels, observer)
+        };
+    }
 }
