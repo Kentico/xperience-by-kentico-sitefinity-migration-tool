@@ -13,6 +13,7 @@ using Migration.Toolkit.Sitefinity.Core.Factories;
 using Migration.Toolkit.Sitefinity.Core.Services;
 using Migration.Toolkit.Sitefinity.Data;
 using Migration.Toolkit.Sitefinity.Factories;
+using Migration.Toolkit.Sitefinity.Model;
 using Migration.Toolkit.Sitefinity.Services;
 
 namespace Migration.Toolkit.Sitefinity;
@@ -49,7 +50,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IUmtAdapter<User, UserInfoModel>, UserInfoModelAdapter>();
         services.AddTransient<IUmtAdapter<SitefinityType, DataClassModel>, DataClassModelAdapter>();
         services.AddTransient<IUmtAdapter<Library, MediaLibraryModel>, MediaLibraryModelAdapter>();
-        services.AddTransient<IUmtAdapter<Media, MediaFileModel>, MediaModelAdapter>();
+        services.AddTransient<IUmtAdapter<Media, MediaFileDependencies, MediaFileModel>, MediaModelAdapter>();
 
         // Factories
         services.AddSingleton<IFieldTypeFactory, FieldTypeFactory>();

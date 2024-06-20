@@ -36,7 +36,8 @@ services.AddLogging(b => b.AddDebug().AddSimpleConsole(options => options.Single
 services.AddSitefinityMigrationToolkit(new SitefinityDataConfiguration
 {
     SitefinityConnectionString = root.GetValue<string>("ConnectionStrings:SitefinityConnectionString") ?? "",
-    SitefinityRestApiUrl = root.GetValue<string>("Sitefinity:Url") ?? "" + root.GetValue<string>("Sitefinity:WebServicePath") ?? "",
+    SitefinitySiteUrl = root.GetValue<string>("Sitefinity:Url") ?? "",
+    SitefinityRestApiUrl = (root.GetValue<string>("Sitefinity:Url") ?? "") + root.GetValue<string>("Sitefinity:WebServicePath") ?? "",
     SitefinityModuleDeploymentFolderPath = root.GetValue<string>("Sitefinity:ModuleDeploymentFolderPath") ?? "",
 }, new SitefinityImportConfiguration
 {
@@ -59,7 +60,7 @@ importObserver.ImportedInfo += (model, info) => Console.WriteLine($"{model.Print
 importObserver.Exception += (model, uniqueId, exception) => Console.WriteLine($"Error in model {model.PrintMe()}: '{uniqueId}': {exception}");
 
 // initiate import
-var observer = importService.StartImportDynamicTypes(importObserver);
+var observer = importService.StartImportMedia(importObserver);
 
 // wait until import finishes
 await observer.ImportCompletedTask;

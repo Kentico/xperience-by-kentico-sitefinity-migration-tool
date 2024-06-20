@@ -10,8 +10,9 @@ using Migration.Toolkit.Sitefinity.Model;
 namespace Migration.Toolkit.Sitefinity.Services;
 internal class MediaImportService(IImportService kenticoImportService,
                                     IMediaLibraryImportService mediaLibraryImportService,
+                                    IUserImportService userImportService,
                                             IMediaProvider mediaProvider,
-                                            IUmtAdapter<Media, MediaFileModel> adapter) : IMediaImportService
+                                            IUmtAdapter<Media, MediaFileDependencies, MediaFileModel> adapter) : IMediaImportService
 {
     public IEnumerable<MediaFileModel> Get(MediaFileDependencies dependenciesModel)
     {
@@ -23,16 +24,18 @@ internal class MediaImportService(IImportService kenticoImportService,
 
         mediaFiles.AddRange(mediaProvider.GetVideos());
 
-        return adapter.Adapt(mediaFiles);
+        return adapter.Adapt(mediaFiles, dependenciesModel);
     }
 
     public SitefinityImportResult<MediaFileModel> StartImport(ImportStateObserver observer)
     {
-        var result = mediaLibraryImportService.StartImport(observer);
+        var mediaLibraryResult = mediaLibraryImportService.StartImport(observer);
+        var userResult = userImportService.StartImport(mediaLibraryResult.Observer);
 
         var dependencies = new MediaFileDependencies
         {
-            MediaLibraries = result.ImportedModels
+            MediaLibraries = mediaLibraryResult.ImportedModels,
+            Users = userResult.ImportedModels
         };
 
         var mediaFiles = Get(dependencies);
@@ -40,9 +43,7 @@ internal class MediaImportService(IImportService kenticoImportService,
         return new SitefinityImportResult<MediaFileModel>
         {
             ImportedModels = mediaFiles,
-            Observer = kenticoImportService.StartImport(mediaFiles, result.Observer)
+            Observer = kenticoImportService.StartImport(mediaFiles, userResult.Observer)
         };
-
-        return kenticoImportService.StartImport(mediaFiles);
     }
 }
