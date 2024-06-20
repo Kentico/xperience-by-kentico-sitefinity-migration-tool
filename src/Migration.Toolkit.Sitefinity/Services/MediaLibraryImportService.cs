@@ -5,6 +5,7 @@ using Migration.Toolkit.Data.Core.Providers;
 using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Sitefinity.Core.Adapters;
 using Migration.Toolkit.Sitefinity.Core.Services;
+using Migration.Toolkit.Sitefinity.Model;
 
 namespace Migration.Toolkit.Sitefinity.Services;
 internal class MediaLibraryImportService(IImportService kenticoImportService,
@@ -23,10 +24,9 @@ internal class MediaLibraryImportService(IImportService kenticoImportService,
 
         return adapter.Adapt(libraries);
     }
-    public ImportStateObserver StartImport(ImportStateObserver observer, out IEnumerable<MediaLibraryModel> libraries)
+    public SitefinityImportResult<MediaLibraryModel> StartImport(ImportStateObserver observer) => new()
     {
-        libraries = Get();
-
-        return kenticoImportService.StartImport(libraries);
-    }
+        ImportedModels = Get(),
+        Observer = kenticoImportService.StartImport(Get(), observer)
+    };
 }

@@ -5,6 +5,7 @@ using Migration.Toolkit.Data.Core.Providers;
 using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Sitefinity.Core.Adapters;
 using Migration.Toolkit.Sitefinity.Core.Services;
+using Migration.Toolkit.Sitefinity.Model;
 
 namespace Migration.Toolkit.Sitefinity.Services;
 internal class DataClassImportService(IImportService kenticoImportService, ITypeProvider typeProvider, IUmtAdapter<SitefinityType, DataClassModel> mapper) : IDataClassImportService
@@ -22,9 +23,9 @@ internal class DataClassImportService(IImportService kenticoImportService, IType
         return dataClassModels;
     }
 
-    public ImportStateObserver StartImport(ImportStateObserver observer)
+    public SitefinityImportResult<DataClassModel> StartImport(ImportStateObserver observer) => new()
     {
-        var types = Get();
-        return kenticoImportService.StartImport(types, observer);
-    }
+        ImportedModels = Get(),
+        Observer = kenticoImportService.StartImport(Get(), observer)
+    };
 }

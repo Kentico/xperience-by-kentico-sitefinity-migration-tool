@@ -5,6 +5,7 @@ using Migration.Toolkit.Data.Core.Providers;
 using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Sitefinity.Core.Adapters;
 using Migration.Toolkit.Sitefinity.Core.Services;
+using Migration.Toolkit.Sitefinity.Model;
 
 namespace Migration.Toolkit.Sitefinity.Services;
 internal class UserImportService(IImportService kenticoImportService,
@@ -18,17 +19,9 @@ internal class UserImportService(IImportService kenticoImportService,
         return mapper.Adapt(users);
     }
 
-    public ImportStateObserver StartImport(ImportStateObserver observer, out IEnumerable<UserInfoModel> users)
+    public SitefinityImportResult<UserInfoModel> StartImport(ImportStateObserver observer) => new()
     {
-        users = Get();
-
-        return kenticoImportService.StartImport(users, observer);
-    }
-
-    public ImportStateObserver StartImport(ImportStateObserver observer)
-    {
-        var users = Get();
-
-        return kenticoImportService.StartImport(users, observer);
-    }
+        ImportedModels = Get(),
+        Observer = kenticoImportService.StartImport(Get(), observer)
+    };
 }

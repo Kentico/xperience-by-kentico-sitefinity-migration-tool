@@ -1,6 +1,4 @@
-﻿using CMS.DataEngine;
-
-using Kentico.Xperience.UMT.Model;
+﻿using Kentico.Xperience.UMT.Model;
 using Kentico.Xperience.UMT.Services;
 
 namespace Migration.Toolkit.Sitefinity.Model
