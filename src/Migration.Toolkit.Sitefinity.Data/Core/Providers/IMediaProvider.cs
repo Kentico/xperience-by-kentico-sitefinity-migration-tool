@@ -1,4 +1,5 @@
-﻿using Migration.Toolkit.Data.Models;
+﻿using Migration.Tookit.Data.Models;
+using Migration.Toolkit.Data.Models;
 
 namespace Migration.Toolkit.Data.Core.Providers;
 /// <summary>
@@ -21,4 +22,19 @@ public interface IMediaProvider
     /// </summary>
     /// <returns>List of libraries</returns>
     public IEnumerable<Library> GetVideoLibraries();
+    /// <summary>
+    /// Get Documents from Sitefinity
+    /// </summary>
+    /// <returns>List of documents</returns>
+    public IEnumerable<Media> GetDocuments();
+    /// <summary>
+    /// Get Images from Sitefinity
+    /// </summary>
+    /// <returns>List of images</returns>
+    public IEnumerable<Media> GetImages();
+    /// <summary>
+    /// Get Videos from Sitefinity
+    /// </summary>
+    /// <returns>List of videos</returns>
+    public IEnumerable<Media> GetVideos();
 }

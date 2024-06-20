@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+using Migration.Tookit.Data.Models;
 using Migration.Toolkit.Data.Models;
 
 namespace Migration.Toolkit.Data.Core.EF;
@@ -14,5 +15,6 @@ public partial class SitefinityContext : DbContext
     }
 
     public virtual DbSet<User> Users { get; set; }
+    public virtual DbSet<SitefinityMediaContent> MediaContent { get; set; }
 
 }
