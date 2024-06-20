@@ -13,7 +13,7 @@ namespace Migration.Toolkit.Sitefinity.Abstractions;
 /// <typeparam name="TSourceModel">ISitefinityModel used in providers</typeparam>
 /// <typeparam name="TTargetModel">IUmtModel used in Universal Migration Toolkit</typeparam>
 /// <param name="logger">Logger</param>
-public abstract class UmtAdapterBase<TSourceModel, TTargetModel>(ILogger logger) : IUmtAdapter<TSourceModel, TTargetModel> where TSourceModel : ISitefinityModel where TTargetModel : IUmtModel
+internal abstract class UmtAdapterBase<TSourceModel, TTargetModel>(ILogger logger) : IUmtAdapter<TSourceModel, TTargetModel> where TSourceModel : ISitefinityModel where TTargetModel : IUmtModel
 {
     public IEnumerable<TTargetModel> Adapt(IEnumerable<TSourceModel> source)
     {
@@ -33,7 +33,7 @@ public abstract class UmtAdapterBase<TSourceModel, TTargetModel>(ILogger logger)
 
             var adaptedModel = AdaptInternal(model);
 
-            if (Equals(adaptedModel, default(TTargetModel)) || adaptedModel == null)
+            if (Equals(adaptedModel, default(TTargetModel)) || object.Equals(adaptedModel, default(TTargetModel)))
             {
                 logger.LogWarning("Adapted model is null. Returning default.");
                 continue;
@@ -46,7 +46,7 @@ public abstract class UmtAdapterBase<TSourceModel, TTargetModel>(ILogger logger)
     protected abstract TTargetModel? AdaptInternal(TSourceModel source);
 }
 
-public abstract class UmtAdapterBase<TSourceModel, TDependenciesModel, TTargetModel>(ILogger logger) : IUmtAdapter<TSourceModel, TDependenciesModel, TTargetModel> where TSourceModel : ISitefinityModel
+internal abstract class UmtAdapterBase<TSourceModel, TDependenciesModel, TTargetModel>(ILogger logger) : IUmtAdapter<TSourceModel, TDependenciesModel, TTargetModel> where TSourceModel : ISitefinityModel
                                                                                                                                                 where TTargetModel : IUmtModel
                                                                                                                                                 where TDependenciesModel : IImportDependencies
 {
@@ -68,7 +68,7 @@ public abstract class UmtAdapterBase<TSourceModel, TDependenciesModel, TTargetMo
 
             var adaptedModel = AdaptInternal(model, dependenciesModel);
 
-            if (Equals(adaptedModel, default(TTargetModel)) || adaptedModel == null)
+            if (Equals(adaptedModel, default(TTargetModel)) || object.Equals(adaptedModel, default(TTargetModel)))
             {
                 logger.LogWarning("Adapted model is null. Returning default.");
                 continue;

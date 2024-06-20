@@ -19,7 +19,7 @@ public interface ISitefinityImportService
     /// <returns>Task, that will return object that represents import state</returns>
     ImportStateObserver StartImportContentTypes(ImportStateObserver observer);
     /// <summary>
-    /// Starts import of media from Sitefinity to XbyK site
+    /// Starts import of media from Sitefinity to XbyK site. Imports users and media libraries automatically to be used in media files.
     /// </summary>
     /// <param name="observer">Observer used to log any errors or warnings during the import</param>
     /// <returns>Task, that will return object that represents import state</returns>
