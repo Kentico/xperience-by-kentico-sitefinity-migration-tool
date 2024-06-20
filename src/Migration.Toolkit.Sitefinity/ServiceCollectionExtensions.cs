@@ -3,6 +3,7 @@ using Kentico.Xperience.UMT.Model;
 
 using Microsoft.Extensions.DependencyInjection;
 
+using Migration.Tookit.Data.Models;
 using Migration.Toolkit.Data.Configuration;
 using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Sitefinity.Adapters;
@@ -42,11 +43,13 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IDataClassImportService, DataClassImportService>();
         services.AddTransient<ISitefinityImportService, SitefinityImportService>();
         services.AddTransient<IMediaLibraryImportService, MediaLibraryImportService>();
+        services.AddTransient<IMediaImportService, MediaImportService>();
 
         // Adapters
         services.AddTransient<IUmtAdapter<User, UserInfoModel>, UserInfoModelAdapter>();
         services.AddTransient<IUmtAdapter<SitefinityType, DataClassModel>, DataClassModelAdapter>();
         services.AddTransient<IUmtAdapter<Library, MediaLibraryModel>, MediaLibraryModelAdapter>();
+        services.AddTransient<IUmtAdapter<Media, MediaFileModel>, MediaModelAdapter>();
 
         // Factories
         services.AddSingleton<IFieldTypeFactory, FieldTypeFactory>();
