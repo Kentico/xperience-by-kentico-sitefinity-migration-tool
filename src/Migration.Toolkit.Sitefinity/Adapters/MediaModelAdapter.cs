@@ -24,21 +24,12 @@ internal class MediaModelAdapter(ILogger<MediaLibraryModelAdapter> logger, Sitef
 
         var users = mediaFileDependencies.Users;
 
-        if (!users.TryGetValue(ValidationHelper.GetGuid(source.CreatedBy, Guid.Empty), out var createdByUser))
-        {
-            logger.LogWarning($"Created By User with GUID {source.CreatedBy} not found. Skipping media file {source.ItemDefaultUrl}.");
-            return default;
-        }
-
-        if (!users.TryGetValue(ValidationHelper.GetGuid(source.LastModifiedBy, Guid.Empty), out var modifiedByUser))
-        {
-            logger.LogWarning($"Modified By User with GUID {source.CreatedBy} not found. Skipping media file {source.ItemDefaultUrl}.");
-            return default;
-        }
+        users.TryGetValue(ValidationHelper.GetGuid(source.CreatedBy, Guid.Empty), out var createdByUser);
+        users.TryGetValue(ValidationHelper.GetGuid(source.LastModifiedBy, Guid.Empty), out var modifiedByUser);
 
         var uri = new Uri(sitefinityDataConfiguration.SitefinitySiteUrl + source.ItemDefaultUrl, UriKind.Absolute);
 
-        string mediaPath = uri.Segments.Skip(4).Join("/");
+        string mediaPath = uri.Segments.Skip(4).SkipLast(1).Join("/");
 
         var mediaFile = new MediaFileModel
         {
@@ -52,8 +43,8 @@ internal class MediaModelAdapter(ILogger<MediaLibraryModelAdapter> logger, Sitef
             FileExtension = source.Extension,
             FileLibraryGuid = library.LibraryGUID,
             FileCreatedWhen = source.DateCreated,
-            FileModifiedByUserGuid = modifiedByUser.UserGUID,
-            FileCreatedByUserGuid = createdByUser.UserGUID,
+            FileModifiedByUserGuid = modifiedByUser?.UserGUID,
+            FileCreatedByUserGuid = createdByUser?.UserGUID,
             DataSourceUrl = Uri.IsWellFormedUriString(source.Url, UriKind.Absolute)
             ? source.Url
             : sitefinityDataConfiguration.SitefinitySiteUrl + source.Url,

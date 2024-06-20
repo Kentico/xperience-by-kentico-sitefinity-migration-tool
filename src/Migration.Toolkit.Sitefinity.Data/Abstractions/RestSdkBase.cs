@@ -11,8 +11,14 @@ internal class RestSdkBase
     public RestSdkBase(IRestClient restClient)
     {
         var args = new RequestArgs();
-
-        restClient.Init(args).Wait();
+        try
+        {
+            restClient.Init(args).Wait();
+        }
+        catch
+        {
+            throw new InvalidOperationException("Failed to initialize REST client. Please ensure Sitefinity site is running and web services have been turned on.");
+        }
 
         this.restClient = restClient;
     }
