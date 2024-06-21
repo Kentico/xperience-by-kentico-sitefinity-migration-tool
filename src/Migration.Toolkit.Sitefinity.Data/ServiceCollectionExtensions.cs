@@ -3,51 +3,55 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Migration.Tookit.Data.Configuration;
 using Migration.Tookit.Data.Core.EF;
+using Migration.Tookit.Data.Core.Providers;
+using Migration.Tookit.Data.Providers;
 
 using Progress.Sitefinity.RestSdk;
 using Progress.Sitefinity.RestSdk.Client;
 
-namespace Migration.Toolkit.Sitefinity.Data
+namespace Migration.Toolkit.Sitefinity.Data;
+
+/// <summary>
+/// Extension methods for adding Sitefinity data services to the service collection
+/// </summary>
+public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// 
+    /// Adding the required dependencies and providers to the service collection for pulling data from Sitefinity site
     /// </summary>
-    public static class ServiceCollectionExtensions
+    /// <param name="services">Service collection</param>
+    /// <param name="configuration">Sitefinity toolkit configuration used for connections</param>
+    /// <returns>Service collection</returns>
+    public static IServiceCollection AddSitefinityData(this IServiceCollection services, SitefinityToolkitConfiguration configuration) =>
+        RegisterServices(services, configuration);
+
+    private static IServiceCollection RegisterServices(IServiceCollection services, SitefinityToolkitConfiguration configuration)
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="services"></param>
-        public static IServiceCollection AddSitefinityData(this IServiceCollection services, SitefinityToolkitConfiguration configuration) =>
-            RegisterServices(services, configuration);
-
-        private static IServiceCollection RegisterServices(IServiceCollection services, SitefinityToolkitConfiguration configuration)
+        services.AddHttpClient("sfservice", (servicesProvider, client) =>
         {
-            services.AddHttpClient("sfservice", (servicesProvider, client) =>
+            client.BaseAddress = new Uri(configuration.SitefinityRestApiUrl);
+            if (!string.IsNullOrEmpty(configuration.SitefinityRestApiKey))
             {
-                client.BaseAddress = new Uri(configuration.SitefinityRestApiUrl);
-                if (!string.IsNullOrEmpty(configuration.SitefinityRestApiKey))
-                {
-                    client.DefaultRequestHeaders.Add("X-SF-APIKEY", configuration.SitefinityRestApiKey);
-                }
-            }).ConfigurePrimaryHttpMessageHandler(configure => new HttpClientHandler
-            {
-                AllowAutoRedirect = false,
-                UseCookies = false,
-            });
+                client.DefaultRequestHeaders.Add("X-SF-APIKEY", configuration.SitefinityRestApiKey);
+            }
+        }).ConfigurePrimaryHttpMessageHandler(configure => new HttpClientHandler
+        {
+            AllowAutoRedirect = false,
+            UseCookies = false,
+        });
 
-            services.AddScoped<IRestClient>((x) =>
-            {
-                var factory = x.GetRequiredService<IHttpClientFactory>();
-                var httpClient = factory.CreateClient("sfservice");
+        services.AddScoped<IRestClient>((x) =>
+        {
+            var factory = x.GetRequiredService<IHttpClientFactory>();
+            var httpClient = factory.CreateClient("sfservice");
 
-                var restClient = new RestClient(httpClient);
-                return restClient;
-            });
+            var restClient = new RestClient(httpClient);
+            return restClient;
+        });
 
-            services.AddDbContextFactory<SitefinityContext>(options => options.UseSqlServer(configuration.SitefinityConnectionString));
+        services.AddDbContextFactory<SitefinityContext>(options => options.UseSqlServer(configuration.SitefinityConnectionString));
+        services.AddTransient<IUserProvider, UserProvider>();
 
-            return services;
-        }
+        return services;
     }
 }
