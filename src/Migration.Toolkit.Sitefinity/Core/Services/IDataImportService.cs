@@ -42,4 +42,6 @@ internal interface IDataImportService<in TDependencies, T> where TDependencies :
     /// <param name="observer">Observer used in UMT import service</param>
     /// <returns>Result that includes observer and items that were imported</returns>
     public SitefinityImportResult<T> StartImport(ImportStateObserver observer);
+
+    public SitefinityImportResult<T> StartImportWithDependencies(ImportStateObserver observer, TDependencies dependenciesModel);
 }

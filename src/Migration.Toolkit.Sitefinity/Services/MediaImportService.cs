@@ -38,12 +38,19 @@ internal class MediaImportService(IImportService kenticoImportService,
             Users = userResult.ImportedModels
         };
 
+        return Import(userResult.Observer, dependencies);
+    }
+
+    public SitefinityImportResult<MediaFileModel> StartImportWithDependencies(ImportStateObserver observer, MediaFileDependencies dependenciesModel) => Import(observer, dependenciesModel);
+
+    private SitefinityImportResult<MediaFileModel> Import(ImportStateObserver observer, MediaFileDependencies dependencies)
+    {
         var mediaFiles = Get(dependencies);
 
         return new SitefinityImportResult<MediaFileModel>
         {
             ImportedModels = mediaFiles.ToDictionary(x => x.FileGUID),
-            Observer = kenticoImportService.StartImport(mediaFiles, userResult.Observer)
+            Observer = kenticoImportService.StartImport(mediaFiles, observer)
         };
     }
 }

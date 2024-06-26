@@ -31,6 +31,10 @@ internal class DataClassModelAdapter(ILogger<DataClassModelAdapter> logger, Site
             ClassHasUnmanagedDbSchema = false,
             ClassResourceGuid = null,
             ClassWebPageHasUrl = isPageType,
+            CustomProperties = new Dictionary<string, object?>
+            {
+                { "SitefinityTypeName", $"{source.ClassNamespace}.{source.Name}" }
+            }
         };
 
         return dataClassModel;
