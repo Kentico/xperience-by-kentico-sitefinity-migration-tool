@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
+using Migration.Tookit.Data.Core.Providers;
+using Migration.Tookit.Data.Providers;
 using Migration.Toolkit.Data.Configuration;
 using Migration.Toolkit.Data.Core.EF;
 using Migration.Toolkit.Data.Core.Providers;
@@ -59,6 +61,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IUserProvider, UserProvider>();
         services.AddTransient<ITypeProvider, TypeProvider>();
         services.AddTransient<IMediaProvider, MediaProvider>();
+        services.AddTransient<IContentProvider, ContentProvider>();
 
         return services;
     }
