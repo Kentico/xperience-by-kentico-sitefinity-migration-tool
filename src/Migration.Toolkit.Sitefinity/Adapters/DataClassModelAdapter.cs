@@ -69,7 +69,7 @@ internal class DataClassModelAdapter(ILogger<DataClassModelAdapter> logger, Site
                 ColumnSize = ValidationHelper.GetInteger(fieldType.GetColumnSize(field), 255),
             };
 
-            fieldType.HandleSpecialCases(formField, field);
+            fieldType.HandleSpecialCase(formField, field);
 
             formFields.Add(formField);
         }
