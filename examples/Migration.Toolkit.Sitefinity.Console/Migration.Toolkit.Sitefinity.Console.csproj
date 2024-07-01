@@ -30,6 +30,9 @@
     <None Update="Deployment\**">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+	  <None Update="StaticSitefinityTypes\**">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
     <None Update="sample.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

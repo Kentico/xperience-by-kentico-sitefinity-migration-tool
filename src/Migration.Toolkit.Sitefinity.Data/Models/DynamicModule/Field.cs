@@ -35,5 +35,6 @@
         public string? RelatedDataType { get; set; }
         public Guid Id { get; set; }
         public DateTime? LastModified { get; set; }
+        public int? DecimalPlacesCount { get; set; }
     }
 }
