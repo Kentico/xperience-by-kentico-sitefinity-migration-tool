@@ -13,10 +13,11 @@ namespace Migration.Toolkit.Sitefinity.Adapters;
 internal class DataClassModelAdapter(ILogger<DataClassModelAdapter> logger, SitefinityImportConfiguration configuration, IFieldTypeFactory fieldTypeFactory) : UmtAdapterBase<SitefinityType, DataClassModel>(logger)
 {
     private readonly string[] excludedFields = ["Translations", "Actions", "DateCreated", "Author", "PublicationDate", "LastModified", "DateCreated"];
+    private readonly string[] forcedWebsiteTypes = ["PageNode"];
 
     protected override DataClassModel AdaptInternal(SitefinityType source)
     {
-        bool isPageType = configuration.PageContentTypes != null && configuration.PageContentTypes.Any(x => x.Name.Equals(source.Name));
+        bool isPageType = (configuration.PageContentTypes != null && configuration.PageContentTypes.Any(x => x.Name.Equals(source.Name))) || forcedWebsiteTypes.Any(x => x.Equals(source.Name));
         var dataClassModel = new DataClassModel
         {
             ClassDisplayName = source.DisplayName,

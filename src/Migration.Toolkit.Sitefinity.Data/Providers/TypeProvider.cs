@@ -11,7 +11,7 @@ internal class TypeProvider(SitefinityDataConfiguration configuration, ILogger<T
 {
     private readonly string[] excludedFileNames = new string[] { "version.sf", "configs.sf", "widgetTemplates.sf" };
     private readonly string[] sitefinityTypeDirectories = new string[] { "Blogs", "Events", "Lists", "News" };
-    private readonly string staticSitefinityTypesPath = Environment.CurrentDirectory + "\\SitefinityTypes.json";
+    private readonly string staticSitefinityTypesDirectory = Environment.CurrentDirectory + "\\StaticSitefinityTypes";
 
     public IEnumerable<SitefinityType> GetAllTypes()
     {
@@ -118,28 +118,35 @@ internal class TypeProvider(SitefinityDataConfiguration configuration, ILogger<T
 
     private IEnumerable<SitefinityType> GetStaticSitefinityTypes()
     {
-        if (!File.Exists(staticSitefinityTypesPath))
+        if (!Directory.Exists(staticSitefinityTypesDirectory))
         {
-            logger.LogInformation($"Static Sitefinity types file does not exist. {staticSitefinityTypesPath}");
+            logger.LogInformation($"Static Sitefinity types folder does not exist. {staticSitefinityTypesDirectory}");
             return [];
         }
 
-        string fileContents = File.ReadAllText(staticSitefinityTypesPath);
+        var staticTypes = new List<StaticSitefinityType>();
 
-        if (string.IsNullOrEmpty(fileContents))
+        foreach (string path in Directory.EnumerateFiles(staticSitefinityTypesDirectory, "*.json", SearchOption.AllDirectories))
         {
-            logger.LogWarning($"File {staticSitefinityTypesPath} is empty.");
-            return [];
+            string fileContents = File.ReadAllText(path);
+
+            if (string.IsNullOrEmpty(fileContents))
+            {
+                logger.LogWarning($"File {path} is empty.");
+                continue;
+            }
+
+            var type = JsonSerializer.Deserialize<IEnumerable<StaticSitefinityType>>(fileContents);
+
+            if (type == null)
+            {
+                logger.LogWarning($"File {path} is not a valid static sitefinity file.");
+                continue;
+            }
+
+            staticTypes.AddRange(type);
         }
 
-        var types = JsonSerializer.Deserialize<IEnumerable<StaticSitefinityType>>(fileContents);
-
-        if (types == null)
-        {
-            logger.LogWarning($"File {staticSitefinityTypesPath} is not a valid type file.");
-            return [];
-        }
-
-        return types;
+        return staticTypes;
     }
 }
