@@ -4,9 +4,9 @@
     "net8.0": {
       "Kentico.Xperience.UMT": {
         "type": "Direct",
-        "requested": "[1.0.5, )",
-        "resolved": "1.0.5",
-        "contentHash": "KX9nP3u+1hsFKk8+aXVBjvbbxsfaO5+yBM4MbnxYZPPYSFkOMksmdGtUZFVps46agjoMtjnKjri9b40mikVKHQ==",
+        "requested": "[1.1.0, )",
+        "resolved": "1.1.0",
+        "contentHash": "t2n/PdUuIALn+VJRDX846aTrcBMmmAhES1fubKoiiEJTzttqxNBR8wqQ+zQRt4SRpwzRIdPWOZ2xtwDvYEd+mw==",
         "dependencies": {
           "Kentico.Xperience.Core": "29.1.0",
           "Microsoft.Bcl.AsyncInterfaces": "8.0.0"

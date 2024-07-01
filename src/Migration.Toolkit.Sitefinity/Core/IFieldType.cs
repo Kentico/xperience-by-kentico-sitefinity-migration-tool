@@ -30,4 +30,11 @@ public interface IFieldType
     /// <param name="sitefinityField">Sitefinity field from content type</param>
     /// <returns>Form field settings to be used in XbyK field</returns>
     public FormFieldSettings GetSettings(Field sitefinityField);
+    /// <summary>
+    /// Handles special cases for field types that need additional processing
+    /// </summary>
+    /// <param name="formField">XbyK form field</param>
+    /// <param name="sitefinityField">Sitefinity field from content type</param>
+    /// <returns>Processed XbyK form field</returns>
+    public FormField HandleSpecialCase(FormField formField, Field sitefinityField);
 }

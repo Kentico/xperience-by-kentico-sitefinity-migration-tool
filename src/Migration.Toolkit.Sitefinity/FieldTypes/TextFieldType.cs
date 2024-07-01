@@ -77,4 +77,19 @@ public class TextFieldType : IFieldType
             ControlName = "Kentico.Administration.TextInput"
         };
     }
+
+    public FormField HandleSpecialCase(FormField formField, Field sitefinityField)
+    {
+        if (sitefinityField.FieldTypeDisplayName == null)
+        {
+            return formField;
+        }
+
+        if (sitefinityField.FieldTypeDisplayName.Equals("Number"))
+        {
+            formField.Precision = sitefinityField.DecimalPlacesCount ?? 0;
+        }
+
+        return formField;
+    }
 }

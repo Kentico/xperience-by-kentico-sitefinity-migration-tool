@@ -1,0 +1,21 @@
+﻿[
+  {
+    "DisplayName": "Page",
+    "ClassName": "PageNode",
+    "Id": "72b912dd-e50b-4592-9fb9-0ce90fdc9363",
+    "Namespace": "Telerik.Sitefinity.Pages.Model",
+    "Fields": [
+      {
+        "Name": "Title",
+        "Title": "Title",
+        "FieldType": 1,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "ShortText",
+        "IsRequired": true,
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.TextField",
+        "Id": "9306cb93-6184-4574-97f6-9c3d6b4a2c26"
+      }
+    ]
+  }
+]

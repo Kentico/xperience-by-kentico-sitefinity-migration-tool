@@ -12,9 +12,12 @@ using Migration.Toolkit.Sitefinity.Core.Factories;
 namespace Migration.Toolkit.Sitefinity.Adapters;
 internal class DataClassModelAdapter(ILogger<DataClassModelAdapter> logger, SitefinityImportConfiguration configuration, IFieldTypeFactory fieldTypeFactory) : UmtAdapterBase<SitefinityType, DataClassModel>(logger)
 {
+    private readonly string[] excludedFields = ["Translations", "Actions", "DateCreated", "Author", "PublicationDate", "LastModified", "DateCreated"];
+    private readonly string[] forcedWebsiteTypes = ["PageNode"];
+
     protected override DataClassModel AdaptInternal(SitefinityType source)
     {
-        bool isPageType = configuration.PageContentTypes != null && configuration.PageContentTypes.Any(x => x.Name.Equals(source.Name));
+        bool isPageType = (configuration.PageContentTypes != null && configuration.PageContentTypes.Any(x => x.Name.Equals(source.Name))) || forcedWebsiteTypes.Any(x => x.Equals(source.Name));
         var dataClassModel = new DataClassModel
         {
             ClassDisplayName = source.DisplayName,
@@ -27,7 +30,7 @@ internal class DataClassModelAdapter(ILogger<DataClassModelAdapter> logger, Site
             ClassContentTypeType = isPageType
             ? "Website"
             : "Reusable",
-            ClassLastModified = source.LastModified,
+            ClassLastModified = source.LastModified ?? DateTime.Now,
             ClassHasUnmanagedDbSchema = false,
             ClassResourceGuid = null,
             ClassWebPageHasUrl = isPageType,
@@ -47,9 +50,14 @@ internal class DataClassModelAdapter(ILogger<DataClassModelAdapter> logger, Site
 
         foreach (var field in fields)
         {
+            if (excludedFields.Contains(field.Name))
+            {
+                continue;
+            }
+
             var fieldType = fieldTypeFactory.CreateFieldType(field.WidgetTypeName);
 
-            formFields.Add(new FormField
+            var formField = new FormField
             {
                 AllowEmpty = !field.IsRequired,
                 Column = !string.IsNullOrEmpty(field.ColumnName) ? field.ColumnName : field.Name,
@@ -60,7 +68,11 @@ internal class DataClassModelAdapter(ILogger<DataClassModelAdapter> logger, Site
                 Properties = MapProperties(field),
                 Settings = fieldType.GetSettings(field),
                 ColumnSize = ValidationHelper.GetInteger(fieldType.GetColumnSize(field), 255),
-            });
+            };
+
+            fieldType.HandleSpecialCase(formField, field);
+
+            formFields.Add(formField);
         }
 
         return formFields;

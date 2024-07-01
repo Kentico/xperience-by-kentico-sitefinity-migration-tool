@@ -14,4 +14,5 @@ public class FieldTypeBase
     {
         ControlName = "Kentico.Administration.TextInput"
     };
+    public virtual FormField HandleSpecialCase(FormField formField, Field sitefinityField) => formField;
 }
