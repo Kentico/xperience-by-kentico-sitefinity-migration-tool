@@ -9,17 +9,17 @@ namespace Migration.Toolkit.Sitefinity.FieldTypes;
 /// <summary>
 /// Field type for Sitefinity RelatedData field: "Telerik.Sitefinity.Web.UI.Fields.RelatedDataField"
 /// </summary>
-public class RelatedDataFieldType : FieldTypeBase, IFieldType
+public class RelatedDataFieldType(ITypeProvider typeProvider) : FieldTypeBase, IFieldType
 {
-    private readonly IEnumerable<SitefinityType> sitefinityTypes;
+    private IEnumerable<SitefinityType>? sitefinityTypes;
 
     public string SitefinityWidgetTypeName => "Telerik.Sitefinity.Web.UI.Fields.RelatedDataField";
-
-    public RelatedDataFieldType(ITypeProvider typeProvider) => sitefinityTypes = typeProvider.GetAllTypes();
 
     public override string GetColumnType(Field sitefinityField) => "contentitemreference";
     public override FormFieldSettings GetSettings(Field sitefinityField)
     {
+        sitefinityTypes ??= typeProvider.GetAllTypes();
+
         var allowedType = sitefinityTypes.FirstOrDefault(x => $"{x.ClassNamespace}.{x.Name}".Equals(sitefinityField.RelatedDataType));
 
         return new FormFieldSettings
