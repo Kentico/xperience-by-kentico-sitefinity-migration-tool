@@ -8,6 +8,24 @@ namespace Migration.Toolkit.Sitefinity.Core.Services;
 /// <summary>
 /// Service for all import services
 /// </summary>
+internal interface IDataImportService
+{
+    /// <summary>
+    /// Gets items of IUmtModel
+    /// </summary>
+    /// <returns>List of IUmtModel/returns>
+    IEnumerable<IUmtModel> Get();
+    /// <summary>
+    /// Starts importing of IUmtModel items
+    /// </summary>
+    /// <param name="observer">Observer used in UMT import service</param>
+    /// <returns>Result that includes observer and items that were imported</returns>
+    public SitefinityImportResult StartImport(ImportStateObserver observer);
+}
+
+/// <summary>
+/// Service for all import services
+/// </summary>
 /// <typeparam name="T">Model used by the Universal Migration Toolkit</typeparam>
 internal interface IDataImportService<T> where T : class, IUmtModel
 {

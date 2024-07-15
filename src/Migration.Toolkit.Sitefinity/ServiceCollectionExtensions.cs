@@ -1,4 +1,4 @@
-using Kentico.Xperience.UMT;
+﻿using Kentico.Xperience.UMT;
 using Kentico.Xperience.UMT.Model;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -46,6 +46,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IMediaImportService, MediaImportService>();
         services.AddTransient<IWebPageImportService, WebPageImportService>();
         services.AddTransient<IContentItemImportService, ContentItemImportService>();
+        services.AddTransient<IChannelImportService, ChannelImportService>();
 
         // Adapters
         services.AddTransient<IUmtAdapter<User, UserInfoModel>, UserInfoModelAdapter>();

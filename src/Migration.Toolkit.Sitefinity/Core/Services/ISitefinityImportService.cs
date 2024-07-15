@@ -31,4 +31,11 @@ public interface ISitefinityImportService
     /// <param name="observer">Observer used to log any errors or warnings during the import</param>
     /// <returns>Task, that will return object that represents import state</returns>
     ImportStateObserver StartImportContent(ImportStateObserver observer);
+
+    /// <summary>
+    /// Starts import of sites in Sitefinity into website channels in XbyK site.
+    /// </summary>
+    /// <param name="observer">Observer used to log any errors or warnings during the import</param>
+    /// <returns>Task, that will return object that represents import state</returns>
+    ImportStateObserver StartImportChannels(ImportStateObserver observer);
 }
