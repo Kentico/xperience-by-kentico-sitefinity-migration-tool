@@ -17,7 +17,7 @@ internal class DataClassModelAdapter(ILogger<DataClassModelAdapter> logger, Site
 
     protected override DataClassModel AdaptInternal(SitefinityType source)
     {
-        bool isPageType = (configuration.PageContentTypes != null && configuration.PageContentTypes.Any(x => x.Name.Equals(source.Name))) || forcedWebsiteTypes.Any(x => x.Equals(source.Name));
+        bool isPageType = (configuration.PageContentTypes != null && configuration.PageContentTypes.Any(x => x.Name.Equals(source.Name))) || Array.Exists(forcedWebsiteTypes, x => x.Equals(source.Name));
         var dataClassModel = new DataClassModel
         {
             ClassDisplayName = source.DisplayName,
