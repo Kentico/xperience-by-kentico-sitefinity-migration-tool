@@ -1,4 +1,4 @@
-using Kentico.Xperience.UMT.Model;
+﻿using Kentico.Xperience.UMT.Model;
 using Kentico.Xperience.UMT.Services;
 
 using Migration.Toolkit.Data.Models;
@@ -12,7 +12,7 @@ internal class MediaImportService(IImportService kenticoImportService,
                                     IMediaLibraryImportService mediaLibraryImportService,
                                     IUserImportService userImportService,
                                             IMediaProvider mediaProvider,
-                                            IUmtAdapter<Media, MediaFileDependencies, MediaFileModel> adapter) : IMediaImportService
+                                            IUmtAdapterWithDependencies<Media, MediaFileDependencies, MediaFileModel> adapter) : IMediaImportService
 {
     public IEnumerable<MediaFileModel> Get(MediaFileDependencies dependenciesModel)
     {

@@ -1,4 +1,4 @@
-using CMS.Helpers;
+﻿using CMS.Helpers;
 
 using Kentico.Xperience.UMT.Model;
 
@@ -10,7 +10,7 @@ using Migration.Toolkit.Sitefinity.Abstractions;
 using Migration.Toolkit.Sitefinity.Model;
 
 namespace Migration.Toolkit.Sitefinity.Adapters;
-internal class MediaModelAdapter(ILogger<MediaLibraryModelAdapter> logger, SitefinityDataConfiguration sitefinityDataConfiguration) : UmtAdapterBase<Media, MediaFileDependencies, MediaFileModel>(logger)
+internal class MediaModelAdapter(ILogger<MediaLibraryModelAdapter> logger, SitefinityDataConfiguration sitefinityDataConfiguration) : UmtAdapterBaseWithDependencies<Media, MediaFileDependencies, MediaFileModel>(logger)
 {
     protected override MediaFileModel? AdaptInternal(Media source, MediaFileDependencies mediaFileDependencies)
     {

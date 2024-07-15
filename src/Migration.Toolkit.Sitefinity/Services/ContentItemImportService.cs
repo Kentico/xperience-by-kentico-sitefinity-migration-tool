@@ -1,4 +1,4 @@
-using CMS.Helpers;
+﻿using CMS.Helpers;
 
 using Kentico.Xperience.UMT.Model;
 using Kentico.Xperience.UMT.Services;
@@ -16,15 +16,13 @@ namespace Migration.Toolkit.Sitefinity.Services
                                             IMediaImportService mediaImportService,
                                             IUserImportService userImportService,
                                             IContentProvider contentProvider,
-                                            IUmtAdapter<ContentItem, ContentDependencies, ContentItemSimplifiedModel> adapter) : IContentItemImportService
+                                            IUmtAdapterWithDependencies<ContentItem, ContentDependencies, ContentItemSimplifiedModel> adapter) : IContentItemImportService
     {
         private readonly string[] relatedColumnTypes = ["contentitemreference", "assets"];
 
         public IEnumerable<ContentItemSimplifiedModel> Get(ContentDependencies dependenciesModel)
         {
             var typeDefinitions = new List<SitefinityTypeDefinition>();
-
-            SitefinityTypeDefinition? test = null;
 
             foreach (var dataClass in dependenciesModel.DataClasses.Select(x => x.Value))
             {
@@ -60,28 +58,9 @@ namespace Migration.Toolkit.Sitefinity.Services
                     DataClassGuid = dataClassGuid,
                     RelatedFields = relatedFields
                 });
-
-                if (dataClass.ClassDisplayName == "Pillar")
-                {
-                    test = new SitefinityTypeDefinition
-                    {
-                        SitefinityTypeName = typeName,
-                        DataClassGuid = dataClassGuid,
-                        RelatedFields = relatedFields
-                    };
-                }
             }
 
             var contentItems = contentProvider.GetContentItems(typeDefinitions);
-
-            foreach (var contentItem in contentItems)
-            {
-                if (test != null && contentItem.DataClassGuid == test.DataClassGuid)
-                {
-                    var relatedItem = contentItem.GetValue<IEnumerable<RelatedItem>>("Image");
-                    Console.WriteLine(contentItem.GetValue<IEnumerable<RelatedItem>>("Image")?.Select(x => x.Id).Join("|"));
-                }
-            }
 
             return adapter.Adapt(contentItems, dependenciesModel);
         }

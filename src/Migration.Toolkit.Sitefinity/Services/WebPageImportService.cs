@@ -1,8 +1,8 @@
 ﻿using Kentico.Xperience.UMT.Model;
 using Kentico.Xperience.UMT.Services;
 
-using Migration.Tookit.Data.Core.Providers;
-using Migration.Tookit.Data.Models;
+using Migration.Toolkit.Data.Core.Providers;
+using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Sitefinity.Core.Adapters;
 using Migration.Toolkit.Sitefinity.Core.Services;
 using Migration.Toolkit.Sitefinity.Model;
@@ -15,7 +15,7 @@ namespace Migration.Toolkit.Sitefinity.Services
                                             IUserImportService userImportService,
                                             IContentItemImportService contentItemImportService,
                                             IContentProvider contentProvider,
-                                            IUmtAdapter<Page, ContentDependencies, WebPageItemModel> adapter) : IWebPageImportService
+                                            IUmtAdapterWithDependencies<Page, ContentDependencies, WebPageItemModel> adapter) : IWebPageImportService
     {
         public IEnumerable<WebPageItemModel> Get(ContentDependencies dependenciesModel)
         {
