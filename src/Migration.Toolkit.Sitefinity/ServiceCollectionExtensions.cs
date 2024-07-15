@@ -1,9 +1,8 @@
-﻿using Kentico.Xperience.UMT;
+using Kentico.Xperience.UMT;
 using Kentico.Xperience.UMT.Model;
 
 using Microsoft.Extensions.DependencyInjection;
 
-using Migration.Tookit.Data.Models;
 using Migration.Toolkit.Data.Configuration;
 using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Sitefinity.Adapters;

@@ -1,10 +1,10 @@
-﻿using CMS.Helpers;
+using CMS.Helpers;
 
 using Kentico.Xperience.UMT.Model;
 using Kentico.Xperience.UMT.Services;
 
-using Migration.Tookit.Data.Core.Providers;
-using Migration.Tookit.Data.Models;
+using Migration.Toolkit.Data.Core.Providers;
+using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Sitefinity.Core.Adapters;
 using Migration.Toolkit.Sitefinity.Core.Services;
 using Migration.Toolkit.Sitefinity.Model;

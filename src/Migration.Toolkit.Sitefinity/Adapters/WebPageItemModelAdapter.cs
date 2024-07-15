@@ -1,8 +1,8 @@
-﻿using Kentico.Xperience.UMT.Model;
+using Kentico.Xperience.UMT.Model;
 
 using Microsoft.Extensions.Logging;
 
-using Migration.Tookit.Data.Models;
+using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Sitefinity.Abstractions;
 using Migration.Toolkit.Sitefinity.Model;
 
