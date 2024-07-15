@@ -15,7 +15,7 @@ internal class SiteProvider(SitefinityDataConfiguration configuration, ILogger<S
         string siteFolder = Environment.CurrentDirectory + configuration.SitefinityModuleDeploymentFolderPath + "\\Multisite\\Content";
         if (!Directory.Exists(siteFolder))
         {
-            logger.LogError($"Sitefinity site folder does not exist. {siteFolder}");
+            logger.LogError("Sitefinity site folder does not exist. {SiteFolder}", siteFolder);
             return [];
         }
 
@@ -27,7 +27,7 @@ internal class SiteProvider(SitefinityDataConfiguration configuration, ILogger<S
 
             if (string.IsNullOrEmpty(fileContents))
             {
-                logger.LogWarning($"File {path} is empty.");
+                logger.LogWarning("File {Path} is empty.", path);
                 continue;
             }
 
@@ -48,7 +48,7 @@ internal class SiteProvider(SitefinityDataConfiguration configuration, ILogger<S
 
                 if (siteDefinition == null)
                 {
-                    logger.LogWarning($"Site definition not found for site: {title?.Name}");
+                    logger.LogWarning("Site definition not found for site: {SiteName}", title?.Name);
                     continue;
                 }
 
@@ -56,7 +56,7 @@ internal class SiteProvider(SitefinityDataConfiguration configuration, ILogger<S
 
                 if (jsonValue == null)
                 {
-                    logger.LogWarning($"Site definition is empty for site: {title?.Name}");
+                    logger.LogWarning("Site definition is empty for site: {SiteName}", title?.Name);
                     continue;
                 }
 
@@ -64,7 +64,7 @@ internal class SiteProvider(SitefinityDataConfiguration configuration, ILogger<S
 
                 if (site == null)
                 {
-                    logger.LogWarning($"Site definition is not a valid JSON for site: {title?.Name}");
+                    logger.LogWarning("Site definition is not a valid JSON for site: {SiteName}", title?.Name);
                     continue;
                 }
 

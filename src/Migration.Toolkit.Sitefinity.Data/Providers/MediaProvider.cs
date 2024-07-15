@@ -5,7 +5,6 @@ using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Data.Abstractions;
 using Migration.Toolkit.Data.Core.EF;
 using Migration.Toolkit.Data.Core.Providers;
-using Migration.Toolkit.Data.Models;
 
 using Progress.Sitefinity.RestSdk;
 
