@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 using Migration.Toolkit.Data.Configuration;
@@ -60,6 +60,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<ITypeProvider, TypeProvider>();
         services.AddTransient<IMediaProvider, MediaProvider>();
         services.AddTransient<IContentProvider, ContentProvider>();
+        services.AddTransient<ISiteProvider, SiteProvider>();
 
         return services;
     }
