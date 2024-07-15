@@ -18,7 +18,7 @@ internal class MediaModelAdapter(ILogger<MediaLibraryModelAdapter> logger, Sitef
 
         if (!mediaLibraries.TryGetValue(ValidationHelper.GetGuid(source.ParentId, Guid.Empty), out var library))
         {
-            logger.LogWarning($"Media library with GUID {source.ParentId} not found. Skipping media file {source.ItemDefaultUrl}.");
+            logger.LogWarning("Media library with GUID {ParentId} not found. Skipping media file {ItemDefaultUrl}.", source.ParentId, source.ItemDefaultUrl);
             return default;
         }
 

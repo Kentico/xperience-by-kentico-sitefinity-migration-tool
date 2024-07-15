@@ -108,7 +108,7 @@ internal class MediaProvider(IRestClient restClient, IDbContextFactory<Sitefinit
             }
             else
             {
-                logger.LogWarning($"Document with id {restMediaItem.Id} not found in Sitefinity database. Could not add LastModifiedBy or Owner");
+                logger.LogWarning("Document with id {RestMediaItemId} not found in Sitefinity database. Could not add LastModifiedBy or Owner", restMediaItem.Id);
             }
         }
     }

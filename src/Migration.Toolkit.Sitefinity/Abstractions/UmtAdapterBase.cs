@@ -33,7 +33,7 @@ internal abstract class UmtAdapterBase<TSourceModel, TTargetModel>(ILogger logge
 
             var adaptedModel = AdaptInternal(model);
 
-            if (Equals(adaptedModel, default(TTargetModel)) || object.Equals(adaptedModel, default(TTargetModel)))
+            if (Equals(adaptedModel, default(TTargetModel)) || adaptedModel == null)
             {
                 logger.LogWarning("Adapted model is null. Returning default.");
                 continue;
@@ -68,7 +68,7 @@ internal abstract class UmtAdapterBase<TSourceModel, TDependenciesModel, TTarget
 
             var adaptedModel = AdaptInternal(model, dependenciesModel);
 
-            if (Equals(adaptedModel, default(TTargetModel)) || object.Equals(adaptedModel, default(TTargetModel)))
+            if (Equals(adaptedModel, default(TTargetModel)) || adaptedModel == null)
             {
                 logger.LogWarning("Adapted model is null. Returning default.");
                 continue;
