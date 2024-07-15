@@ -28,20 +28,20 @@ internal class TypeProvider(SitefinityDataConfiguration configuration, ILogger<T
         string dynamicModulesPath = Environment.CurrentDirectory + configuration.SitefinityModuleDeploymentFolderPath + "\\Dynamic modules";
         if (!Directory.Exists(dynamicModulesPath))
         {
-            logger.LogError($"Sitefinity module deployment folder does not exist. {dynamicModulesPath}");
+            logger.LogError("Sitefinity module deployment folder does not exist. {DynamicModulesPath}", dynamicModulesPath);
             return [];
         }
 
         var dynamicTypes = new List<DynamicModuleType>();
 
         foreach (string path in Directory.EnumerateFiles(dynamicModulesPath, "*.sf", SearchOption.AllDirectories)
-                                            .Where(path => !excludedFileNames.Any(e => e.Equals(Path.GetFileName(path)))))
+                                            .Where(path => !Array.Exists(excludedFileNames, e => e.Equals(Path.GetFileName(path)))))
         {
             string fileContents = File.ReadAllText(path);
 
             if (string.IsNullOrEmpty(fileContents))
             {
-                logger.LogWarning($"File {path} is empty.");
+                logger.LogWarning("File {Path} is empty.", path);
                 continue;
             }
 
@@ -49,13 +49,13 @@ internal class TypeProvider(SitefinityDataConfiguration configuration, ILogger<T
 
             if (module == null)
             {
-                logger.LogWarning($"File {path} is not a valid module file.");
+                logger.LogWarning("File {Path} is not a valid module file.", path);
                 continue;
             }
 
             if (module.Types == null || module.Types.Count == 0)
             {
-                logger.LogWarning($"Module {module.Name} does not contain any types.");
+                logger.LogWarning("Module {ModuleName} does not contain any types.", module.Name);
                 continue;
             }
 
@@ -70,7 +70,7 @@ internal class TypeProvider(SitefinityDataConfiguration configuration, ILogger<T
         string deploymentFolderPath = Environment.CurrentDirectory + configuration.SitefinityModuleDeploymentFolderPath;
         if (!Directory.Exists(deploymentFolderPath))
         {
-            logger.LogError($"Sitefinity module deployment folder does not exist. {deploymentFolderPath}");
+            logger.LogError("Sitefinity module deployment folder does not exist. {DeploymentFolderPath}", deploymentFolderPath);
             return [];
         }
 
@@ -81,13 +81,13 @@ internal class TypeProvider(SitefinityDataConfiguration configuration, ILogger<T
         foreach (string sitefinityPath in sitefinityTypeDirectories)
         {
             foreach (string path in Directory.EnumerateFiles($"{deploymentFolderPath}\\{sitefinityPath}", "*.sf", SearchOption.AllDirectories)
-                                            .Where(path => !excludedFileNames.Any(e => e.Equals(Path.GetFileName(path)))))
+                                            .Where(path => !Array.Exists(excludedFileNames, e => e.Equals(Path.GetFileName(path)))))
             {
                 string fileContents = File.ReadAllText(path);
 
                 if (string.IsNullOrEmpty(fileContents))
                 {
-                    logger.LogWarning($"File {path} is empty.");
+                    logger.LogWarning("File {Path} is empty.", path);
                     continue;
                 }
 
@@ -95,7 +95,7 @@ internal class TypeProvider(SitefinityDataConfiguration configuration, ILogger<T
 
                 if (types == null)
                 {
-                    logger.LogWarning($"File {path} is not a valid type file.");
+                    logger.LogWarning("File {Path} is not a valid type file.", path);
                     continue;
                 }
 
@@ -120,7 +120,7 @@ internal class TypeProvider(SitefinityDataConfiguration configuration, ILogger<T
     {
         if (!Directory.Exists(staticSitefinityTypesDirectory))
         {
-            logger.LogInformation($"Static Sitefinity types folder does not exist. {staticSitefinityTypesDirectory}");
+            logger.LogInformation("Static Sitefinity types folder does not exist. {StaticSitefinityTypesDirectory}", staticSitefinityTypesDirectory);
             return [];
         }
 
@@ -132,7 +132,7 @@ internal class TypeProvider(SitefinityDataConfiguration configuration, ILogger<T
 
             if (string.IsNullOrEmpty(fileContents))
             {
-                logger.LogWarning($"File {path} is empty.");
+                logger.LogWarning("File {Path} is empty.", path);
                 continue;
             }
 
@@ -140,7 +140,7 @@ internal class TypeProvider(SitefinityDataConfiguration configuration, ILogger<T
 
             if (type == null)
             {
-                logger.LogWarning($"File {path} is not a valid static sitefinity file.");
+                logger.LogWarning("File {Path} is not a valid static sitefinity file.", path);
                 continue;
             }
 
