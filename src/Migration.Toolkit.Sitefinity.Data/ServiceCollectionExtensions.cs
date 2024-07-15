@@ -1,8 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-using Migration.Tookit.Data.Core.Providers;
-using Migration.Tookit.Data.Providers;
 using Migration.Toolkit.Data.Configuration;
 using Migration.Toolkit.Data.Core.EF;
 using Migration.Toolkit.Data.Core.Providers;

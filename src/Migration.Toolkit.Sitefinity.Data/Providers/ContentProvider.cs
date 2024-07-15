@@ -1,10 +1,10 @@
-﻿using Migration.Tookit.Data.Core.Providers;
-using Migration.Tookit.Data.Models;
+﻿using Migration.Toolkit.Data.Core.Providers;
+using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Data.Abstractions;
 
 using Progress.Sitefinity.RestSdk;
 
-namespace Migration.Tookit.Data.Providers;
+namespace Migration.Toolkit.Data.Providers;
 internal class ContentProvider(IRestClient restClient) : RestSdkBase(restClient), IContentProvider
 {
     public IEnumerable<ContentItem> GetContentItems(IEnumerable<SitefinityTypeDefinition> typeDefinitions)

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Migration.Tookit.Data.Models;
+namespace Migration.Toolkit.Data.Models;
 [Table("sf_media_content")]
 public partial class SitefinityMediaContent
 {

@@ -2,7 +2,7 @@
 
 using Progress.Sitefinity.RestSdk.Dto;
 
-namespace Migration.Tookit.Data.Models
+namespace Migration.Toolkit.Data.Models
 {
     public class Media : MediaDto, ISitefinityModel
     {

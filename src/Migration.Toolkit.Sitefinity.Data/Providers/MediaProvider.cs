@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-using Migration.Tookit.Data.Models;
+using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Data.Abstractions;
 using Migration.Toolkit.Data.Core.EF;
 using Migration.Toolkit.Data.Core.Providers;

@@ -1,6 +1,6 @@
-﻿using Migration.Tookit.Data.Models;
+﻿using Migration.Toolkit.Data.Models;
 
-namespace Migration.Tookit.Data.Core.Providers;
+namespace Migration.Toolkit.Data.Core.Providers;
 public interface IContentProvider
 {
     public IEnumerable<Page> GetPages();

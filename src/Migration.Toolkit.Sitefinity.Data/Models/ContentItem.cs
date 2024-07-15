@@ -2,7 +2,7 @@
 
 using Progress.Sitefinity.RestSdk.Dto.Content;
 
-namespace Migration.Tookit.Data.Models;
+namespace Migration.Toolkit.Data.Models;
 public class ContentItem : ContentWithParentDto, ISitefinityModel
 {
     public new Guid Id
