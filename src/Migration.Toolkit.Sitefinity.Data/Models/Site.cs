@@ -10,5 +10,5 @@ public partial class Site : ISitefinityModel
 
     public string? LiveUrl { get; set; }
 
-    public IEnumerable<SystemCulture>? Cultures { get; set; }
+    public IEnumerable<SystemCulture>? SystemCultures { get; set; }
 }

@@ -14,6 +14,22 @@ internal class ChannelModelAdapter(ILogger<ChannelModelAdapter> logger) : UmtAda
 {
     protected override IEnumerable<IUmtModel>? AdaptInternal(Site source, ChannelDependencies channelDependencies)
     {
+        var siteDefaultLanguage = source.SystemCultures?.FirstOrDefault(x => x.IsDefault);
+
+        if (siteDefaultLanguage == null)
+        {
+            logger.LogWarning($"Default language not found for site {source.Name}");
+            yield break;
+        }
+
+        var language = channelDependencies.ContentLanguages.Values.FirstOrDefault(x => x.ContentLanguageCultureFormat == siteDefaultLanguage.Culture);
+
+        if (language == null)
+        {
+            logger.LogWarning($"Imported language not found for site {source.Name}");
+            yield break;
+        }
+
         var channel = new ChannelModel
         {
             ChannelDisplayName = source.Name,
@@ -24,29 +40,13 @@ internal class ChannelModelAdapter(ILogger<ChannelModelAdapter> logger) : UmtAda
 
         yield return channel;
 
-        var siteDefaultLanguage = source.Cultures?.FirstOrDefault(x => x.IsDefault);
-
-        if (siteDefaultLanguage == null)
-        {
-            logger.LogWarning($"Default language not found for site {source.Name}");
-            yield break;
-        }
-
-        var language = channelDependencies.ContentLanguages.FirstOrDefault(x => x.ContentLanguageCultureFormat == siteDefaultLanguage.UICulture);
-
-        if (language == null)
-        {
-            logger.LogWarning($"Imported language not found for site {source.Name}");
-            yield break;
-        }
-
         var websiteChannel = new WebsiteChannelModel
         {
             WebsiteChannelChannelGuid = source.Id,
             WebsiteChannelGUID = source.Id,
             WebsiteChannelDefaultCookieLevel = 1000,
             WebsiteChannelDomain = source.LiveUrl,
-            WebsiteChannelHomePage = "home",
+            WebsiteChannelHomePage = "//home",
             WebsiteChannelPrimaryContentLanguageGuid = language.ContentLanguageGUID,
             WebsiteChannelStoreFormerUrls = false
         };

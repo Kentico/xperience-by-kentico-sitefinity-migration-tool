@@ -8,5 +8,5 @@ public partial class SystemCulture : ISitefinityModel
     public string? Key { get; set; }
     public string? ShortName { get; set; }
     public string? UICulture { get; set; }
-    public Guid Id { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public Guid Id => Guid.NewGuid();
 }

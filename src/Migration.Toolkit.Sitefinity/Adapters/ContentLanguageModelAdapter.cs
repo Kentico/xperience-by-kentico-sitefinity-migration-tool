@@ -1,4 +1,6 @@
-﻿using Kentico.Xperience.UMT.Model;
+﻿using CMS.ContentEngine;
+
+using Kentico.Xperience.UMT.Model;
 
 using Microsoft.Extensions.Logging;
 
@@ -8,12 +10,34 @@ using Migration.Toolkit.Sitefinity.Abstractions;
 namespace Migration.Toolkit.Sitefinity.Adapters;
 internal class ContentLanguageModelAdapter(ILogger<ContentLanguageModelAdapter> logger) : UmtAdapterBase<SystemCulture, ContentLanguageModel>(logger)
 {
-    protected override ContentLanguageModel? AdaptInternal(SystemCulture source) => new()
+    protected override ContentLanguageModel? AdaptInternal(SystemCulture source)
     {
-        ContentLanguageDisplayName = source.DisplayName,
-        ContentLanguageIsDefault = source.IsDefault,
-        ContentLanguageCultureFormat = source.Culture,
-        ContentLanguageName = source.Key,
-        ContentLanguageGUID = source.Id
+        var existing = ContentLanguageInfoProvider.ProviderObject.Get()
+                    .WhereEquals(nameof(ContentLanguageInfo.ContentLanguageCultureFormat), source.Culture)
+                    .FirstOrDefault();
+
+        if (existing != null)
+        {
+            return AdaptLanguage(existing);
+        }
+
+        return new ContentLanguageModel
+        {
+            ContentLanguageDisplayName = source.DisplayName,
+            ContentLanguageIsDefault = source.IsDefault,
+            ContentLanguageCultureFormat = source.Culture,
+            ContentLanguageName = source.Key,
+            ContentLanguageGUID = Guid.NewGuid(),
+            ContentLanguageFallbackContentLanguageGuid = null,
+        };
+    }
+
+    private ContentLanguageModel? AdaptLanguage(ContentLanguageInfo existing) => new()
+    {
+        ContentLanguageDisplayName = existing.ContentLanguageDisplayName,
+        ContentLanguageIsDefault = existing.ContentLanguageIsDefault,
+        ContentLanguageCultureFormat = existing.ContentLanguageCultureFormat,
+        ContentLanguageName = existing.ContentLanguageName,
+        ContentLanguageGUID = existing.ContentLanguageGUID,
     };
 }

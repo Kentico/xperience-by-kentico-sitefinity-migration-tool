@@ -2,6 +2,6 @@
 {
     public interface ISitefinityModel
     {
-        Guid Id { get; set; }
+        Guid Id { get; }
     }
 }

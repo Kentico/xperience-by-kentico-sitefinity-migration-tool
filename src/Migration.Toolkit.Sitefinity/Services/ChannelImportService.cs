@@ -11,18 +11,34 @@ using Migration.Toolkit.Sitefinity.Model;
 
 namespace Migration.Toolkit.Sitefinity.Services;
 internal class ChannelImportService(IImportService kenticoImportService,
+                                        IContentLanguageImportService contentLanguageImportService,
                                         ISiteProvider siteProvider,
                                         IUmtAdapterWithDependencies<Site, ChannelDependencies> adapter) : IChannelImportService
 {
-    public IEnumerable<IUmtModel> Get()
+    public IEnumerable<IUmtModel> Get(ChannelDependencies dependenciesModel)
     {
         var sites = siteProvider.GetSites();
 
-        return adapter.Adapt(sites, new ChannelDependencies { ContentLanguages = [] });
+        return adapter.Adapt(sites, dependenciesModel);
     }
+
     public SitefinityImportResult StartImport(ImportStateObserver observer)
     {
-        var channels = Get();
+        var languages = contentLanguageImportService.StartImport(observer);
+
+        var channelDependencies = new ChannelDependencies
+        {
+            ContentLanguages = languages.ImportedModels
+        };
+
+        return Import(observer, channelDependencies);
+    }
+
+    public SitefinityImportResult StartImportWithDependencies(ImportStateObserver observer, ChannelDependencies dependenciesModel) => Import(observer, dependenciesModel);
+
+    private SitefinityImportResult Import(ImportStateObserver observer, ChannelDependencies dependenciesModel)
+    {
+        var channels = Get(dependenciesModel);
 
         var importedModels = new Dictionary<Guid, IUmtModel>();
 

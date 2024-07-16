@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-using Migration.Tookit.Data.Models;
 using Migration.Toolkit.Data.Models;
 
 namespace Migration.Toolkit.Data.Core.EF;

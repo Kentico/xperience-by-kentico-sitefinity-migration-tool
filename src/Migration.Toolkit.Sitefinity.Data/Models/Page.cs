@@ -1,6 +1,4 @@
-﻿using Migration.Toolkit.Data.Models;
-
-using Progress.Sitefinity.RestSdk.Clients.Pages.Dto;
+﻿using Progress.Sitefinity.RestSdk.Clients.Pages.Dto;
 
 namespace Migration.Toolkit.Data.Models;
 public class Page : PageNodeDto, ISitefinityModel

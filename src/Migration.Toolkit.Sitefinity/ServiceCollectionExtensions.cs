@@ -47,6 +47,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IWebPageImportService, WebPageImportService>();
         services.AddTransient<IContentItemImportService, ContentItemImportService>();
         services.AddTransient<IChannelImportService, ChannelImportService>();
+        services.AddTransient<IContentLanguageImportService, ContentLanguageImportService>();
 
         // Adapters
         services.AddTransient<IUmtAdapter<User, UserInfoModel>, UserInfoModelAdapter>();
@@ -56,6 +57,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IUmtAdapterWithDependencies<Page, ContentDependencies, WebPageItemModel>, WebPageItemModelAdapter>();
         services.AddTransient<IUmtAdapterWithDependencies<ContentItem, ContentDependencies, ContentItemSimplifiedModel>, ContentItemSimplifiedModelAdapter>();
         services.AddTransient<IUmtAdapterWithDependencies<Site, ChannelDependencies>, ChannelModelAdapter>();
+        services.AddTransient<IUmtAdapter<SystemCulture, ContentLanguageModel>, ContentLanguageModelAdapter>();
 
         // Factories
         services.AddSingleton<IFieldTypeFactory, FieldTypeFactory>();

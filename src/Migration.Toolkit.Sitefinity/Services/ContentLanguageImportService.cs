@@ -18,7 +18,7 @@ internal class ContentLanguageImportService(IImportService kenticoImportService,
 
         var cultures = new Dictionary<string, SystemCulture>();
 
-        foreach (var siteCulture in sites.Select(x => x.Cultures))
+        foreach (var siteCulture in sites.Select(x => x.SystemCultures))
         {
             if (siteCulture == null)
             {
