@@ -1,4 +1,4 @@
-using Migration.Toolkit.Data.Core.Providers;
+﻿using Migration.Toolkit.Data.Core.Providers;
 using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Data.Abstractions;
 
@@ -53,12 +53,25 @@ internal class ContentProvider(IRestClient restClient, IDbContextFactory<Sitefin
 
     public IEnumerable<Page> GetPages()
     {
+        using var context = sitefinityContext.CreateDbContext();
+        pageNodes ??= context.PageNodes.ToList();
+
         var getAllArgs = new GetAllArgs
         {
             Type = RestClientContentTypes.Pages
         };
 
         var pages = GetUsingBatches<Page>(getAllArgs);
+
+        foreach (var page in pages)
+        {
+            var pageNode = pageNodes.FirstOrDefault(x => x.Id == page.Id);
+
+            if (pageNode != null)
+            {
+                page.Owner = pageNode.Owner;
+            }
+        }
 
         return pages;
     }

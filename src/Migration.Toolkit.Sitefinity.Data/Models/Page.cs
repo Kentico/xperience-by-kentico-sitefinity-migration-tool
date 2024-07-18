@@ -16,4 +16,6 @@ public class Page : PageNodeDto, ISitefinityModel
         }
         set => base.Id = value.ToString();
     }
+    public Guid Owner { get; set; }
+    public DateTime DateCreated { get; set; }
 }
