@@ -5,9 +5,7 @@ using System.Text.Json;
 
 using CMS.Core;
 using CMS.DataEngine;
-//using CMS.DataEngine;
 
-//using Kentico.Xperience.UMT;
 using Kentico.Xperience.UMT.Services;
 
 using Microsoft.Extensions.Configuration;
@@ -15,7 +13,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 using Migration.Toolkit.Data.Configuration;
-//using Microsoft.Extensions.Logging;
 
 using Migration.Toolkit.Sitefinity;
 using Migration.Toolkit.Sitefinity.Configuration;
