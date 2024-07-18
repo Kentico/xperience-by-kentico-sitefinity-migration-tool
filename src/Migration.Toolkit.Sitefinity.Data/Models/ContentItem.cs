@@ -1,4 +1,4 @@
-﻿using Migration.Toolkit.Data.Models;
+﻿using System.Text.Json.Serialization;
 
 using Progress.Sitefinity.RestSdk.Dto.Content;
 
@@ -20,4 +20,10 @@ public class ContentItem : ContentWithParentDto, ISitefinityModel
     }
 
     public Guid DataClassGuid { get; set; }
+    public Guid Owner { get; set; }
+    public DateTime LastModified { get; set; }
+    public string? ChangeType { get; set; }
+    public string? Culture { get; set; }
+    [JsonIgnore]
+    public IEnumerable<ContentItem> AlternateLanguageContentItems { get; set; } = [];
 }

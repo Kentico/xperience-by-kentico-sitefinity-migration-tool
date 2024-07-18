@@ -15,5 +15,5 @@ public partial class SitefinityContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
     public virtual DbSet<SitefinityMediaContent> MediaContent { get; set; }
-
+    public virtual DbSet<SitefinityVersionChange> VersionChanges { get; set; }
 }
