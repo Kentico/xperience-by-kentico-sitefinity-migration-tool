@@ -27,7 +27,7 @@ internal class MediaModelAdapter(ILogger<MediaLibraryModelAdapter> logger, Sitef
         users.TryGetValue(ValidationHelper.GetGuid(source.CreatedBy, Guid.Empty), out var createdByUser);
         users.TryGetValue(ValidationHelper.GetGuid(source.LastModifiedBy, Guid.Empty), out var modifiedByUser);
 
-        var uri = new Uri(sitefinityDataConfiguration.SitefinitySiteUrl + source.ItemDefaultUrl, UriKind.Absolute);
+        var uri = new Uri("https://" + sitefinityDataConfiguration.SitefinitySiteDomain + source.ItemDefaultUrl, UriKind.Absolute);
 
         string mediaPath = uri.Segments.Skip(4).SkipLast(1).Join("/");
 
@@ -47,7 +47,7 @@ internal class MediaModelAdapter(ILogger<MediaLibraryModelAdapter> logger, Sitef
             FileCreatedByUserGuid = createdByUser?.UserGUID,
             DataSourceUrl = Uri.IsWellFormedUriString(source.Url, UriKind.Absolute)
             ? source.Url
-            : sitefinityDataConfiguration.SitefinitySiteUrl + source.Url,
+            : "https://" + sitefinityDataConfiguration.SitefinitySiteDomain + source.Url,
         };
 
         if (source is Image image)

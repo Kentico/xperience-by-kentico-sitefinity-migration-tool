@@ -8,10 +8,12 @@
         /// <summary>
         /// Name of Sitefinity content type. OOB or custom dynamic module.
         /// </summary>
-        public required string Name { get; set; }
+        public required string TypeName { get; set; }
         /// <summary>
         /// Root path where the child pages will be created in XbyK
         /// </summary>
         public required string PageRootPath { get; set; }
+
+        public required string PageTemplateType { get; set; }
     }
 }

@@ -10,5 +10,7 @@ public partial class Site : ISitefinityModel
 
     public string? LiveUrl { get; set; }
 
+    public string? StagingUrl { get; set; }
+
     public IEnumerable<SystemCulture>? SystemCultures { get; set; }
 }
