@@ -96,6 +96,8 @@ internal abstract class UmtAdapterBase<TSourceModel, TTargetModel>(ILogger logge
 {
     public IEnumerable<TTargetModel> Adapt(IEnumerable<TSourceModel> source)
     {
+        var adaptedModelsList = new List<TTargetModel>();
+
         foreach (var model in source)
         {
             if (model.Equals(default(TSourceModel)))
@@ -118,8 +120,10 @@ internal abstract class UmtAdapterBase<TSourceModel, TTargetModel>(ILogger logge
                 continue;
             }
 
-            yield return adaptedModel;
+            adaptedModelsList.Add(adaptedModel);
         }
+
+        return adaptedModelsList;
     }
 
     protected abstract TTargetModel? AdaptInternal(TSourceModel source);
@@ -131,6 +135,8 @@ internal abstract class UmtAdapterBaseWithDependencies<TSourceModel, TDependenci
 {
     public IEnumerable<TTargetModel> Adapt(IEnumerable<TSourceModel> source, TDependenciesModel dependenciesModel)
     {
+        var adaptedModelsList = new List<TTargetModel>();
+
         foreach (var model in source)
         {
             if (model.Equals(default(TSourceModel)))
@@ -153,8 +159,10 @@ internal abstract class UmtAdapterBaseWithDependencies<TSourceModel, TDependenci
                 continue;
             }
 
-            yield return adaptedModel;
+            adaptedModelsList.Add(adaptedModel);
         }
+
+        return adaptedModelsList;
     }
 
     protected abstract TTargetModel? AdaptInternal(TSourceModel source, TDependenciesModel dependenciesModel);
