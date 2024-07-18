@@ -1,4 +1,4 @@
-using CMS.ContentEngine;
+﻿using CMS.ContentEngine;
 using CMS.Helpers;
 
 using Kentico.Xperience.UMT.Model;
@@ -34,11 +34,7 @@ internal class ContentItemSimplifiedModelAdapter(ILogger<ContentItemSimplifiedMo
 
         var users = dependenciesModel.Users;
 
-        if (!users.TryGetValue(ValidationHelper.GetGuid(source.Owner, Guid.Empty), out var createdByUser))
-        {
-            logger.LogWarning("User with UserGuid of {Owner} not found. Skipping content item {ItemDefaultUrl}.", source.Owner, source.ItemDefaultUrl);
-            return default;
-        }
+        users.TryGetValue(ValidationHelper.GetGuid(source.Owner, Guid.Empty), out var createdByUser);
 
         var languageData = contentHelper.GetLanguageData(dependenciesModel.ContentLanguages.Values.Select(language => language.ContentLanguageName), source.Title, dataClassModel, createdByUser, source);
 

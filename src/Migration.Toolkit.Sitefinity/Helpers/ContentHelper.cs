@@ -13,7 +13,7 @@ using Progress.Sitefinity.RestSdk.Dto;
 namespace Migration.Toolkit.Sitefinity.Helpers;
 internal class ContentHelper(ILogger<ContentHelper> logger, ITypeProvider typeProvider, IFieldTypeFactory fieldTypeFactory) : IContentHelper
 {
-    public IEnumerable<ContentItemLanguageData> GetLanguageData(IEnumerable<string?> languageNames, string title, DataClassModel dataClassModel, UserInfoModel user, SdkItem sdkItem)
+    public IEnumerable<ContentItemLanguageData> GetLanguageData(IEnumerable<string?> languageNames, string title, DataClassModel dataClassModel, UserInfoModel? user, SdkItem sdkItem)
     {
         var types = typeProvider.GetAllTypes();
 
@@ -62,7 +62,7 @@ internal class ContentHelper(ILogger<ContentHelper> logger, ITypeProvider typePr
             {
                 DisplayName = title,
                 LanguageName = languageName,
-                UserGuid = user.UserGUID,
+                UserGuid = user?.UserGUID,
                 ContentItemData = contentItemData,
                 VersionStatus = VersionStatus.Published,
             });
