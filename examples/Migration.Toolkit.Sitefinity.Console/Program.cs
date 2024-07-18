@@ -5,6 +5,8 @@ using System.Text.Json;
 
 using CMS.Core;
 using CMS.DataEngine;
+using CMS.Helpers;
+
 //using CMS.DataEngine;
 
 //using Kentico.Xperience.UMT;
@@ -36,8 +38,8 @@ services.AddLogging(b => b.AddDebug().AddSimpleConsole(options => options.Single
 services.AddSitefinityMigrationToolkit(new SitefinityDataConfiguration
 {
     SitefinityConnectionString = root.GetValue<string>("ConnectionStrings:SitefinityConnectionString") ?? "",
-    SitefinitySiteUrl = root.GetValue<string>("Sitefinity:Url") ?? "",
-    SitefinityRestApiUrl = (root.GetValue<string>("Sitefinity:Url") ?? "") + root.GetValue<string>("Sitefinity:WebServicePath") ?? "",
+    SitefinitySiteDomain = root.GetValue<string>("Sitefinity:Domain") ?? "",
+    SitefinityRestApiUrl = "https://" + (root.GetValue<string>("Sitefinity:Domain") ?? "") + root.GetValue<string>("Sitefinity:WebServicePath") ?? "",
     SitefinityModuleDeploymentFolderPath = root.GetValue<string>("Sitefinity:ModuleDeploymentFolderPath") ?? "",
 }, new SitefinityImportConfiguration
 {
@@ -60,10 +62,14 @@ importObserver.ImportedInfo += (model, info) => Console.WriteLine($"{model.Print
 importObserver.Exception += (model, uniqueId, exception) => Console.WriteLine($"Error in model {model.PrintMe()}: '{uniqueId}': {exception}");
 
 // initiate import
-var observer = importService.StartImportMedia(importObserver);
+var observer = importService.StartImportContent(importObserver);
 
 // wait until import finishes
 await observer.ImportCompletedTask;
+
+Console.WriteLine("Clearing Cache...");
+CacheHelper.ClearCache();
+Console.WriteLine("Cache Cleared!");
 
 Console.WriteLine("Finished!");
 
