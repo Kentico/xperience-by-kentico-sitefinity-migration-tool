@@ -2,7 +2,7 @@
 
 namespace Migration.Toolkit.Sitefinity.Core.Services;
 /// <summary>
-/// Service for importing content types from Sitefinity to XbyK site
+/// Service for importing content types from Sitefinity to XbyK site.
 /// </summary>
 internal interface IDataClassImportService : IDataImportService<DataClassModel>
 {

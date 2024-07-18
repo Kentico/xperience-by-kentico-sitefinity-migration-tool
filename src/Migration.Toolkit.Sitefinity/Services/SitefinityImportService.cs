@@ -8,6 +8,8 @@ internal class SitefinityImportService(IUserImportService userImportService,
                                         IMediaImportService mediaImportService) : ISitefinityImportService
 {
     public ImportStateObserver StartImportUsers(ImportStateObserver observer) => userImportService.StartImport(observer).Observer;
+
     public ImportStateObserver StartImportContentTypes(ImportStateObserver observer) => contentTypeImportService.StartImport(observer).Observer;
+
     public ImportStateObserver StartImportMedia(ImportStateObserver observer) => mediaImportService.StartImport(observer).Observer;
 }

@@ -5,7 +5,7 @@ using Migration.Toolkit.Data.Models;
 
 namespace Migration.Toolkit.Data.Core.EF;
 /// <summary>
-/// Entity Framework Context for Sitefinity database
+/// Entity Framework Context for Sitefinity database.
 /// </summary>
 public partial class SitefinityContext : DbContext
 {

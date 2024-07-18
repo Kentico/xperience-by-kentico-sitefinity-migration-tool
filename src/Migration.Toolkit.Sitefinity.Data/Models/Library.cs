@@ -1,6 +1,9 @@
 ﻿using Progress.Sitefinity.RestSdk.Dto;
 
 namespace Migration.Toolkit.Data.Models;
+/// <summary>
+/// SdkItem model for Sitefinity libraries.
+/// </summary>
 public class Library : LibraryDto, ISitefinityModel
 {
     public new Guid Id
