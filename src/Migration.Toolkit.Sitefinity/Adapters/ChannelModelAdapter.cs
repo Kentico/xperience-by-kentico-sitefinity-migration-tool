@@ -46,7 +46,7 @@ internal class ChannelModelAdapter(ILogger<ChannelModelAdapter> logger) : UmtAda
             WebsiteChannelGUID = source.Id,
             WebsiteChannelDefaultCookieLevel = 1000,
             WebsiteChannelDomain = source.LiveUrl,
-            WebsiteChannelHomePage = "//home",
+            WebsiteChannelHomePage = "/home",
             WebsiteChannelPrimaryContentLanguageGuid = language.ContentLanguageGUID,
             WebsiteChannelStoreFormerUrls = false
         };
