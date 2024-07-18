@@ -36,6 +36,7 @@ internal interface IDataImportService<in TDependencies, T> where TDependencies :
     /// <summary>
     /// Gets items of type <typeparamref name="T"/>.
     /// </summary>
+    /// <param name="dependenciesModel">Dependency objects used in adapter</param>
     /// <returns>List of <typeparamref name="T"/></returns>
     IEnumerable<T> Get(TDependencies dependenciesModel);
 

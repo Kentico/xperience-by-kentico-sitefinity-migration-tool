@@ -5,10 +5,10 @@ namespace Migration.Toolkit.Data.Abstractions;
 /// <summary>
 /// Base class for Sitefinity REST SDK providers. Ensures that the REST client is initialized.
 /// </summary>
-internal class RestSdkBase
+internal abstract class RestSdkBase
 {
-    private readonly IRestClient restClient;
-    public RestSdkBase(IRestClient restClient)
+    protected readonly IRestClient RestClient;
+    protected RestSdkBase(IRestClient restClient)
     {
         var args = new RequestArgs();
         try
@@ -20,7 +20,7 @@ internal class RestSdkBase
             throw new InvalidOperationException("Failed to initialize REST client. Please ensure Sitefinity site is running and web services have been turned on.");
         }
 
-        this.restClient = restClient;
+        RestClient = restClient;
     }
 
     protected IEnumerable<T> GetUsingBatches<T>(GetAllArgs getAllArgs) where T : SdkItem
@@ -32,7 +32,7 @@ internal class RestSdkBase
         getAllArgs.Skip = skip;
         getAllArgs.Take = take;
 
-        var result = restClient.GetItems<T>(getAllArgs);
+        var result = RestClient.GetItems<T>(getAllArgs);
 
         while (result.Result.Items.Any())
         {
@@ -41,7 +41,7 @@ internal class RestSdkBase
             skip += take;
             getAllArgs.Skip = skip;
 
-            result = restClient.GetItems<T>(getAllArgs);
+            result = RestClient.GetItems<T>(getAllArgs);
         }
 
         return items;

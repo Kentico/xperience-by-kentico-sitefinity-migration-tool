@@ -1,7 +1,4 @@
-﻿#pragma warning disable S1135 // this is sample, todos are here for end user
-// See https://aka.ms/new-console-template for more information
-
-using System.Text.Json;
+﻿using System.Text.Json;
 
 using CMS.Core;
 using CMS.DataEngine;
@@ -34,7 +31,7 @@ services.AddSitefinityMigrationToolkit(new SitefinityDataConfiguration
 {
     SitefinityConnectionString = root.GetValue<string>("ConnectionStrings:SitefinityConnectionString") ?? "",
     SitefinitySiteUrl = root.GetValue<string>("Sitefinity:Url") ?? "",
-    SitefinityRestApiUrl = (root.GetValue<string>("Sitefinity:Url") ?? "") + root.GetValue<string>("Sitefinity:WebServicePath") ?? "",
+    SitefinityRestApiUrl = root.GetValue<string>("Sitefinity:Url") + root.GetValue<string>("Sitefinity:WebServicePath"),
     SitefinityModuleDeploymentFolderPath = root.GetValue<string>("Sitefinity:ModuleDeploymentFolderPath") ?? "",
 }, new SitefinityImportConfiguration
 {
@@ -64,4 +61,3 @@ await observer.ImportCompletedTask;
 
 Console.WriteLine("Finished!");
 
-#pragma warning restore S1135
