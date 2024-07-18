@@ -12,7 +12,7 @@ using Migration.Toolkit.Sitefinity.Core.Helpers;
 using Migration.Toolkit.Sitefinity.Model;
 
 namespace Migration.Toolkit.Sitefinity.Adapters;
-internal class WebPageItemModelAdapter(ILogger<WebPageItemModelAdapter> logger, IContentHelper contentHelper, ISiteProvider siteProvider, SitefinityDataConfiguration dataConfiguration) : UmtAdapterBaseWithDependencies<Page, ContentDependencies, ContentItemSimplifiedModel>(logger)
+internal class WebPageModelAdapter(ILogger<WebPageModelAdapter> logger, IContentHelper contentHelper, ISiteProvider siteProvider, SitefinityDataConfiguration dataConfiguration) : UmtAdapterBaseWithDependencies<Page, ContentDependencies, ContentItemSimplifiedModel>(logger)
 {
     protected override ContentItemSimplifiedModel? AdaptInternal(Page source, ContentDependencies dependenciesModel)
     {

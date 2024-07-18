@@ -56,7 +56,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IUmtAdapterWithDependencies<SitefinityType, DataClassDependencies>, DataClassModelAdapter>();
         services.AddTransient<IUmtAdapter<Library, MediaLibraryModel>, MediaLibraryModelAdapter>();
         services.AddTransient<IUmtAdapterWithDependencies<Media, MediaFileDependencies, MediaFileModel>, MediaModelAdapter>();
-        services.AddTransient<IUmtAdapterWithDependencies<Page, ContentDependencies, ContentItemSimplifiedModel>, WebPageItemModelAdapter>();
+        services.AddTransient<IUmtAdapterWithDependencies<Page, ContentDependencies, ContentItemSimplifiedModel>, WebPageModelAdapter>();
         services.AddTransient<IUmtAdapterWithDependencies<ContentItem, ContentDependencies, ContentItemSimplifiedModel>, ContentItemSimplifiedModelAdapter>();
         services.AddTransient<IUmtAdapterWithDependencies<Site, ChannelDependencies>, ChannelModelAdapter>();
         services.AddTransient<IUmtAdapter<SystemCulture, ContentLanguageModel>, ContentLanguageModelAdapter>();
