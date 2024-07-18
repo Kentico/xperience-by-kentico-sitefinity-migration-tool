@@ -1,4 +1,4 @@
-﻿using CMS.Helpers;
+using CMS.Helpers;
 
 using Kentico.Xperience.UMT.Model;
 
@@ -64,7 +64,7 @@ internal class WebPageModelAdapter(ILogger<WebPageModelAdapter> logger, IContent
         {
             ContentItemGUID = source.Id,
             ContentTypeName = pageNodeClass.ClassName,
-            Name = ValidationHelper.GetCodeName(source.Title),
+            Name = $"{ValidationHelper.GetCodeName(source.Title)}-{source.Id}",
             LanguageData = languageData.ToList(),
             IsReusable = false,
             PageData = pageData,

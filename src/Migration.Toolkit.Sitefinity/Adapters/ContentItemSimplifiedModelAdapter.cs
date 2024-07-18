@@ -1,4 +1,4 @@
-﻿using CMS.ContentEngine;
+using CMS.ContentEngine;
 using CMS.Helpers;
 
 using Kentico.Xperience.UMT.Model;
@@ -108,7 +108,7 @@ internal class ContentItemSimplifiedModelAdapter(ILogger<ContentItemSimplifiedMo
             {
                 ContentItemGUID = source.Id,
                 ContentTypeName = dataClassModel.ClassName,
-                Name = $"{ValidationHelper.GetCodeName(source.Title)}-{Guid.NewGuid()}",
+                Name = $"{ValidationHelper.GetCodeName(source.Title)}-{source.Id}",
                 LanguageData = languageData.ToList(),
                 IsReusable = false,
                 PageData = pageData,
@@ -129,7 +129,7 @@ internal class ContentItemSimplifiedModelAdapter(ILogger<ContentItemSimplifiedMo
             {
                 ContentItemGUID = source.Id,
                 ContentTypeName = dataClassModel.ClassName,
-                Name = $"{ValidationHelper.GetCodeName(source.Title)}-{Guid.NewGuid()}",
+                Name = $"{ValidationHelper.GetCodeName(source.Title)}-{source.Id}",
                 LanguageData = languageData.ToList(),
                 IsReusable = true,
                 PageData = pageData
@@ -144,7 +144,7 @@ internal class ContentItemSimplifiedModelAdapter(ILogger<ContentItemSimplifiedMo
     {
         ContentItemGUID = source.Id,
         ContentTypeName = dataClassModel.ClassName,
-        Name = $"{ValidationHelper.GetCodeName(source.Title)}-{Guid.NewGuid()}",
+        Name = $"{ValidationHelper.GetCodeName(source.Title)}-{source.Id}",
         LanguageData = languageData.ToList(),
         IsReusable = true,
         ContentItemContentFolderGUID = rootFolder.ContentFolderGUID,
