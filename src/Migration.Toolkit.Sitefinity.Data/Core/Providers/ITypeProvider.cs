@@ -11,11 +11,15 @@ public interface ITypeProvider
     /// </summary>
     /// <returns>List of Sitefinity types</returns>
     IEnumerable<SitefinityType> GetDynamicModuleTypes();
+
+
     /// <summary>
     /// Gets static Sitefinity types defined in the StaticSitefinityTypes folder
     /// </summary>
     /// <returns>List of Sitefinity types</returns>
     IEnumerable<SitefinityType> GetSitefinityTypes();
+
+
     /// <summary>
     /// Gets both static and dynamic module types
     /// </summary>
