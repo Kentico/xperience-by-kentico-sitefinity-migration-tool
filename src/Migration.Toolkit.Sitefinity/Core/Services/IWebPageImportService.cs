@@ -4,7 +4,7 @@ using Migration.Toolkit.Sitefinity.Model;
 
 namespace Migration.Toolkit.Sitefinity.Core.Services
 {
-    internal interface IWebPageImportService : IDataImportServiceWithDependencies<ContentDependencies, WebPageItemModel>
+    internal interface IWebPageImportService : IDataImportServiceWithDependencies<ContentDependencies, ContentItemSimplifiedModel>
     {
     }
 }

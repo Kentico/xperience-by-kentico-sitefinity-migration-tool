@@ -10,52 +10,86 @@ using Migration.Toolkit.Sitefinity.Model;
 namespace Migration.Toolkit.Sitefinity.Services
 {
     internal class WebPageImportService(IImportService kenticoImportService,
+                                            IContentLanguageImportService contentLanguageImportService,
+                                            IChannelImportService channelImportService,
                                             IDataClassImportService dataClassImportService,
+                                            IMediaLibraryImportService mediaLibraryImportService,
                                             IMediaImportService mediaImportService,
                                             IUserImportService userImportService,
-                                            IContentItemImportService contentItemImportService,
                                             IContentProvider contentProvider,
-                                            IUmtAdapterWithDependencies<Page, ContentDependencies, WebPageItemModel> adapter) : IWebPageImportService
+                                            IUmtAdapterWithDependencies<Page, ContentDependencies, ContentItemSimplifiedModel> adapter) : IWebPageImportService
     {
-        public IEnumerable<WebPageItemModel> Get(ContentDependencies dependenciesModel)
+        public IEnumerable<ContentItemSimplifiedModel> Get(ContentDependencies dependenciesModel)
         {
             var pages = contentProvider.GetPages();
 
-            foreach (var page in pages)
-            {
-                Console.WriteLine(page.UrlName);
-            }
-
             return adapter.Adapt(pages, dependenciesModel);
         }
-        public SitefinityImportResult<WebPageItemModel> StartImport(ImportStateObserver observer)
+        public SitefinityImportResult<ContentItemSimplifiedModel> StartImport(ImportStateObserver observer)
         {
-            var mediaFiles = mediaImportService.StartImport(observer);
+            var languages = contentLanguageImportService.StartImport(observer);
 
-            var users = userImportService.StartImport(mediaFiles.Observer);
+            observer.ImportCompletedTask.Wait();
 
-            var dataClasses = dataClassImportService.StartImport(users.Observer);
+            var channelDependencies = new ChannelDependencies
+            {
+                ContentLanguages = languages.ImportedModels
+            };
+
+            var channels = channelImportService.StartImportWithDependencies(observer, channelDependencies);
+
+            observer.ImportCompletedTask.Wait();
+
+            var users = userImportService.StartImport(observer);
+
+            observer.ImportCompletedTask.Wait();
+
+            var mediaLibraries = mediaLibraryImportService.StartImport(observer);
+
+            observer.ImportCompletedTask.Wait();
+
+            var mediaFilesDependencies = new MediaFileDependencies
+            {
+                MediaLibraries = mediaLibraries.ImportedModels,
+                Users = users.ImportedModels
+            };
+
+            var mediaFiles = mediaImportService.StartImportWithDependencies(observer, mediaFilesDependencies);
+
+            observer.ImportCompletedTask.Wait();
+
+            var dataClassDependencies = new DataClassDependencies
+            {
+                Channels = channels.ImportedModels.Values.OfType<ChannelModel>().ToDictionary(x => x.ChannelGUID)
+            };
+
+            var dataClasses = dataClassImportService.StartImportWithDependencies(observer, dataClassDependencies);
+
+            observer.ImportCompletedTask.Wait();
 
             var dependencies = new ContentDependencies
             {
                 MediaFiles = mediaFiles.ImportedModels,
                 Users = users.ImportedModels,
-                DataClasses = dataClasses.ImportedModels
+                DataClasses = dataClasses.ImportedModels.Values.OfType<DataClassModel>().ToDictionary(x => x.ClassGUID),
+                Channels = channels.ImportedModels.Values.OfType<ChannelModel>().ToDictionary(x => x.ChannelGUID),
+                ContentLanguages = languages.ImportedModels
             };
 
-            var contentItems = contentItemImportService.StartImportWithDependencies(dataClasses.Observer, dependencies);
-
-            dependencies.ContentItems = contentItems.ImportedModels;
-
-            var pages = Get(dependencies);
-
-            return new SitefinityImportResult<WebPageItemModel>
-            {
-                ImportedModels = pages.ToDictionary(x => x.WebPageItemGUID),
-                Observer = observer// kenticoImportService.StartImport(pages, dataClasses.Observer)
-            };
+            return Import(observer, dependencies);
         }
 
-        public SitefinityImportResult<WebPageItemModel> StartImportWithDependencies(ImportStateObserver observer, ContentDependencies dependenciesModel) => throw new NotImplementedException();
+        public SitefinityImportResult<ContentItemSimplifiedModel> StartImportWithDependencies(ImportStateObserver observer, ContentDependencies dependenciesModel) => Import(observer, dependenciesModel);
+
+        private SitefinityImportResult<ContentItemSimplifiedModel> Import(ImportStateObserver observer, ContentDependencies dependencies)
+        {
+            var pages = Get(dependencies);
+
+            return new SitefinityImportResult<ContentItemSimplifiedModel>
+            {
+                ImportedModels = pages.ToDictionary(x => x.ContentItemGUID),
+                Observer = kenticoImportService.StartImport(pages, observer)
+            };
+        }
     }
 }
