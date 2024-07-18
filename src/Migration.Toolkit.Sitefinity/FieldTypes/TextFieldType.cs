@@ -1,17 +1,18 @@
 ﻿using Kentico.Xperience.UMT.Model;
 
 using Migration.Toolkit.Data.Models;
+using Migration.Toolkit.Sitefinity.Abstractions;
 using Migration.Toolkit.Sitefinity.Core;
 
 namespace Migration.Toolkit.Sitefinity.FieldTypes;
 /// <summary>
 /// Field type for Sitefinity Text field: "Telerik.Sitefinity.Web.UI.Fields.TextField"
 /// </summary>
-public class TextFieldType : IFieldType
+public class TextFieldType : FieldTypeBase, IFieldType
 {
     public string SitefinityWidgetTypeName => "Telerik.Sitefinity.Web.UI.Fields.TextField";
 
-    public string? GetColumnSize(Field sitefinityField)
+    public override string? GetColumnSize(Field sitefinityField)
     {
         if (sitefinityField.FieldTypeDisplayName == null)
         {
@@ -26,7 +27,7 @@ public class TextFieldType : IFieldType
         return sitefinityField.DBLength;
     }
 
-    public string GetColumnType(Field sitefinityField)
+    public override string GetColumnType(Field sitefinityField)
     {
         if (sitefinityField.FieldTypeDisplayName == null)
         {
@@ -46,7 +47,7 @@ public class TextFieldType : IFieldType
         return "text";
     }
 
-    public FormFieldSettings GetSettings(Field sitefinityField)
+    public override FormFieldSettings GetSettings(Field sitefinityField)
     {
         if (sitefinityField.FieldTypeDisplayName == null)
         {
@@ -78,7 +79,7 @@ public class TextFieldType : IFieldType
         };
     }
 
-    public FormField HandleSpecialCase(FormField formField, Field sitefinityField)
+    public override FormField HandleSpecialCase(FormField formField, Field sitefinityField)
     {
         if (sitefinityField.FieldTypeDisplayName == null)
         {

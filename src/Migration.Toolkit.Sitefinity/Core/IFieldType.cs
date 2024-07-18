@@ -2,6 +2,8 @@
 
 using Migration.Toolkit.Data.Models;
 
+using Progress.Sitefinity.RestSdk.Dto;
+
 namespace Migration.Toolkit.Sitefinity.Core;
 /// <summary>
 /// Interface for field types. Used in Dependency Injection to instantiate field types dynamically.
@@ -37,4 +39,6 @@ public interface IFieldType
     /// <param name="sitefinityField">Sitefinity field from content type</param>
     /// <returns>Processed XbyK form field</returns>
     public FormField HandleSpecialCase(FormField formField, Field sitefinityField);
+
+    public object GetData(SdkItem sdkItem, string fieldName);
 }

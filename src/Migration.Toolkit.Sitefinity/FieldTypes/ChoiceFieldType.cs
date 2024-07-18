@@ -4,6 +4,8 @@ using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Sitefinity.Abstractions;
 using Migration.Toolkit.Sitefinity.Core;
 
+using Progress.Sitefinity.RestSdk.Dto;
+
 namespace Migration.Toolkit.Sitefinity.FieldTypes;
 /// <summary>
 /// Field type for Sitefinity Choice field: "Telerik.Sitefinity.Web.UI.Fields.ChoiceField"
@@ -17,4 +19,5 @@ public class ChoiceFieldType : FieldTypeBase, IFieldType
     {
         ControlName = "Kentico.Administration.Checkbox"
     };
+    public override object GetData(SdkItem sdkItem, string fieldName) => sdkItem.GetValue<bool>(fieldName);
 }
