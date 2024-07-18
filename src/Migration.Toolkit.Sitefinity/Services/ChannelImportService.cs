@@ -26,6 +26,8 @@ internal class ChannelImportService(IImportService kenticoImportService,
     {
         var languages = contentLanguageImportService.StartImport(observer);
 
+        observer.ImportCompletedTask.Wait();
+
         var channelDependencies = new ChannelDependencies
         {
             ContentLanguages = languages.ImportedModels

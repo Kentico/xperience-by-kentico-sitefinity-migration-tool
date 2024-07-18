@@ -8,16 +8,14 @@ using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Sitefinity.Abstractions;
 using Migration.Toolkit.Sitefinity.Configuration;
 using Migration.Toolkit.Sitefinity.Core.Factories;
+using Migration.Toolkit.Sitefinity.Model;
 
 namespace Migration.Toolkit.Sitefinity.Adapters;
-internal class DataClassModelAdapter(ILogger<DataClassModelAdapter> logger, SitefinityImportConfiguration configuration, IFieldTypeFactory fieldTypeFactory) : UmtAdapterBase<SitefinityType, DataClassModel>(logger)
+internal class DataClassModelAdapter(ILogger<DataClassModelAdapter> logger, SitefinityImportConfiguration configuration, IFieldTypeFactory fieldTypeFactory) : UmtAdapterBaseWithDependencies<SitefinityType, DataClassDependencies>(logger)
 {
-    private readonly string[] excludedFields = ["Translations", "Actions", "DateCreated", "Author", "PublicationDate", "LastModified", "DateCreated"];
-    private readonly string[] forcedWebsiteTypes = ["PageNode"];
-
-    protected override DataClassModel AdaptInternal(SitefinityType source)
+    protected override IEnumerable<IUmtModel> AdaptInternal(SitefinityType source, DataClassDependencies dependenciesModel)
     {
-        bool isPageType = (configuration.PageContentTypes != null && configuration.PageContentTypes.Any(x => x.Name.Equals(source.Name))) || Array.Exists(forcedWebsiteTypes, x => x.Equals(source.Name));
+        bool isPageType = (configuration.PageContentTypes != null && configuration.PageContentTypes.Any(x => x.TypeName.Equals(source.Name))) || Array.Exists(Constants.ForcedWebsiteTypes, x => x.Equals(source.Name));
         var dataClassModel = new DataClassModel
         {
             ClassDisplayName = source.DisplayName,
@@ -34,13 +32,23 @@ internal class DataClassModelAdapter(ILogger<DataClassModelAdapter> logger, Site
             ClassHasUnmanagedDbSchema = false,
             ClassResourceGuid = null,
             ClassWebPageHasUrl = isPageType,
-            CustomProperties = new Dictionary<string, object?>
-            {
-                { "SitefinityTypeName", $"{source.ClassNamespace}.{source.Name}" }
-            }
         };
 
-        return dataClassModel;
+        yield return dataClassModel;
+
+        if (isPageType)
+        {
+            foreach (var channel in dependenciesModel.Channels)
+            {
+                var dataClassChannelModel = new ContentTypeChannelModel
+                {
+                    ContentTypeChannelChannelGuid = channel.Key,
+                    ContentTypeChannelContentTypeGuid = dataClassModel.ClassGUID
+                };
+
+                yield return dataClassChannelModel;
+            }
+        }
     }
 
     private List<FormField> MapFields(IEnumerable<Field>? fields)
@@ -54,7 +62,7 @@ internal class DataClassModelAdapter(ILogger<DataClassModelAdapter> logger, Site
 
         foreach (var field in fields)
         {
-            if (excludedFields.Contains(field.Name))
+            if (Constants.ExcludedFields.Contains(field.Name))
             {
                 continue;
             }
