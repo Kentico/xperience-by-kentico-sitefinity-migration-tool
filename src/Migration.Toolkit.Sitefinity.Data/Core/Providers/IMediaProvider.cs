@@ -1,5 +1,4 @@
 ﻿using Migration.Toolkit.Data.Models;
-using Migration.Toolkit.Data.Models;
 
 namespace Migration.Toolkit.Data.Core.Providers;
 /// <summary>

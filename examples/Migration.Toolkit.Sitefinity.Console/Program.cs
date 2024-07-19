@@ -31,7 +31,7 @@ services.AddLogging(b => b.AddDebug().AddSimpleConsole(options => options.Single
 services.AddSitefinityMigrationToolkit(new SitefinityDataConfiguration
 {
     SitefinityConnectionString = root.GetValue<string>("ConnectionStrings:SitefinityConnectionString") ?? "",
-    SitefinitySiteDomain = root.GetValue<string>("Sitefinity:Domain"),
+    SitefinitySiteDomain = root.GetValue<string>("Sitefinity:Domain") ?? "",
     SitefinityRestApiUrl = "https://" + root.GetValue<string>("Sitefinity:Domain") + root.GetValue<string>("Sitefinity:WebServicePath"),
     SitefinityModuleDeploymentFolderPath = root.GetValue<string>("Sitefinity:ModuleDeploymentFolderPath") ?? "",
 }, new SitefinityImportConfiguration
