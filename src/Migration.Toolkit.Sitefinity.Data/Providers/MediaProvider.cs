@@ -19,7 +19,7 @@ internal class MediaProvider(IRestClient restClient, IDbContextFactory<Sitefinit
             Type = RestClientContentTypes.Libraries
         };
 
-        var libraries = restClient.GetItems<Library>(getAllArgs);
+        var libraries = RestClient.GetItems<Library>(getAllArgs);
 
         return libraries.Result.Items;
     }
@@ -45,7 +45,7 @@ internal class MediaProvider(IRestClient restClient, IDbContextFactory<Sitefinit
             Type = "Telerik.Sitefinity.Libraries.Model.Album"
         };
 
-        var libraries = restClient.GetItems<Library>(getAllArgs);
+        var libraries = RestClient.GetItems<Library>(getAllArgs);
 
         return libraries.Result.Items;
     }
@@ -71,7 +71,7 @@ internal class MediaProvider(IRestClient restClient, IDbContextFactory<Sitefinit
             Type = "Telerik.Sitefinity.Libraries.Model.VideoLibrary"
         };
 
-        var libraries = restClient.GetItems<Library>(getAllArgs);
+        var libraries = RestClient.GetItems<Library>(getAllArgs);
 
         return libraries.Result.Items;
     }

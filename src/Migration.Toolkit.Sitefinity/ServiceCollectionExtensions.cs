@@ -20,12 +20,12 @@ using Migration.Toolkit.Sitefinity.Services;
 namespace Migration.Toolkit.Sitefinity;
 
 /// <summary>
-/// Extension methods for registering Sitefinity Migration Toolkit services
+/// Extension methods for registering Sitefinity Migration Toolkit services.
 /// </summary>
 public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Adding Sitefinity Migration Toolkit services to the service collection to use the importer
+    /// Adding Sitefinity Migration Toolkit services to the service collection to use the importer.
     /// </summary>
     /// <param name="services">Service collection</param>
     /// <param name="dataConfiguration">Sitefinity data configuration used for connections</param>

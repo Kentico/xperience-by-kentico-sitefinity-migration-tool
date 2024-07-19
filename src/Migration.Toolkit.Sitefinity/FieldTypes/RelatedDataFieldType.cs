@@ -12,7 +12,7 @@ using Progress.Sitefinity.RestSdk.Dto;
 
 namespace Migration.Toolkit.Sitefinity.FieldTypes;
 /// <summary>
-/// Field type for Sitefinity RelatedData field: "Telerik.Sitefinity.Web.UI.Fields.RelatedDataField"
+/// Field type for Sitefinity RelatedData field: "Telerik.Sitefinity.Web.UI.Fields.RelatedDataField".
 /// </summary>
 public class RelatedDataFieldType(ITypeProvider typeProvider) : FieldTypeBase, IFieldType
 {
@@ -34,6 +34,7 @@ public class RelatedDataFieldType(ITypeProvider typeProvider) : FieldTypeBase, I
 
         return "contentitemreference";
     }
+
     public override FormFieldSettings GetSettings(Field sitefinityField)
     {
         sitefinityTypes ??= typeProvider.GetAllTypes();
@@ -63,6 +64,7 @@ public class RelatedDataFieldType(ITypeProvider typeProvider) : FieldTypeBase, I
             }
         };
     }
+    
     public override object GetData(SdkItem sdkItem, string fieldName)
     {
         var relatedData = sdkItem.GetValue<IEnumerable<RelatedItem>>(fieldName);

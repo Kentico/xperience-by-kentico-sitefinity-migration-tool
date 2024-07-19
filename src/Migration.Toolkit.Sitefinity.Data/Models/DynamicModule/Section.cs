@@ -1,13 +1,41 @@
-﻿namespace Migration.Toolkit.Data.Models
+﻿namespace Migration.Toolkit.Data.Models;
+/// <summary>
+/// Model for sections in a type definition.
+/// </summary>
+public class Section
 {
-    public class Section
-    {
-        public string? Name { get; set; }
-        public int Ordinal { get; set; }
-        public string? Title { get; set; }
-        public bool IsExpandable { get; set; }
-        public bool IsExpandedByDefault { get; set; }
-        public string? ParentTypeId { get; set; }
-        public string? Id { get; set; }
-    }
+    /// <summary>
+    /// The name of the section.
+    /// </summary>
+    public string? Name { get; set; }
+
+    /// <summary>
+    /// The ordinal value of the section.
+    /// </summary>
+    public int Ordinal { get; set; }
+
+    /// <summary>
+    /// The title of the section.
+    /// </summary>
+    public string? Title { get; set; }
+
+    /// <summary>
+    /// A value indicating whether the section is expandable.
+    /// </summary>
+    public bool IsExpandable { get; set; }
+
+    /// <summary>
+    /// A value indicating whether the section is expanded by default.
+    /// </summary>
+    public bool IsExpandedByDefault { get; set; }
+
+    /// <summary>
+    /// The parent type ID of the section.
+    /// </summary>
+    public string? ParentTypeId { get; set; }
+
+    /// <summary>
+    /// The ID of the section.
+    /// </summary>
+    public string? Id { get; set; }
 }

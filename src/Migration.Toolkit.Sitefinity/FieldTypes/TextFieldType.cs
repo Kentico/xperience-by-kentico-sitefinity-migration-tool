@@ -6,7 +6,7 @@ using Migration.Toolkit.Sitefinity.Core;
 
 namespace Migration.Toolkit.Sitefinity.FieldTypes;
 /// <summary>
-/// Field type for Sitefinity Text field: "Telerik.Sitefinity.Web.UI.Fields.TextField"
+/// Field type for Sitefinity Text field: "Telerik.Sitefinity.Web.UI.Fields.TextField".
 /// </summary>
 public class TextFieldType : FieldTypeBase, IFieldType
 {

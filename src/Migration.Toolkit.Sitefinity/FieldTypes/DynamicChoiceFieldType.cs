@@ -10,7 +10,7 @@ using Migration.Toolkit.Sitefinity.Core;
 
 namespace Migration.Toolkit.Sitefinity.FieldTypes;
 /// <summary>
-/// Field type for Sitefinity Dynamic Choice field: "Telerik.Sitefinity.Web.UI.Fields.DynamicChoiceField"
+/// Field type for Sitefinity Dynamic Choice field: "Telerik.Sitefinity.Web.UI.Fields.DynamicChoiceField".
 /// </summary>
 public class DynamicChoiceFieldType : FieldTypeBase, IFieldType
 {

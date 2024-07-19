@@ -129,6 +129,13 @@ internal abstract class UmtAdapterBase<TSourceModel, TTargetModel>(ILogger logge
     protected abstract TTargetModel? AdaptInternal(TSourceModel source);
 }
 
+/// <summary>
+/// Base class for UMT adapters. Provides logging and default checks.
+/// </summary>
+/// <typeparam name="TSourceModel">ISitefinityModel used in providers</typeparam>
+/// <typeparam name="TDependenciesModel">IImportDependencies model used for dependencies used in adapter</typeparam>
+/// <typeparam name="TTargetModel">IUmtModel used in Universal Migration Toolkit</typeparam>
+/// <param name="logger">Logger</param>
 internal abstract class UmtAdapterBaseWithDependencies<TSourceModel, TDependenciesModel, TTargetModel>(ILogger logger) : IUmtAdapterWithDependencies<TSourceModel, TDependenciesModel, TTargetModel> where TSourceModel : ISitefinityModel
                                                                                                                                                 where TTargetModel : class, IUmtModel
                                                                                                                                                 where TDependenciesModel : IImportDependencies

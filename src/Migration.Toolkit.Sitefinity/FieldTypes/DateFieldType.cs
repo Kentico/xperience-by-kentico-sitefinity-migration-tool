@@ -8,13 +8,14 @@ using Progress.Sitefinity.RestSdk.Dto;
 
 namespace Migration.Toolkit.Sitefinity.FieldTypes;
 /// <summary>
-/// Field type for Sitefinity Date field: "Telerik.Sitefinity.Web.UI.Fields.DateField"
+/// Field type for Sitefinity Date field: "Telerik.Sitefinity.Web.UI.Fields.DateField".
 /// </summary>
 public class DateFieldType : FieldTypeBase, IFieldType
 {
     public string SitefinityWidgetTypeName => "Telerik.Sitefinity.Web.UI.Fields.DateField";
 
     public override string GetColumnType(Field sitefinityField) => "datetime";
+
     public override FormFieldSettings GetSettings(Field sitefinityField) => new()
     {
         ControlName = "Kentico.Administration.DateTimeInput"

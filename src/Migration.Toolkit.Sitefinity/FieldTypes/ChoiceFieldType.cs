@@ -8,13 +8,14 @@ using Progress.Sitefinity.RestSdk.Dto;
 
 namespace Migration.Toolkit.Sitefinity.FieldTypes;
 /// <summary>
-/// Field type for Sitefinity Choice field: "Telerik.Sitefinity.Web.UI.Fields.ChoiceField"
+/// Field type for Sitefinity Choice field: "Telerik.Sitefinity.Web.UI.Fields.ChoiceField".
 /// </summary>
 public class ChoiceFieldType : FieldTypeBase, IFieldType
 {
     public string SitefinityWidgetTypeName => "Telerik.Sitefinity.Web.UI.Fields.ChoiceField";
 
     public override string GetColumnType(Field sitefinityField) => "boolean";
+
     public override FormFieldSettings GetSettings(Field sitefinityField) => new()
     {
         ControlName = "Kentico.Administration.Checkbox"

@@ -1,15 +1,9 @@
-﻿#pragma warning disable S1135 // this is sample, todos are here for end user
-// See https://aka.ms/new-console-template for more information
-
-using System.Text.Json;
+﻿using System.Text.Json;
 
 using CMS.Core;
 using CMS.DataEngine;
 using CMS.Helpers;
 
-//using CMS.DataEngine;
-
-//using Kentico.Xperience.UMT;
 using Kentico.Xperience.UMT.Services;
 
 using Microsoft.Extensions.Configuration;
@@ -17,7 +11,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 using Migration.Toolkit.Data.Configuration;
-//using Microsoft.Extensions.Logging;
 
 using Migration.Toolkit.Sitefinity;
 using Migration.Toolkit.Sitefinity.Configuration;
@@ -38,8 +31,8 @@ services.AddLogging(b => b.AddDebug().AddSimpleConsole(options => options.Single
 services.AddSitefinityMigrationToolkit(new SitefinityDataConfiguration
 {
     SitefinityConnectionString = root.GetValue<string>("ConnectionStrings:SitefinityConnectionString") ?? "",
-    SitefinitySiteDomain = root.GetValue<string>("Sitefinity:Domain") ?? "",
-    SitefinityRestApiUrl = "https://" + (root.GetValue<string>("Sitefinity:Domain") ?? "") + root.GetValue<string>("Sitefinity:WebServicePath") ?? "",
+    SitefinitySiteDomain = root.GetValue<string>("Sitefinity:Domain"),
+    SitefinityRestApiUrl = "https://" + root.GetValue<string>("Sitefinity:Domain") + root.GetValue<string>("Sitefinity:WebServicePath"),
     SitefinityModuleDeploymentFolderPath = root.GetValue<string>("Sitefinity:ModuleDeploymentFolderPath") ?? "",
 }, new SitefinityImportConfiguration
 {
@@ -73,4 +66,3 @@ Console.WriteLine("Cache Cleared!");
 
 Console.WriteLine("Finished!");
 
-#pragma warning restore S1135

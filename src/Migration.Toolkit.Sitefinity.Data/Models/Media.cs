@@ -2,27 +2,41 @@
 
 using Progress.Sitefinity.RestSdk.Dto;
 
-namespace Migration.Toolkit.Data.Models
+namespace Migration.Toolkit.Data.Models;
+/// <summary>
+/// SdkItem model for Sitefinity media. Can be used for images, videos or documents.
+/// </summary>
+public class Media : MediaDto, ISitefinityModel
 {
-    public class Media : MediaDto, ISitefinityModel
+    /// <summary>
+    /// The unique identifier of the media.
+    /// </summary>
+    public new Guid Id
     {
-        public new Guid Id
+        get
         {
-            get
+            if (Guid.TryParse(base.Id, out var id))
             {
-                if (Guid.TryParse(base.Id, out var id))
-                {
-                    return id;
-                }
-
-                return Guid.Empty;
+                return id;
             }
-            set => base.Id = value.ToString();
+
+            return Guid.Empty;
         }
-
-        public DateTime LastModified { get; set; }
-
-        public Guid? LastModifiedBy { get; set; }
-        public Guid? CreatedBy { get; set; }
+        set => base.Id = value.ToString();
     }
+
+    /// <summary>
+    /// The last modified date of the media.
+    /// </summary>
+    public DateTime LastModified { get; set; }
+
+    /// <summary>
+    /// The unique identifier of the user who last modified the media.
+    /// </summary>
+    public Guid? LastModifiedBy { get; set; }
+
+    /// <summary>
+    /// The unique identifier of the user who created the media.
+    /// </summary>
+    public Guid? CreatedBy { get; set; }
 }

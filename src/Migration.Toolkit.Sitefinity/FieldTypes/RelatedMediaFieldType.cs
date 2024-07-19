@@ -11,13 +11,14 @@ using Progress.Sitefinity.RestSdk.Dto;
 
 namespace Migration.Toolkit.Sitefinity.FieldTypes;
 /// <summary>
-/// Field type for Sitefinity Related Media field: "Telerik.Sitefinity.Web.UI.Fields.RelatedMediaField"
+/// Field type for Sitefinity Related Media field: "Telerik.Sitefinity.Web.UI.Fields.RelatedMediaField".
 /// </summary>
 public class RelatedMediaFieldType : FieldTypeBase, IFieldType
 {
     public string SitefinityWidgetTypeName => "Telerik.Sitefinity.Web.UI.Fields.RelatedMediaField";
 
     public override string GetColumnType(Field sitefinityField) => "assets";
+
     public override FormFieldSettings GetSettings(Field sitefinityField) => new()
     {
         ControlName = "Kentico.Administration.AssetSelector",
