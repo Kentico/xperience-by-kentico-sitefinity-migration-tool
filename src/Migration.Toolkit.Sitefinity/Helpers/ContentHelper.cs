@@ -1,73 +1,218 @@
 ﻿using CMS.ContentEngine;
+using CMS.Helpers;
 
 using Kentico.Xperience.UMT.Model;
 
 using Microsoft.Extensions.Logging;
 
+using Migration.Toolkit.Data.Configuration;
 using Migration.Toolkit.Data.Core.Providers;
+using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Sitefinity.Core.Factories;
 using Migration.Toolkit.Sitefinity.Core.Helpers;
+using Migration.Toolkit.Sitefinity.Model;
 
 using Progress.Sitefinity.RestSdk.Dto;
 
 namespace Migration.Toolkit.Sitefinity.Helpers;
-internal class ContentHelper(ILogger<ContentHelper> logger, ITypeProvider typeProvider, IFieldTypeFactory fieldTypeFactory) : IContentHelper
+internal class ContentHelper(ILogger<ContentHelper> logger,
+                                ITypeProvider typeProvider,
+                                IFieldTypeFactory fieldTypeFactory,
+                                ISiteProvider siteProvider,
+                                SitefinityDataConfiguration dataConfiguration) : IContentHelper
 {
-    public IEnumerable<ContentItemLanguageData> GetLanguageData(IEnumerable<string?> languageNames, string title, DataClassModel dataClassModel, UserInfoModel? user, SdkItem sdkItem)
+    private IEnumerable<Site>? sites;
+
+    public IEnumerable<ContentItemLanguageData> GetLanguageData(ContentDependencies contentDependencies, ICultureSdkItem cultureSdkItem, DataClassModel dataClassModel, UserInfoModel? createdByUser)
     {
+        var languageData = new List<ContentItemLanguageData>();
+
+        foreach (var culture in contentDependencies.ContentLanguages.Values)
+        {
+            if (culture.ContentLanguageIsDefault == null)
+            {
+                continue;
+            }
+
+            if (culture.ContentLanguageName == null)
+            {
+                continue;
+            }
+
+            if (ValidationHelper.GetBoolean(culture.ContentLanguageIsDefault, false))
+            {
+                var contentLanguageData = GetLanguageDataInternal(culture.ContentLanguageName, cultureSdkItem, dataClassModel, createdByUser);
+
+                if (contentLanguageData == null)
+                {
+                    logger.LogWarning("Failed to parse language data for default culture: {Culture}. Skipping content item {ItemDefaultUrl}.", culture.ContentLanguageName, cultureSdkItem.UrlName);
+                    continue;
+                }
+
+                languageData.Add(contentLanguageData);
+            }
+            else
+            {
+                foreach (var alternateLanguageContentItem in cultureSdkItem.AlternateLanguageContentItems)
+                {
+                    if (alternateLanguageContentItem.Culture == null)
+                    {
+                        continue;
+                    }
+
+                    if (alternateLanguageContentItem.Culture.Equals(culture.ContentLanguageCultureFormat))
+                    {
+                        var contentLanguageData = GetLanguageDataInternal(culture.ContentLanguageName, alternateLanguageContentItem, dataClassModel, createdByUser);
+
+                        if (contentLanguageData == null)
+                        {
+                            logger.LogWarning("Failed to parse language data for alternate culture: {Culture}. Skipping content item {ItemDefaultUrl}.", culture.ContentLanguageName, alternateLanguageContentItem.UrlName);
+                            continue;
+                        }
+
+                        languageData.Add(contentLanguageData);
+                    }
+                }
+            }
+        }
+
+        return languageData;
+    }
+
+    private ContentItemLanguageData? GetLanguageDataInternal(string languageName, ICultureSdkItem cultureSdkItem, DataClassModel dataClassModel, UserInfoModel? user)
+    {
+        if (string.IsNullOrEmpty(cultureSdkItem.UrlName))
+        {
+            return default;
+        }
+
         var types = typeProvider.GetAllTypes();
 
         var type = types.FirstOrDefault(x => x.Id == dataClassModel.ClassGUID);
 
         if (type == null || type.Fields == null)
         {
-            return [];
+            return default;
         }
 
-        var languageData = new List<ContentItemLanguageData>();
+        var contentItemData = new Dictionary<string, object?>();
 
-        foreach (string? languageName in languageNames.Take(1))
+        foreach (var field in type.Fields)
         {
-            if (languageName == null)
+            var fieldType = fieldTypeFactory.CreateFieldType(field.WidgetTypeName);
+
+            if (field.Name == null)
             {
                 continue;
             }
-            var contentItemData = new Dictionary<string, object?>();
 
-            foreach (var field in type.Fields)
+            if (Constants.ExcludedFields.Contains(field.Name))
             {
-                var fieldType = fieldTypeFactory.CreateFieldType(field.WidgetTypeName);
+                continue;
+            }
 
-                if (field.Name == null)
-                {
-                    continue;
-                }
-
-                if (Constants.ExcludedFields.Contains(field.Name))
-                {
-                    continue;
-                }
-
-                try
+            try
+            {
+                if (cultureSdkItem is SdkItem sdkItem)
                 {
                     contentItemData.Add(field.Name, fieldType.GetData(sdkItem, field.Name));
                 }
-                catch
-                {
-                    logger.LogWarning("Cannot get data for {FieldName} field", field.Name);
-                }
             }
-
-            languageData.Add(new ContentItemLanguageData
+            catch
             {
-                DisplayName = title,
-                LanguageName = languageName,
-                UserGuid = user?.UserGUID,
-                ContentItemData = contentItemData,
-                VersionStatus = VersionStatus.Published,
-            });
+                logger.LogWarning("Cannot get data for {FieldName} field", field.Name);
+            }
         }
 
-        return languageData;
+        return new ContentItemLanguageData
+        {
+            DisplayName = cultureSdkItem.Title.Length > 100 ? cultureSdkItem.Title[..100] : cultureSdkItem.Title,
+            LanguageName = languageName,
+            UserGuid = user?.UserGUID,
+            ContentItemData = contentItemData,
+            VersionStatus = VersionStatus.Published,
+        };
+    }
+
+    public string GetName(string title, Guid id, int length = 100)
+    {
+        string name = $"{ValidationHelper.GetCodeName(title)}-{id}";
+
+        if (name.Length > length)
+        {
+            return name[..length];
+        }
+
+        return name;
+    }
+
+    public Site? GetCurrentSite()
+    {
+        sites ??= siteProvider.GetSites();
+        return sites.FirstOrDefault(x => (x.LiveUrl != null && x.LiveUrl.Equals(dataConfiguration.SitefinitySiteDomain)) || (x.StagingUrl != null && x.StagingUrl.Equals(dataConfiguration.SitefinitySiteDomain)));
+    }
+
+    public ChannelModel? GetCurrentChannel(IEnumerable<ChannelModel> channels)
+    {
+        var currentSite = GetCurrentSite();
+        return channels.FirstOrDefault(x => x.ChannelGUID.Equals(currentSite?.Id));
+    }
+
+    public List<PageUrlModel> GetPageUrls(ContentDependencies dependenciesModel, ICultureSdkItem source, string? rootPath = null)
+    {
+        var pageUrls = new List<PageUrlModel>();
+
+        var currentSite = GetCurrentSite();
+
+        if (currentSite == null)
+        {
+            logger.LogWarning("Current site not found. Cannot get page urls for {UrlName}.", source.UrlName);
+            return pageUrls;
+        }
+
+        foreach (var siteCulture in currentSite.SystemCultures)
+        {
+            var culture = dependenciesModel.ContentLanguages.Values.FirstOrDefault(x => x.ContentLanguageCultureFormat == siteCulture.Culture);
+
+            if (culture == null)
+            {
+                continue;
+            }
+
+            if (ValidationHelper.GetBoolean(culture.ContentLanguageIsDefault, false))
+            {
+                pageUrls.Add(new PageUrlModel
+                {
+                    UrlPath = (string.IsNullOrEmpty(rootPath) ? source.Url : rootPath + source.Url).TrimStart('/'),
+                    LanguageName = culture.ContentLanguageName,
+                    PathIsDraft = false
+                });
+            }
+            else
+            {
+                var alternateLanguageContentItem = source.AlternateLanguageContentItems.Find(x => x.Culture == culture.ContentLanguageCultureFormat);
+
+                if (alternateLanguageContentItem == null)
+                {
+                    pageUrls.Add(new PageUrlModel
+                    {
+                        UrlPath = culture.ContentLanguageName + (string.IsNullOrEmpty(rootPath) ? source.Url : rootPath + source.Url),
+                        LanguageName = culture.ContentLanguageName,
+                        PathIsDraft = false
+                    });
+
+                    continue;
+                }
+
+                pageUrls.Add(new PageUrlModel
+                {
+                    UrlPath = (string.IsNullOrEmpty(rootPath) ? alternateLanguageContentItem.Url : rootPath + alternateLanguageContentItem.Url).TrimStart('/'),
+                    LanguageName = culture.ContentLanguageName,
+                    PathIsDraft = false
+                });
+            }
+        }
+
+        return pageUrls;
     }
 }

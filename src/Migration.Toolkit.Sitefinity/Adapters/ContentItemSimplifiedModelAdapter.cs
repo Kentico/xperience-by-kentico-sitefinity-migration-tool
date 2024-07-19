@@ -6,7 +6,6 @@ using Kentico.Xperience.UMT.Model;
 using Microsoft.Extensions.Logging;
 
 using Migration.Toolkit.Data.Configuration;
-using Migration.Toolkit.Data.Core.Providers;
 using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Sitefinity.Abstractions;
 using Migration.Toolkit.Sitefinity.Configuration;
@@ -14,7 +13,7 @@ using Migration.Toolkit.Sitefinity.Core.Helpers;
 using Migration.Toolkit.Sitefinity.Model;
 
 namespace Migration.Toolkit.Sitefinity.Adapters;
-internal class ContentItemSimplifiedModelAdapter(ILogger<ContentItemSimplifiedModelAdapter> logger, IContentHelper contentHelper, SitefinityImportConfiguration configuration, ISiteProvider siteProvider, SitefinityDataConfiguration dataConfiguration) : UmtAdapterBaseWithDependencies<ContentItem, ContentDependencies, ContentItemSimplifiedModel>(logger)
+internal class ContentItemSimplifiedModelAdapter(ILogger<ContentItemSimplifiedModelAdapter> logger, IContentHelper contentHelper, SitefinityImportConfiguration configuration, SitefinityDataConfiguration dataConfiguration) : UmtAdapterBaseWithDependencies<ContentItem, ContentDependencies, ContentItemSimplifiedModel>(logger)
 {
     protected override ContentItemSimplifiedModel? AdaptInternal(ContentItem source, ContentDependencies dependenciesModel)
     {
@@ -28,7 +27,7 @@ internal class ContentItemSimplifiedModelAdapter(ILogger<ContentItemSimplifiedMo
 
         if (!dependenciesModel.DataClasses.TryGetValue(source.DataClassGuid, out var dataClassModel))
         {
-            logger.LogWarning($"Data class with ClassGuid of {source.DataClassGuid} not found. Skipping content item {source.ItemDefaultUrl}.");
+            logger.LogWarning("Data class with ClassGuid of {DataClassGuid} not found. Skipping content item {ItemDefaultUrl}.", source.DataClassGuid, source.ItemDefaultUrl);
             return default;
         }
 
@@ -36,7 +35,7 @@ internal class ContentItemSimplifiedModelAdapter(ILogger<ContentItemSimplifiedMo
 
         users.TryGetValue(ValidationHelper.GetGuid(source.Owner, Guid.Empty), out var createdByUser);
 
-        var languageData = contentHelper.GetLanguageData(dependenciesModel.ContentLanguages.Values.Select(language => language.ContentLanguageName), source.Title, dataClassModel, createdByUser, source);
+        var languageData = contentHelper.GetLanguageData(dependenciesModel, source, dataClassModel, createdByUser);
 
         if (dataClassModel.ClassContentTypeType == null)
         {
@@ -58,9 +57,7 @@ internal class ContentItemSimplifiedModelAdapter(ILogger<ContentItemSimplifiedMo
 
     private ContentItemSimplifiedModel? AdaptPage(ContentItem source, DataClassModel dataClassModel, IEnumerable<ContentItemLanguageData> languageData, ContentDependencies dependenciesModel)
     {
-        var sites = siteProvider.GetSites();
-        var currentSite = sites.FirstOrDefault(x => (x.LiveUrl != null && x.LiveUrl.Equals(dataConfiguration.SitefinitySiteDomain)) || (x.StagingUrl != null && x.StagingUrl.Equals(dataConfiguration.SitefinitySiteDomain)));
-        var channel = dependenciesModel.Channels.Values.FirstOrDefault(x => x.ChannelGUID.Equals(currentSite?.Id));
+        var channel = contentHelper.GetCurrentChannel(dependenciesModel.Channels.Values);
 
         if (channel == null)
         {
@@ -87,15 +84,8 @@ internal class ContentItemSimplifiedModelAdapter(ILogger<ContentItemSimplifiedMo
             var pageData = new PageDataModel
             {
                 ItemOrder = null,
-                PageUrls =
-                [
-                    new PageUrlModel
-                    {
-                        UrlPath = pageConfig.PageRootPath.TrimStart('/') + source.ItemDefaultUrl,
-                        LanguageName = "en",
-                        PathIsDraft = false
-                    }
-                ],
+                PageUrls = contentHelper.GetPageUrls(dependenciesModel, source, pageConfig.PageRootPath),
+                PageGuid = source.Id,
                 ParentGuid = listingPage.ContentItemGUID,
                 TreePath = pageConfig.PageRootPath + source.ItemDefaultUrl
             };
@@ -104,7 +94,7 @@ internal class ContentItemSimplifiedModelAdapter(ILogger<ContentItemSimplifiedMo
             {
                 ContentItemGUID = source.Id,
                 ContentTypeName = dataClassModel.ClassName,
-                Name = $"{ValidationHelper.GetCodeName(source.Title)}-{source.Id}",
+                Name = contentHelper.GetName(source.Title, source.Id),
                 LanguageData = languageData.ToList(),
                 IsReusable = false,
                 PageData = pageData,
@@ -125,7 +115,7 @@ internal class ContentItemSimplifiedModelAdapter(ILogger<ContentItemSimplifiedMo
             {
                 ContentItemGUID = source.Id,
                 ContentTypeName = dataClassModel.ClassName,
-                Name = $"{ValidationHelper.GetCodeName(source.Title)}-{source.Id}",
+                Name = contentHelper.GetName(source.Title, source.Id),
                 LanguageData = languageData.ToList(),
                 IsReusable = true,
                 PageData = pageData
@@ -140,7 +130,7 @@ internal class ContentItemSimplifiedModelAdapter(ILogger<ContentItemSimplifiedMo
     {
         ContentItemGUID = source.Id,
         ContentTypeName = dataClassModel.ClassName,
-        Name = $"{ValidationHelper.GetCodeName(source.Title)}-{source.Id}",
+        Name = contentHelper.GetName(source.Title, source.Id),
         LanguageData = languageData.ToList(),
         IsReusable = true,
         ContentItemContentFolderGUID = rootFolder.ContentFolderGUID,

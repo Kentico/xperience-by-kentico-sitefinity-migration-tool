@@ -3,9 +3,12 @@
 using Kentico.Xperience.UMT.Model;
 using Kentico.Xperience.UMT.Services;
 
+using Microsoft.Extensions.Logging;
+
 using Migration.Toolkit.Data.Core.Providers;
 using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Sitefinity.Core.Adapters;
+using Migration.Toolkit.Sitefinity.Core.Helpers;
 using Migration.Toolkit.Sitefinity.Core.Services;
 using Migration.Toolkit.Sitefinity.Model;
 
@@ -21,6 +24,9 @@ namespace Migration.Toolkit.Sitefinity.Services
                                             IWebPageImportService webPageImportService,
                                             IContentProvider contentProvider,
                                             ITypeProvider typeProvider,
+                                            IContentHelper contentHelper,
+                                            ISiteProvider siteProvider,
+                                            ILogger<ContentImportService> logger,
                                             IUmtAdapterWithDependencies<ContentItem, ContentDependencies, ContentItemSimplifiedModel> adapter) : IContentImportService
     {
         public IEnumerable<ContentItemSimplifiedModel> Get(ContentDependencies dependenciesModel)
@@ -54,7 +60,16 @@ namespace Migration.Toolkit.Sitefinity.Services
                 });
             }
 
-            var contentItems = contentProvider.GetContentItems(typeDefinitions, dependenciesModel.ContentLanguages.Select(x => x.Value).Select(z => z.ContentLanguageCultureFormat));
+            var channel = contentHelper.GetCurrentChannel(dependenciesModel.Channels.Values);
+            if (channel == null)
+            {
+                logger.LogWarning("Channel not found. Cannot import content items.");
+                return [];
+            }
+
+            var currentSite = siteProvider.GetSites().First(x => x.Id.Equals(channel.ChannelGUID));
+
+            var contentItems = contentProvider.GetContentItems(typeDefinitions, currentSite.SystemCultures);
 
             return adapter.Adapt(contentItems, dependenciesModel);
         }

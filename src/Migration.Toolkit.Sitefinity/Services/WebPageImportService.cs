@@ -1,9 +1,12 @@
 ﻿using Kentico.Xperience.UMT.Model;
 using Kentico.Xperience.UMT.Services;
 
+using Microsoft.Extensions.Logging;
+
 using Migration.Toolkit.Data.Core.Providers;
 using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Sitefinity.Core.Adapters;
+using Migration.Toolkit.Sitefinity.Core.Helpers;
 using Migration.Toolkit.Sitefinity.Core.Services;
 using Migration.Toolkit.Sitefinity.Model;
 
@@ -17,11 +20,23 @@ namespace Migration.Toolkit.Sitefinity.Services
                                             IMediaImportService mediaImportService,
                                             IUserImportService userImportService,
                                             IContentProvider contentProvider,
+                                            ISiteProvider siteProvider,
+                                            IContentHelper contentHelper,
+                                            ILogger<WebPageImportService> logger,
                                             IUmtAdapterWithDependencies<Page, ContentDependencies, ContentItemSimplifiedModel> adapter) : IWebPageImportService
     {
         public IEnumerable<ContentItemSimplifiedModel> Get(ContentDependencies dependenciesModel)
         {
-            var pages = contentProvider.GetPages();
+            var channel = contentHelper.GetCurrentChannel(dependenciesModel.Channels.Values);
+            if (channel == null)
+            {
+                logger.LogWarning("Channel not found. Cannot import content items.");
+                return [];
+            }
+
+            var currentSite = siteProvider.GetSites().First(x => x.Id.Equals(channel.ChannelGUID));
+
+            var pages = contentProvider.GetPages(currentSite.SystemCultures);
 
             return adapter.Adapt(pages, dependenciesModel);
         }
