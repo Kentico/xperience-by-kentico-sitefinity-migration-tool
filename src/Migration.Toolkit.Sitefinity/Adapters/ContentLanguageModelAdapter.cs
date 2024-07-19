@@ -21,6 +21,17 @@ internal class ContentLanguageModelAdapter(ILogger<ContentLanguageModelAdapter> 
             return AdaptLanguage(existing);
         }
 
+        Guid? fallbackLanguageGuid = null;
+
+        if (!source.IsDefault)
+        {
+            var defaultCulture = ContentLanguageInfoProvider.ProviderObject.Get()
+                    .WhereEquals(nameof(ContentLanguageInfo.ContentLanguageIsDefault), true)
+                    .FirstOrDefault();
+
+            fallbackLanguageGuid = defaultCulture?.ContentLanguageGUID;
+        }
+
         return new ContentLanguageModel
         {
             ContentLanguageDisplayName = source.DisplayName,
@@ -28,7 +39,7 @@ internal class ContentLanguageModelAdapter(ILogger<ContentLanguageModelAdapter> 
             ContentLanguageCultureFormat = source.Culture,
             ContentLanguageName = source.Key,
             ContentLanguageGUID = Guid.NewGuid(),
-            ContentLanguageFallbackContentLanguageGuid = null,
+            ContentLanguageFallbackContentLanguageGuid = fallbackLanguageGuid,
         };
     }
 
