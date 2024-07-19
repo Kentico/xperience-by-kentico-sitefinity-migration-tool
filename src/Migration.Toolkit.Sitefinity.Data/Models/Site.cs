@@ -12,5 +12,5 @@ public partial class Site : ISitefinityModel
 
     public string? StagingUrl { get; set; }
 
-    public IEnumerable<SystemCulture>? SystemCultures { get; set; }
+    public required IEnumerable<SystemCulture> SystemCultures { get; set; }
 }

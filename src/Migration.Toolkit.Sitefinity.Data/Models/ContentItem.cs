@@ -3,7 +3,7 @@
 using Progress.Sitefinity.RestSdk.Dto.Content;
 
 namespace Migration.Toolkit.Data.Models;
-public class ContentItem : ContentWithParentDto, ISitefinityModel
+public class ContentItem : ContentWithParentDto, ISitefinityModel, ICultureSdkItem
 {
     public new Guid Id
     {
@@ -25,5 +25,7 @@ public class ContentItem : ContentWithParentDto, ISitefinityModel
     public string? ChangeType { get; set; }
     public string? Culture { get; set; }
     [JsonIgnore]
-    public IEnumerable<ContentItem> AlternateLanguageContentItems { get; set; } = [];
+    public List<ICultureSdkItem> AlternateLanguageContentItems { get; set; } = [];
+    [JsonIgnore]
+    public string Url => ItemDefaultUrl;
 }
