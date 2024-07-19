@@ -62,7 +62,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IUmtAdapter<SystemCulture, ContentLanguageModel>, ContentLanguageModelAdapter>();
 
         // Helpers
-        services.AddTransient<IContentHelper, ContentHelper>();
+        services.AddSingleton<IContentHelper, ContentHelper>();
 
         // Factories
         services.AddSingleton<IFieldTypeFactory, FieldTypeFactory>();
