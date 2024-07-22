@@ -40,15 +40,15 @@ public class Page : PageNodeDto, ISitefinityModel, ICultureSdkItem
     /// </summary>
     public string? Culture { get; set; }
 
-    [JsonIgnore]
     /// <summary>
     /// The alternate language content items of the page.
     /// </summary>
+    [JsonIgnore]
     public List<ICultureSdkItem> AlternateLanguageContentItems { get; set; } = [];
 
-    [JsonIgnore]
     /// <summary>
     /// The URL of the page.
     /// </summary>
+    [JsonIgnore]
     public string Url => ViewUrl;
 }
