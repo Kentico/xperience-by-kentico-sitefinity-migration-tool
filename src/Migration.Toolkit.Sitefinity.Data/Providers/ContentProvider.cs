@@ -17,7 +17,7 @@ internal class ContentProvider(IRestClient restClient, ILogger<ContentProvider> 
     public IEnumerable<ContentItem> GetContentItems(IEnumerable<SitefinityTypeDefinition> typeDefinitions, IEnumerable<SystemCulture> cultures)
     {
         using var context = sitefinityContext.CreateDbContext();
-        versions ??= context.VersionChanges.OrderByDescending(x => x.Version).Where(x => x.ChangeType.Equals("publish")).ToList();
+        versions ??= [.. context.VersionChanges.OrderByDescending(x => x.Version).Where(x => x.ChangeType.Equals("publish"))];
 
         var defaultCulture = cultures.FirstOrDefault(cultures => cultures.IsDefault);
 
@@ -47,7 +47,7 @@ internal class ContentProvider(IRestClient restClient, ILogger<ContentProvider> 
         return contentItems.Values;
     }
 
-    private IDictionary<Guid, ContentItem> GetContentItemsInternal(IEnumerable<SitefinityTypeDefinition> typeDefinitions, SystemCulture defaultCulture)
+    private Dictionary<Guid, ContentItem> GetContentItemsInternal(IEnumerable<SitefinityTypeDefinition> typeDefinitions, SystemCulture defaultCulture)
     {
         var contentItems = new Dictionary<Guid, ContentItem>();
 
@@ -95,7 +95,7 @@ internal class ContentProvider(IRestClient restClient, ILogger<ContentProvider> 
     public IEnumerable<Page> GetPages(IEnumerable<SystemCulture> cultures)
     {
         using var context = sitefinityContext.CreateDbContext();
-        pageNodes ??= context.PageNodes.ToList();
+        pageNodes ??= [.. context.PageNodes];
 
         var defaultCulture = cultures.FirstOrDefault(cultures => cultures.IsDefault);
 
@@ -125,7 +125,7 @@ internal class ContentProvider(IRestClient restClient, ILogger<ContentProvider> 
         return pages.Values;
     }
 
-    private IDictionary<Guid, Page> GetPagesInternal(SystemCulture culture)
+    private Dictionary<Guid, Page> GetPagesInternal(SystemCulture culture)
     {
         var pages = new Dictionary<Guid, Page>();
         var getAllArgs = new GetAllArgs

@@ -30,7 +30,7 @@ internal class TypeHelper(ITypeProvider typeProvider, SitefinityImportConfigurat
         return websiteTypes.Distinct();
     }
 
-    private IEnumerable<SitefinityType> FindChildWebsiteTypes(SitefinityType parentType, IEnumerable<SitefinityType> types)
+    private static List<SitefinityType> FindChildWebsiteTypes(SitefinityType parentType, IEnumerable<SitefinityType> types)
     {
         var sitefinityTypes = new List<SitefinityType>();
 
@@ -40,7 +40,7 @@ internal class TypeHelper(ITypeProvider typeProvider, SitefinityImportConfigurat
         {
             sitefinityTypes.Add(childType);
 
-            while (FindChildWebsiteTypes(childType, types).Any())
+            while (FindChildWebsiteTypes(childType, types).Count != 0)
             {
                 sitefinityTypes.AddRange(FindChildWebsiteTypes(childType, types));
             }

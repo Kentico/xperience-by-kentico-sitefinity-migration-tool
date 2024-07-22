@@ -93,7 +93,7 @@ internal class DataClassModelAdapter(ILogger<DataClassModelAdapter> logger, Site
         return formFields;
     }
 
-    private FormFieldProperties MapProperties(Field field) => new()
+    private static FormFieldProperties MapProperties(Field field) => new()
     {
         FieldCaption = field.Title
     };
