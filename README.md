@@ -16,18 +16,26 @@ The Sitefinity Migration Tool transfers content and other data from **Sitefinity
 
 ## Library Version Matrix
 
-| Xperience Version | Library Version |
-| ----------------- | --------------- |
-| >= 28.4.2         | 1.0.0           |
+| Xperience Version | Sitefinity Version | Library Version |
+| ----------------- | ------------------ | --------------- |
+| >= 28.4.2         | 14.4.x             |1.0.0            |
 
 ### Dependencies
 
 - [ASP.NET Core 8.0](https://dotnet.microsoft.com/en-us/download)
 - [Xperience by Kentico](https://docs.kentico.com/changelog)
+- [Progress Sitefinity CMS 14.4](https://www.progress.com/documentation/sitefinity-cms/144/sitefinity-cms-documentation)
 
 ## Quick Start
 
----
+1. Download the package from the repository [Releases](https://github.com/Kentico/xperience-by-kentico-sitefinity-migration-tool/releases)
+1. Extract and navigate to the configuration file `/examples/Migration.Toolkit.Sitefinity.Console/appsettings.json`, make a copy of this file and update settings as needed. The details for configuration options can be found in the [Usage Guide](./docs/Usage-Guide.md).
+1. Execute the command from an elevated command prompt: 
+```
+>>./Migration.Toolkit.CLI.exe migrate -config "/path/to/your/config/appsettings.json" 
+```
+1. View migrated sites, multi-lingual content, users, pages, and media in your XbyK instance.
+
 
 ## Full Instructions
 
