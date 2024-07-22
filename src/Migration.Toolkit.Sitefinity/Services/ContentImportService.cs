@@ -1,4 +1,4 @@
-﻿using CMS.Helpers;
+using CMS.Helpers;
 
 using Kentico.Xperience.UMT.Model;
 using Kentico.Xperience.UMT.Services;
@@ -35,7 +35,7 @@ namespace Migration.Toolkit.Sitefinity.Services
 
             foreach (var dataClass in dependenciesModel.DataClasses.Select(x => x.Value))
             {
-                var types = typeProvider.GetAllTypes();
+                var types = typeProvider.GetAllTypes().Where(type => Array.Exists(Constants.ForcedWebsiteTypes, x => !x.Equals(type.Name)));
 
                 var type = types.FirstOrDefault(x => x.Id == dataClass.ClassGUID);
 
@@ -43,9 +43,6 @@ namespace Migration.Toolkit.Sitefinity.Services
                 {
                     continue;
                 }
-
-                string typeName = $"{type.ClassNamespace}.{type.Name}";
-
                 var dataClassGuid = ValidationHelper.GetGuid(dataClass.ClassGUID, Guid.Empty);
 
                 if (dataClassGuid.Equals(Guid.Empty))
@@ -55,7 +52,8 @@ namespace Migration.Toolkit.Sitefinity.Services
 
                 typeDefinitions.Add(new SitefinityTypeDefinition
                 {
-                    SitefinityTypeName = typeName,
+                    SitefinityTypeNameSpace = type.ClassNamespace,
+                    SitefinityTypeName = type.Name,
                     DataClassGuid = dataClassGuid,
                 });
             }

@@ -25,6 +25,8 @@ public class ContentItem : ContentWithParentDto, ISitefinityModel, ICultureSdkIt
     public string? ChangeType { get; set; }
     public string? Culture { get; set; }
     [JsonIgnore]
+    public string? TypeName { get; set; }
+    [JsonIgnore]
     public List<ICultureSdkItem> AlternateLanguageContentItems { get; set; } = [];
     [JsonIgnore]
     public string Url => ItemDefaultUrl;

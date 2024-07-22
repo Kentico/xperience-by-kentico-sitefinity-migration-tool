@@ -55,7 +55,7 @@ internal class ContentProvider(IRestClient restClient, ILogger<ContentProvider> 
         {
             var getAllArgs = new GetAllArgs
             {
-                Type = typeDefinition.SitefinityTypeName,
+                Type = $"{typeDefinition.SitefinityTypeNameSpace}.{typeDefinition.SitefinityTypeName}",
                 Fields = ["*"],
                 Culture = defaultCulture.Culture
             };
@@ -65,6 +65,7 @@ internal class ContentProvider(IRestClient restClient, ILogger<ContentProvider> 
             foreach (var item in items)
             {
                 item.DataClassGuid = typeDefinition.DataClassGuid;
+                item.TypeName = typeDefinition.SitefinityTypeName;
 
                 contentItems.Add(item.Id, item);
             }
