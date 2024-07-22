@@ -18,7 +18,7 @@ internal class ChannelModelAdapter(ILogger<ChannelModelAdapter> logger) : UmtAda
 
         if (siteDefaultLanguage == null)
         {
-            logger.LogWarning($"Default language not found for site {source.Name}");
+            logger.LogWarning("Default language not found for site {SiteName}", source.Name);
             yield break;
         }
 
@@ -26,7 +26,7 @@ internal class ChannelModelAdapter(ILogger<ChannelModelAdapter> logger) : UmtAda
 
         if (language == null)
         {
-            logger.LogWarning($"Imported language not found for site {source.Name}");
+            logger.LogWarning("Imported language not found for site {SiteName}", source.Name);
             yield break;
         }
 
