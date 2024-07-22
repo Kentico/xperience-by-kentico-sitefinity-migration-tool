@@ -47,7 +47,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IMediaLibraryImportService, MediaLibraryImportService>();
         services.AddTransient<IMediaImportService, MediaImportService>();
         services.AddTransient<IWebPageImportService, WebPageImportService>();
-        services.AddTransient<IContentImportService, ContentImportService>();
+        services.AddTransient<IContentItemImportService, ContentItemImportService>();
         services.AddTransient<IChannelImportService, ChannelImportService>();
         services.AddTransient<IContentLanguageImportService, ContentLanguageImportService>();
 

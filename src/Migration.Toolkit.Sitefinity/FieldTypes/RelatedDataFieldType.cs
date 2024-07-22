@@ -64,10 +64,10 @@ public class RelatedDataFieldType(ITypeProvider typeProvider) : FieldTypeBase, I
             }
         };
     }
-    
+
     public override object GetData(SdkItem sdkItem, string fieldName)
     {
-        var relatedData = sdkItem.GetValue<IEnumerable<RelatedItem>>(fieldName);
+        var relatedData = sdkItem.GetValue<IEnumerable<SdkItem>>(fieldName);
 
         var contentRelatedItems = new List<ContentRelatedItem>();
 

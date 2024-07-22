@@ -119,9 +119,9 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
                     contentItemData.Add(field.Name, fieldType.GetData(sdkItem, field.Name));
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                logger.LogWarning("Cannot get data for {FieldName} field", field.Name);
+                logger.LogWarning(ex, "Cannot get data for {FieldName} field.", field.Name);
             }
         }
 

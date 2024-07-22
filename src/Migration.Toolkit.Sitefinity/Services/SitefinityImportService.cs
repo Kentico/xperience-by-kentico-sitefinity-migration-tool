@@ -6,7 +6,7 @@ namespace Migration.Toolkit.Sitefinity.Services;
 internal class SitefinityImportService(IUserImportService userImportService,
                                         IDataClassImportService contentTypeImportService,
                                         IMediaImportService mediaImportService,
-                                        IContentImportService contentImportService,
+                                        IContentItemImportService contentImportService,
                                         IChannelImportService channelImportService) : ISitefinityImportService
 {
     public ImportStateObserver StartImportUsers(ImportStateObserver observer) => userImportService.StartImport(observer).Observer;

@@ -1,6 +1,4 @@
-﻿using Migration.Toolkit.Data.Models;
-
-using Progress.Sitefinity.RestSdk.Dto;
+﻿using Progress.Sitefinity.RestSdk.Dto;
 
 namespace Migration.Toolkit.Data.Models;
 /// <summary>

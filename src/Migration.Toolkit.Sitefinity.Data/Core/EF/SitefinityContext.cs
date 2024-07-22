@@ -6,7 +6,7 @@ namespace Migration.Toolkit.Data.Core.EF;
 /// <summary>
 /// Entity Framework Context for Sitefinity database.
 /// </summary>
-public partial class SitefinityContext : DbContext
+internal partial class SitefinityContext : DbContext
 {
     public SitefinityContext() { }
     public SitefinityContext(DbContextOptions<SitefinityContext> options) : base(options)

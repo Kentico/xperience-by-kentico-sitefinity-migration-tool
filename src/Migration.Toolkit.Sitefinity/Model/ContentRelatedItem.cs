@@ -1,5 +1,5 @@
 ﻿namespace Migration.Toolkit.Sitefinity.Model;
-public class ContentRelatedItem
+internal class ContentRelatedItem
 {
     public Guid Identifier { get; set; }
 }

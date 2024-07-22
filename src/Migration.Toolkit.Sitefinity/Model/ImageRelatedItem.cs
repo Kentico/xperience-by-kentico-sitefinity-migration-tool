@@ -1,5 +1,5 @@
 ﻿namespace Migration.Toolkit.Sitefinity.Model;
-public class ImageRelatedItem
+internal class ImageRelatedItem
 {
     public Guid Identifier { get; set; }
     public string? Name { get; set; }
@@ -7,7 +7,7 @@ public class ImageRelatedItem
     public Dimensions? Dimensions { get; set; }
 }
 
-public class Dimensions
+internal class Dimensions
 {
     public int Width { get; set; }
     public int Height { get; set; }

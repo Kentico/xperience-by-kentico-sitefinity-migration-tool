@@ -1,6 +1,4 @@
-﻿using CMS.Helpers;
-
-using Kentico.Xperience.UMT.Model;
+﻿using Kentico.Xperience.UMT.Model;
 using Kentico.Xperience.UMT.Services;
 
 using Microsoft.Extensions.Logging;
@@ -15,7 +13,7 @@ using Migration.Toolkit.Sitefinity.Model;
 
 namespace Migration.Toolkit.Sitefinity.Services
 {
-    internal class ContentImportService(IImportService kenticoImportService,
+    internal class ContentItemImportService(IImportService kenticoImportService,
                                             IContentLanguageImportService contentLanguageImportService,
                                             IChannelImportService channelImportService,
                                             IDataClassImportService dataClassImportService,
@@ -26,29 +24,23 @@ namespace Migration.Toolkit.Sitefinity.Services
                                             IContentProvider contentProvider,
                                             ITypeProvider typeProvider,
                                             IContentHelper contentHelper,
-                                            ISiteProvider siteProvider,
                                             SitefinityImportConfiguration importConfiguration,
-                                            ILogger<ContentImportService> logger,
-                                            IUmtAdapterWithDependencies<ContentItem, ContentDependencies, ContentItemSimplifiedModel> adapter) : IContentImportService
+                                            ILogger<ContentItemImportService> logger,
+                                            IUmtAdapterWithDependencies<ContentItem, ContentDependencies, ContentItemSimplifiedModel> adapter) : IContentItemImportService
     {
         public IEnumerable<ContentItemSimplifiedModel> Get(ContentDependencies dependenciesModel)
         {
             var typeDefinitions = new List<SitefinityTypeDefinition>();
 
-            foreach (var dataClass in dependenciesModel.DataClasses.Select(x => x.Value))
+            foreach (var dataClassGuid in dependenciesModel.DataClasses.Keys)
             {
                 var types = typeProvider.GetAllTypes().Where(type => Array.Exists(Constants.ForcedWebsiteTypes, x => !x.Equals(type.Name)));
 
-                var type = types.FirstOrDefault(x => x.Id == dataClass.ClassGUID);
+                var type = types.FirstOrDefault(x => x.Id == dataClassGuid);
 
                 if (type == null)
                 {
-                    continue;
-                }
-                var dataClassGuid = ValidationHelper.GetGuid(dataClass.ClassGUID, Guid.Empty);
-
-                if (dataClassGuid.Equals(Guid.Empty))
-                {
+                    logger.LogWarning("No type found for dataclass with ClassGuid of {DataClassGuid}. Cannot get items based on data class: {DataClassName}", dataClassGuid, dependenciesModel.DataClasses[dataClassGuid].ClassName);
                     continue;
                 }
 
@@ -66,13 +58,13 @@ namespace Migration.Toolkit.Sitefinity.Services
             }
 
             var channel = contentHelper.GetCurrentChannel(dependenciesModel.Channels.Values);
-            if (channel == null)
+            var currentSite = contentHelper.GetCurrentSite();
+
+            if (channel == null || currentSite == null)
             {
-                logger.LogWarning("Channel not found. Cannot import content items.");
+                logger.LogWarning("Channel/Site not found. Cannot import content items.");
                 return [];
             }
-
-            var currentSite = siteProvider.GetSites().First(x => x.Id.Equals(channel.ChannelGUID));
 
             var detailPageConfigs = importConfiguration.PageContentTypes?.Where(x => x.PageTemplateType.Equals("Detail"));
 

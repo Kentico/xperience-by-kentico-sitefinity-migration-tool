@@ -17,14 +17,16 @@ internal class ContentDependencies : IImportDependencies
     /// Required data classes for content.
     /// </summary>
     public required IDictionary<Guid, DataClassModel> DataClasses { get; set; }
+    /// <summary>
+    /// Required content languages for content.
+    /// </summary>
     public required IDictionary<Guid, ContentLanguageModel> ContentLanguages { get; set; }
+    /// <summary>
+    /// Required channels for content.
+    /// </summary>
     public required IDictionary<Guid, ChannelModel> Channels { get; set; }
     /// <summary>
     /// Imported web pages
     /// </summary>
     public IDictionary<Guid, ContentItemSimplifiedModel>? WebPages { get; set; }
-    /// <summary>
-    /// Imported content items
-    /// </summary>
-    public IDictionary<Guid, ContentItemSimplifiedModel>? ContentItems { get; set; }
 }

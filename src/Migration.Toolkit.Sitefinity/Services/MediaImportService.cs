@@ -1,8 +1,8 @@
 ﻿using Kentico.Xperience.UMT.Model;
 using Kentico.Xperience.UMT.Services;
 
-using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Data.Core.Providers;
+using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Sitefinity.Core.Adapters;
 using Migration.Toolkit.Sitefinity.Core.Services;
 using Migration.Toolkit.Sitefinity.Model;
