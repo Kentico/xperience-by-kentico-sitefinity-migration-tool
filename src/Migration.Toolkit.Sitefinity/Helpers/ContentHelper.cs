@@ -1,4 +1,5 @@
 ﻿using CMS.ContentEngine;
+using CMS.ContentEngine.Internal;
 using CMS.Helpers;
 
 using Kentico.Xperience.UMT.Model;
@@ -233,5 +234,19 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
         }
 
         return pageUrl;
+    }
+
+    public string GetParentPath(string? path) => TreePathUtils.RemoveLastPathSegment(path);
+
+    public string RemovePathSegmentsFromStart(string path, int numberOfSegments)
+    {
+        string[] segments = path.Split('/');
+        int remainingSegments = segments.Length - numberOfSegments;
+        if (remainingSegments <= 0)
+        {
+            return "";
+        }
+        string newPath = $"/{string.Join("/", segments.TakeLast(remainingSegments))}";
+        return newPath;
     }
 }

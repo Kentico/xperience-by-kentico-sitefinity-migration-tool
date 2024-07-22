@@ -1,5 +1,4 @@
 ﻿using CMS.ContentEngine;
-using CMS.ContentEngine.Internal;
 using CMS.Helpers;
 
 using Kentico.Xperience.UMT.Model;
@@ -79,7 +78,7 @@ internal class ContentItemSimplifiedModelAdapter(ILogger<ContentItemSimplifiedMo
             if (detailContentItems.TryGetValue(parentGuid, out var detailContentItem))
             {
                 parentGuid = ValidationHelper.GetGuid(detailContentItem.ContentItemGUID, Guid.Empty);
-                treePath = detailContentItem.PageData?.TreePath + RemovePathSegmentsFromStart(source.ItemDefaultUrl, 2);
+                treePath = detailContentItem.PageData?.TreePath + contentHelper.RemovePathSegmentsFromStart(source.ItemDefaultUrl, 2);
                 pagePath = treePath;
             }
 
@@ -149,7 +148,7 @@ internal class ContentItemSimplifiedModelAdapter(ILogger<ContentItemSimplifiedMo
                     return default;
                 }
 
-                var parentDetailPage = dependenciesModel.WebPages?.Values.FirstOrDefault(x => x.PageData?.TreePath?.Equals(GetParentPath(detailPage.PageData?.TreePath)) ?? false);
+                var parentDetailPage = dependenciesModel.WebPages?.Values.FirstOrDefault(x => x.PageData?.TreePath?.Equals(contentHelper.GetParentPath(detailPage.PageData?.TreePath)) ?? false);
 
                 if (parentDetailPage == null)
                 {
@@ -197,18 +196,4 @@ internal class ContentItemSimplifiedModelAdapter(ILogger<ContentItemSimplifiedMo
         IsReusable = true,
         ContentItemContentFolderGUID = rootFolder.ContentFolderGUID,
     };
-
-    private string GetParentPath(string? path) => TreePathUtils.RemoveLastPathSegment(path);
-
-    private string RemovePathSegmentsFromStart(string path, int numberOfSegments)
-    {
-        string[] segments = path.Split('/');
-        int remainingSegments = segments.Length - numberOfSegments;
-        if (remainingSegments <= 0)
-        {
-            return "";
-        }
-        string newPath = $"/{string.Join("/", segments.TakeLast(remainingSegments))}";
-        return newPath;
-    }
 }

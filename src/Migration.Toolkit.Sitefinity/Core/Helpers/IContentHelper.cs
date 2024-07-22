@@ -10,5 +10,7 @@ internal interface IContentHelper
     public string GetName(string title, Guid id, int length = 100);
     public Site? GetCurrentSite();
     public ChannelModel? GetCurrentChannel(IEnumerable<ChannelModel> channels);
-    List<PageUrlModel> GetPageUrls(ContentDependencies dependenciesModel, ICultureSdkItem source, string? rootPath = null, string? pagePath = null);
+    public List<PageUrlModel> GetPageUrls(ContentDependencies dependenciesModel, ICultureSdkItem source, string? rootPath = null, string? pagePath = null);
+    public string GetParentPath(string? path);
+    public string RemovePathSegmentsFromStart(string path, int numberOfSegments);
 }
