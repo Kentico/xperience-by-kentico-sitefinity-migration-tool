@@ -13,6 +13,7 @@
         /// Root path where the child pages will be created in XbyK.
         /// </summary>
         public required string PageRootPath { get; set; }
+        public string? ItemUrlName { get; set; }
 
         public required string PageTemplateType { get; set; }
     }

@@ -1,4 +1,5 @@
 ﻿using CMS.ContentEngine;
+using CMS.ContentEngine.Internal;
 using CMS.Helpers;
 
 using Kentico.Xperience.UMT.Model;
@@ -15,6 +16,8 @@ using Migration.Toolkit.Sitefinity.Model;
 namespace Migration.Toolkit.Sitefinity.Adapters;
 internal class ContentItemSimplifiedModelAdapter(ILogger<ContentItemSimplifiedModelAdapter> logger, IContentHelper contentHelper, SitefinityImportConfiguration configuration, SitefinityDataConfiguration dataConfiguration) : UmtAdapterBaseWithDependencies<ContentItem, ContentDependencies, ContentItemSimplifiedModel>(logger)
 {
+    private readonly Dictionary<Guid, ContentItemSimplifiedModel> detailContentItems = [];
+
     protected override ContentItemSimplifiedModel? AdaptInternal(ContentItem source, ContentDependencies dependenciesModel)
     {
         var rootFolder = ContentFolderInfoProvider.ProviderObject.GetRoot();
@@ -65,67 +68,126 @@ internal class ContentItemSimplifiedModelAdapter(ILogger<ContentItemSimplifiedMo
             return default;
         }
 
-        var pageConfig = configuration.PageContentTypes?.FirstOrDefault(x => dataClassModel.ClassName != null && dataClassModel.ClassName.Contains(x.TypeName));
+        var pageConfigs = configuration.PageContentTypes?.Where(x => dataClassModel.ClassName != null && dataClassModel.ClassName.Contains(x.TypeName));
 
-        if (pageConfig == null)
+        if (pageConfigs == null || !pageConfigs.Any())
         {
-            return default;
-        }
+            var parentGuid = ValidationHelper.GetGuid(source.ParentId, Guid.Empty);
+            string treePath = source.ItemDefaultUrl;
+            string? pagePath = null;
 
-        if (pageConfig.PageTemplateType.Equals("Listing"))
-        {
-            var listingPage = dependenciesModel.WebPages?.Values.FirstOrDefault(x => x.PageData?.TreePath?.Equals(pageConfig.PageRootPath) ?? false);
-
-            if (listingPage == null)
+            if (detailContentItems.TryGetValue(parentGuid, out var detailContentItem))
             {
-                return default;
+                parentGuid = ValidationHelper.GetGuid(detailContentItem.ContentItemGUID, Guid.Empty);
+                treePath = detailContentItem.PageData?.TreePath + RemovePathSegmentsFromStart(source.ItemDefaultUrl, 2);
+                pagePath = treePath;
             }
 
-            var pageData = new PageDataModel
+            var noPageConfigPageData = new PageDataModel
             {
                 ItemOrder = null,
-                PageUrls = contentHelper.GetPageUrls(dependenciesModel, source, pageConfig.PageRootPath),
+                PageUrls = contentHelper.GetPageUrls(dependenciesModel, source, pagePath: pagePath),
                 PageGuid = source.Id,
-                ParentGuid = listingPage.ContentItemGUID,
-                TreePath = pageConfig.PageRootPath + source.ItemDefaultUrl
+                ParentGuid = parentGuid,
+                TreePath = treePath
             };
 
-            var pageContentItem = new ContentItemSimplifiedModel
+            var noPageConfigPageContentItem = new ContentItemSimplifiedModel
             {
                 ContentItemGUID = source.Id,
                 ContentTypeName = dataClassModel.ClassName,
                 Name = contentHelper.GetName(source.Title, source.Id),
                 LanguageData = languageData.ToList(),
                 IsReusable = false,
-                PageData = pageData,
+                PageData = noPageConfigPageData,
                 ChannelName = channel.ChannelName
             };
 
-            return pageContentItem;
+            return noPageConfigPageContentItem;
         }
 
-        if (pageConfig.PageTemplateType.Equals("Detail"))
+        foreach (var pageConfig in pageConfigs)
         {
-            var pageData = new PageDataModel
+            if (pageConfig.PageTemplateType.Equals("Listing"))
             {
-                ItemOrder = null
-            };
+                var listingPage = dependenciesModel.WebPages?.Values.FirstOrDefault(x => x.PageData?.TreePath?.Equals(pageConfig.PageRootPath) ?? false);
 
-            var pageContentItem = new ContentItemSimplifiedModel
+                if (listingPage == null)
+                {
+                    return default;
+                }
+
+                var listingChildPageData = new PageDataModel
+                {
+                    ItemOrder = null,
+                    PageUrls = contentHelper.GetPageUrls(dependenciesModel, source, pageConfig.PageRootPath),
+                    PageGuid = source.Id,
+                    ParentGuid = listingPage.ContentItemGUID,
+                    TreePath = pageConfig.PageRootPath + source.ItemDefaultUrl
+                };
+
+                var listingChildPageContentItem = new ContentItemSimplifiedModel
+                {
+                    ContentItemGUID = source.Id,
+                    ContentTypeName = dataClassModel.ClassName,
+                    Name = contentHelper.GetName(source.Title, source.Id),
+                    LanguageData = languageData.ToList(),
+                    IsReusable = false,
+                    PageData = listingChildPageData,
+                    ChannelName = channel.ChannelName
+                };
+
+                return listingChildPageContentItem;
+            }
+
+            if (pageConfig.PageTemplateType.Equals("Detail") && (pageConfig.PageRootPath.Equals(source.Url) || (pageConfig.ItemUrlName != null && pageConfig.ItemUrlName.Equals(source.Url))))
             {
-                ContentItemGUID = source.Id,
-                ContentTypeName = dataClassModel.ClassName,
-                Name = contentHelper.GetName(source.Title, source.Id),
-                LanguageData = languageData.ToList(),
-                IsReusable = true,
-                PageData = pageData
-            };
+                var detailPage = dependenciesModel.WebPages?.Values.FirstOrDefault(x => (x.PageData?.TreePath?.Equals(pageConfig.PageRootPath) ?? false) || (x.PageData?.TreePath?.Equals(pageConfig.ItemUrlName) ?? false));
 
-            return pageContentItem;
+                if (detailPage == null)
+                {
+                    return default;
+                }
+
+                var parentDetailPage = dependenciesModel.WebPages?.Values.FirstOrDefault(x => x.PageData?.TreePath?.Equals(GetParentPath(detailPage.PageData?.TreePath)) ?? false);
+
+                if (parentDetailPage == null)
+                {
+                    return default;
+                }
+
+                detailPage.ContentTypeName = dataClassModel.ClassName;
+                detailPage.LanguageData = languageData.ToList();
+
+                detailContentItems.Add(source.Id, detailPage);
+
+                return detailPage;
+            }
         }
 
-        return default;
+        var pageData = new PageDataModel
+        {
+            ItemOrder = null,
+            PageUrls = contentHelper.GetPageUrls(dependenciesModel, source),
+            PageGuid = source.Id,
+            ParentGuid = ValidationHelper.GetGuid(source.ParentId, Guid.Empty),
+            TreePath = source.ItemDefaultUrl
+        };
+
+        var pageContentItem = new ContentItemSimplifiedModel
+        {
+            ContentItemGUID = source.Id,
+            ContentTypeName = dataClassModel.ClassName,
+            Name = contentHelper.GetName(source.Title, source.Id),
+            LanguageData = languageData.ToList(),
+            IsReusable = false,
+            PageData = pageData,
+            ChannelName = channel.ChannelName
+        };
+
+        return pageContentItem;
     }
+
     private ContentItemSimplifiedModel AdaptReusable(ContentItem source, DataClassModel dataClassModel, IEnumerable<ContentItemLanguageData> languageData, ContentFolderInfo rootFolder) => new()
     {
         ContentItemGUID = source.Id,
@@ -135,4 +197,18 @@ internal class ContentItemSimplifiedModelAdapter(ILogger<ContentItemSimplifiedMo
         IsReusable = true,
         ContentItemContentFolderGUID = rootFolder.ContentFolderGUID,
     };
+
+    private string GetParentPath(string? path) => TreePathUtils.RemoveLastPathSegment(path);
+
+    private string RemovePathSegmentsFromStart(string path, int numberOfSegments)
+    {
+        string[] segments = path.Split('/');
+        int remainingSegments = segments.Length - numberOfSegments;
+        if (remainingSegments <= 0)
+        {
+            return "";
+        }
+        string newPath = $"/{string.Join("/", segments.TakeLast(remainingSegments))}";
+        return newPath;
+    }
 }

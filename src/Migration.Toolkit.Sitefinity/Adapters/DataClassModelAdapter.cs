@@ -8,14 +8,17 @@ using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Sitefinity.Abstractions;
 using Migration.Toolkit.Sitefinity.Configuration;
 using Migration.Toolkit.Sitefinity.Core.Factories;
+using Migration.Toolkit.Sitefinity.Core.Helpers;
 using Migration.Toolkit.Sitefinity.Model;
 
 namespace Migration.Toolkit.Sitefinity.Adapters;
-internal class DataClassModelAdapter(ILogger<DataClassModelAdapter> logger, SitefinityImportConfiguration configuration, IFieldTypeFactory fieldTypeFactory) : UmtAdapterBaseWithDependencies<SitefinityType, DataClassDependencies>(logger)
+internal class DataClassModelAdapter(ILogger<DataClassModelAdapter> logger, SitefinityImportConfiguration configuration, IFieldTypeFactory fieldTypeFactory, ITypeHelper typeHelper) : UmtAdapterBaseWithDependencies<SitefinityType, DataClassDependencies>(logger)
 {
     protected override IEnumerable<IUmtModel> AdaptInternal(SitefinityType source, DataClassDependencies dependenciesModel)
     {
-        bool isPageType = (configuration.PageContentTypes != null && configuration.PageContentTypes.Any(x => x.TypeName.Equals(source.Name))) || Array.Exists(Constants.ForcedWebsiteTypes, x => x.Equals(source.Name));
+        var websiteTypes = typeHelper.GetWebsiteTypes();
+
+        bool isPageType = websiteTypes.Any(x => x.Id.Equals(source.Id)) || Array.Exists(Constants.ForcedWebsiteTypes, x => x.Equals(source.Name));
         var dataClassModel = new DataClassModel
         {
             ClassDisplayName = source.DisplayName,

@@ -1,4 +1,4 @@
-using CMS.Helpers;
+﻿using CMS.Helpers;
 
 using Kentico.Xperience.UMT.Model;
 using Kentico.Xperience.UMT.Services;
@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 
 using Migration.Toolkit.Data.Core.Providers;
 using Migration.Toolkit.Data.Models;
+using Migration.Toolkit.Sitefinity.Configuration;
 using Migration.Toolkit.Sitefinity.Core.Adapters;
 using Migration.Toolkit.Sitefinity.Core.Helpers;
 using Migration.Toolkit.Sitefinity.Core.Services;
@@ -26,6 +27,7 @@ namespace Migration.Toolkit.Sitefinity.Services
                                             ITypeProvider typeProvider,
                                             IContentHelper contentHelper,
                                             ISiteProvider siteProvider,
+                                            SitefinityImportConfiguration importConfiguration,
                                             ILogger<ContentImportService> logger,
                                             IUmtAdapterWithDependencies<ContentItem, ContentDependencies, ContentItemSimplifiedModel> adapter) : IContentImportService
     {
@@ -50,6 +52,11 @@ namespace Migration.Toolkit.Sitefinity.Services
                     continue;
                 }
 
+                if (type.ClassNamespace == null || type.Name == null)
+                {
+                    continue;
+                }
+
                 typeDefinitions.Add(new SitefinityTypeDefinition
                 {
                     SitefinityTypeNameSpace = type.ClassNamespace,
@@ -67,7 +74,9 @@ namespace Migration.Toolkit.Sitefinity.Services
 
             var currentSite = siteProvider.GetSites().First(x => x.Id.Equals(channel.ChannelGUID));
 
-            var contentItems = contentProvider.GetContentItems(typeDefinitions, currentSite.SystemCultures);
+            var detailPageConfigs = importConfiguration.PageContentTypes?.Where(x => x.PageTemplateType.Equals("Detail"));
+
+            var contentItems = contentProvider.GetContentItems(typeDefinitions, currentSite.SystemCultures).OrderByDescending(x => (detailPageConfigs?.Any(z => z.TypeName.Equals(x.TypeName)) ?? false) ? x.TypeName : "");
 
             return adapter.Adapt(contentItems, dependenciesModel);
         }
@@ -128,7 +137,7 @@ namespace Migration.Toolkit.Sitefinity.Services
 
             dependencies.WebPages = webpages.ImportedModels;
 
-            var contentItems = Get(dependencies);
+            var contentItems = Get(dependencies).OrderBy(x => x.PageData == null ? "" : x.PageData.TreePath);
 
             return new SitefinityImportResult<ContentItemSimplifiedModel>
             {
