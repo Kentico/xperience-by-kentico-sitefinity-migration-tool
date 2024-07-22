@@ -158,9 +158,11 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
         return channels.FirstOrDefault(x => x.ChannelGUID.Equals(currentSite?.Id));
     }
 
-    public List<PageUrlModel> GetPageUrls(ContentDependencies dependenciesModel, ICultureSdkItem source, string? rootPath = null)
+    public List<PageUrlModel> GetPageUrls(ContentDependencies dependenciesModel, ICultureSdkItem source, string? rootPath = null, string? pagePath = null)
     {
         var pageUrls = new List<PageUrlModel>();
+
+        string pageUrl = GetUrl(source, rootPath, pagePath);
 
         var currentSite = GetCurrentSite();
 
@@ -174,7 +176,7 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
         {
             var culture = dependenciesModel.ContentLanguages.Values.FirstOrDefault(x => x.ContentLanguageCultureFormat == siteCulture.Culture);
 
-            if (culture == null)
+            if (culture == null || string.IsNullOrEmpty(source.Url))
             {
                 continue;
             }
@@ -183,7 +185,7 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
             {
                 pageUrls.Add(new PageUrlModel
                 {
-                    UrlPath = (string.IsNullOrEmpty(rootPath) ? source.Url : rootPath + source.Url).TrimStart('/'),
+                    UrlPath = pageUrl.TrimStart('/'),
                     LanguageName = culture.ContentLanguageName,
                     PathIsDraft = false
                 });
@@ -192,11 +194,11 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
             {
                 var alternateLanguageContentItem = source.AlternateLanguageContentItems.Find(x => x.Culture == culture.ContentLanguageCultureFormat);
 
-                if (alternateLanguageContentItem == null)
+                if (alternateLanguageContentItem == null || string.IsNullOrEmpty(alternateLanguageContentItem.Url))
                 {
                     pageUrls.Add(new PageUrlModel
                     {
-                        UrlPath = culture.ContentLanguageName + (string.IsNullOrEmpty(rootPath) ? source.Url : rootPath + source.Url),
+                        UrlPath = culture.ContentLanguageName + pageUrl,
                         LanguageName = culture.ContentLanguageName,
                         PathIsDraft = false
                     });
@@ -206,7 +208,7 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
 
                 pageUrls.Add(new PageUrlModel
                 {
-                    UrlPath = (string.IsNullOrEmpty(rootPath) ? alternateLanguageContentItem.Url : rootPath + alternateLanguageContentItem.Url).TrimStart('/'),
+                    UrlPath = GetUrl(alternateLanguageContentItem, rootPath, pagePath).TrimStart('/'),
                     LanguageName = culture.ContentLanguageName,
                     PathIsDraft = false
                 });
@@ -214,5 +216,22 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
         }
 
         return pageUrls;
+    }
+
+    private static string GetUrl(ICultureSdkItem source, string? rootPath, string? pagePath)
+    {
+        string pageUrl = source.Url;
+
+        if (!string.IsNullOrEmpty(pagePath))
+        {
+            pageUrl = pagePath;
+        }
+
+        if (!string.IsNullOrEmpty(rootPath))
+        {
+            pageUrl = rootPath + pageUrl;
+        }
+
+        return pageUrl;
     }
 }
