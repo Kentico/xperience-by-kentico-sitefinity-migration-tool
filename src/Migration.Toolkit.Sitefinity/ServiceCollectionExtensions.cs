@@ -63,6 +63,7 @@ public static class ServiceCollectionExtensions
 
         // Helpers
         services.AddSingleton<IContentHelper, ContentHelper>();
+        services.AddSingleton<ITypeHelper, TypeHelper>();
 
         // Factories
         services.AddSingleton<IFieldTypeFactory, FieldTypeFactory>();
