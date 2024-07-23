@@ -7,10 +7,11 @@ using Microsoft.Extensions.Logging;
 using Migration.Toolkit.Data.Configuration;
 using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Sitefinity.Abstractions;
+using Migration.Toolkit.Sitefinity.Core.Helpers;
 using Migration.Toolkit.Sitefinity.Model;
 
 namespace Migration.Toolkit.Sitefinity.Adapters;
-internal class MediaModelAdapter(ILogger<MediaLibraryModelAdapter> logger, SitefinityDataConfiguration sitefinityDataConfiguration) : UmtAdapterBaseWithDependencies<Media, MediaFileDependencies, MediaFileModel>(logger)
+internal class MediaModelAdapter(ILogger<MediaLibraryModelAdapter> logger, SitefinityDataConfiguration sitefinityDataConfiguration, IContentHelper contentHelper) : UmtAdapterBaseWithDependencies<Media, MediaFileDependencies, MediaFileModel>(logger)
 {
     protected override MediaFileModel? AdaptInternal(Media source, MediaFileDependencies mediaFileDependencies)
     {
