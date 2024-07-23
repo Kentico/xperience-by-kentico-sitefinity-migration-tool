@@ -65,4 +65,6 @@ internal interface IContentHelper
     /// <param name="numberOfSegments">Amount of segments to remove from path.</param>
     /// <returns>Updated path.</returns>
     public string RemovePathSegmentsFromStart(string path, int numberOfSegments);
+
+    public string UpdateImageUrls(ContentDependencies contentDependencies, string html);
 }

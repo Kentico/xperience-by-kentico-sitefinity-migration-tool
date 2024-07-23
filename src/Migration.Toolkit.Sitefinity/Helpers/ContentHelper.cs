@@ -1,4 +1,7 @@
-﻿using CMS.ContentEngine;
+﻿using AngleSharp;
+using AngleSharp.Html.Dom;
+
+using CMS.ContentEngine;
 using CMS.ContentEngine.Internal;
 using CMS.Helpers;
 
@@ -11,6 +14,7 @@ using Migration.Toolkit.Data.Core.Providers;
 using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Sitefinity.Core.Factories;
 using Migration.Toolkit.Sitefinity.Core.Helpers;
+using Migration.Toolkit.Sitefinity.FieldTypes;
 using Migration.Toolkit.Sitefinity.Model;
 
 using Progress.Sitefinity.RestSdk.Dto;
@@ -42,7 +46,7 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
 
             if (ValidationHelper.GetBoolean(culture.ContentLanguageIsDefault, false))
             {
-                var contentLanguageData = GetLanguageDataInternal(culture.ContentLanguageName, cultureSdkItem, dataClassModel, createdByUser);
+                var contentLanguageData = GetLanguageDataInternal(contentDependencies, culture.ContentLanguageName, cultureSdkItem, dataClassModel, createdByUser);
 
                 if (contentLanguageData == null)
                 {
@@ -63,7 +67,7 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
 
                     if (alternateLanguageContentItem.Culture.Equals(culture.ContentLanguageCultureFormat))
                     {
-                        var contentLanguageData = GetLanguageDataInternal(culture.ContentLanguageName, alternateLanguageContentItem, dataClassModel, createdByUser);
+                        var contentLanguageData = GetLanguageDataInternal(contentDependencies, culture.ContentLanguageName, alternateLanguageContentItem, dataClassModel, createdByUser);
 
                         if (contentLanguageData == null)
                         {
@@ -80,7 +84,7 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
         return languageData;
     }
 
-    private ContentItemLanguageData? GetLanguageDataInternal(string languageName, ICultureSdkItem cultureSdkItem, DataClassModel dataClassModel, UserInfoModel? user)
+    private ContentItemLanguageData? GetLanguageDataInternal(ContentDependencies contentDependencies, string languageName, ICultureSdkItem cultureSdkItem, DataClassModel dataClassModel, UserInfoModel? user)
     {
         if (string.IsNullOrEmpty(cultureSdkItem.UrlName))
         {
@@ -116,7 +120,14 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
             {
                 if (cultureSdkItem is SdkItem sdkItem)
                 {
-                    contentItemData.Add(field.Name, fieldType.GetData(sdkItem, field.Name));
+                    object data = fieldType.GetData(sdkItem, field.Name);
+
+                    if (fieldType is HtmlFieldType)
+                    {
+                        data = UpdateImageUrls(contentDependencies, ValidationHelper.GetString(data, ""));
+                    }
+
+                    contentItemData.Add(field.Name, data);
                 }
             }
             catch (Exception ex)
@@ -248,5 +259,97 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
         }
         string newPath = $"/{string.Join("/", segments.TakeLast(remainingSegments))}";
         return newPath;
+    }
+
+    public string UpdateImageUrls(ContentDependencies contentDependencies, string html)
+    {
+        int updatedSrcCount = 0;
+        int updatedHrefCount = 0;
+        string page = $"<html><body>{html}</body>";
+
+        using var context = BrowsingContext.New();
+        using var doc = context.OpenAsync(req => req.Content(page)).Result;
+        foreach (var image in doc.Images)
+        {
+            if (image.Source == null)
+            {
+                continue;
+            }
+
+            string url = image.Source.Replace("http://localhost", "");
+            string? permaLInkUrl = GetPermalink(contentDependencies, url);
+            if (!string.Equals(url, permaLInkUrl, StringComparison.OrdinalIgnoreCase))
+            {
+                updatedSrcCount++;
+            }
+            image.Source = permaLInkUrl;
+        }
+
+        foreach (var link in doc.Links.ToList().OfType<IHtmlAnchorElement>())
+        {
+            if (link.Href == null)
+            {
+                continue;
+            }
+
+            string url = link.Href.Replace("http://localhost", "");
+            string? permaLInkUrl = GetPermalink(contentDependencies, url);
+            if (!string.Equals(url, permaLInkUrl, StringComparison.OrdinalIgnoreCase))
+            {
+                updatedHrefCount++;
+            }
+
+            if (permaLInkUrl != null)
+            {
+                link.Href = permaLInkUrl;
+            }
+        }
+
+        if (updatedSrcCount > 0)
+        {
+            logger.LogInformation("\tPermalinks created {Count}", updatedSrcCount);
+        }
+
+        if (updatedHrefCount > 0)
+        {
+            logger.LogInformation("\tHrefs updated {Count}", updatedHrefCount);
+        }
+
+        if (doc.Body == null)
+        {
+            return html;
+        }
+
+        return doc.Body.InnerHtml;
+    }
+
+    private string? GetPermalink(ContentDependencies contentDependencies, string url)
+    {
+        url = url.TrimStart('~');
+
+        if (url.StartsWith("tel:", StringComparison.OrdinalIgnoreCase) || url.StartsWith("mailto:", StringComparison.OrdinalIgnoreCase))
+        {
+            return url;
+        }
+
+        MediaFileModel? mediaFile = null;
+
+        if (Uri.TryCreate(url, UriKind.Absolute, out var absoluteUri))
+        {
+            mediaFile = contentDependencies.MediaFiles.Values.FirstOrDefault(x => x.DataSourceUrl == URLHelper.RemoveQuery(absoluteUri.ToString()));
+        }
+
+        if (Uri.TryCreate(url, UriKind.Relative, out var relativeUri))
+        {
+            mediaFile = contentDependencies.MediaFiles.Values.FirstOrDefault(x => x.DataSourceUrl == "https://" + dataConfiguration.SitefinitySiteDomain + URLHelper.RemoveQuery(url));
+        }
+
+        if (mediaFile == null)
+        {
+            logger.LogInformation("Could not find media file for {PathAndQuery}", url);
+            return url;
+        }
+
+        return $"/getmedia/{mediaFile.FileGUID}/{mediaFile.FileName}{URLHelper.GetQuery(url)}";
     }
 }
