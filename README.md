@@ -16,9 +16,9 @@ The Sitefinity Migration Tool transfers content and other data from **Sitefinity
 
 ## Library Version Matrix
 
-| Xperience Version | Sitefinity Version |UMT Version | Library Version |
-| ----------------- | ------------------ |------------| --------------- |
-| >= 28.2.0         | 14.4.x             |1.2.0       |1.0.0            |
+| Xperience Version | Sitefinity Version | UMT Version | Library Version |
+| ----------------- | ------------------ | ----------- | --------------- |
+| >= 28.2.0         | 14.4.x             | 1.2.0       | 1.0.0           |
 
 ### Dependencies
 
@@ -32,12 +32,13 @@ The Sitefinity Migration Tool transfers content and other data from **Sitefinity
 1. Download this package from the repository [Releases](https://github.com/Kentico/xperience-by-kentico-sitefinity-migration-tool/releases)
 1. Check XbyK and Sitefinity settings to ensure proper communication. See [Usage Guide](./docs/Usage-Guide.md) for details.
 1. Navigate to the configuration file `/examples/Migration.Toolkit.Sitefinity.Console/appsettings.json`, update settings as needed. The details for configuration options can be found in the [Usage Guide](./docs/Usage-Guide.md).
-1. Execute the run command from an elevated command prompt in the folder `/examples/Migration.Toolkit.Sitefinity.Console`: 
-```
-dotnet run 
-```
-1. View migrated multi-lingual content, users, pages, and media in your XbyK instance.
+1. Execute the run command from an elevated command prompt in the folder `/examples/Migration.Toolkit.Sitefinity.Console`:
 
+```
+dotnet run
+```
+
+5. View migrated multi-lingual content, users, pages, and media in your XbyK instance.
 
 ## Full Instructions
 
