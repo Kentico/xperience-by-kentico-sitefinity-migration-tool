@@ -20,7 +20,7 @@
    - Make sure the Sitefinity content API is set to allow all content and is enabled. View the web service configuration under _Administration >> Web services >> Default_ ![alt text](image-4.png) In the configuration options for 'Default' make sure all content types are selected and 'This service is active' is checked/true.
      ![alt text](image-1.png)
 5. Set up XbyK
-   - Check that the XbyK default language matches the default language of the Sitefinity source site being migrated e.g. 'en-us' ![alt text](image-3.png). Sitefinity's default English culture is 'en'.
+   - Modify the XbyK default language to match the default language of the Sitefinity source site being migrated e.g. 'en-us'. Sitefinity's default English culture is 'en'. ![alt text](image-3.png).
 6. Make a back up of your XbyK database in case there are issues with the migration
 7. Execute the `dotnet run` command from an elevated command prompt
 8. Check the destination XbyK admin for correctness
@@ -102,7 +102,7 @@ Sitefinity path to the 'Default' API endpoint. It is required to have this 'Defa
 
 ### Sitefinity/ModuleDeploymentFolderPath
 
-Absolute path to the deployment folder created by the 'Export for Deployment' process in Sitefinity. This tool requires the deployment folder and type definitions in order to import the content types required for the content items and pages.
+**Absolute path** to the deployment folder created by the 'Export for Deployment' process in Sitefinity. This tool requires the deployment folder and type definitions in order to import the content types required for the content items and pages.
 
 ### Sitefinity/CodeNamePrefix
 
