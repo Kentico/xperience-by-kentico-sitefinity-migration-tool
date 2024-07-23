@@ -1,4 +1,6 @@
-﻿namespace Migration.Toolkit.Sitefinity.Configuration
+﻿using System.Text.Json.Serialization;
+
+namespace Migration.Toolkit.Sitefinity.Configuration
 {
     /// <summary>
     /// Configuration for which content types should be Website types and the location of the child pages in XbyK.
@@ -15,6 +17,13 @@
         public required string PageRootPath { get; set; }
         public string? ItemUrlName { get; set; }
 
-        public required string PageTemplateType { get; set; }
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public required PageTemplateType PageTemplateType { get; set; }
+    }
+
+    public enum PageTemplateType
+    {
+        Listing,
+        Detail
     }
 }

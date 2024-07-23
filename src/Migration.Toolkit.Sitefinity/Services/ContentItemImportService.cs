@@ -66,7 +66,7 @@ namespace Migration.Toolkit.Sitefinity.Services
                 return [];
             }
 
-            var detailPageConfigs = importConfiguration.PageContentTypes?.Where(x => x.PageTemplateType.Equals("Detail"));
+            var detailPageConfigs = importConfiguration.PageContentTypes?.Where(x => x.PageTemplateType == PageTemplateType.Detail);
 
             var contentItems = contentProvider.GetContentItems(typeDefinitions, currentSite.SystemCultures).OrderByDescending(x => (detailPageConfigs?.Any(z => z.TypeName.Equals(x.TypeName)) ?? false) ? x.TypeName : "");
 
