@@ -1,9 +1,8 @@
-﻿using AngleSharp;
-using AngleSharp.Html.Dom;
-
-using CMS.ContentEngine;
+﻿using CMS.ContentEngine;
 using CMS.ContentEngine.Internal;
 using CMS.Helpers;
+
+using HtmlAgilityPack;
 
 using Kentico.Xperience.UMT.Model;
 
@@ -263,64 +262,40 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
 
     public string UpdateImageUrls(ContentDependencies contentDependencies, string html)
     {
-        int updatedSrcCount = 0;
-        int updatedHrefCount = 0;
-        string page = $"<html><body>{html}</body>";
+        var document = new HtmlDocument();
+        document.LoadHtml(html);
 
-        using var context = BrowsingContext.New();
-        using var doc = context.OpenAsync(req => req.Content(page)).Result;
-        foreach (var image in doc.Images)
+        UpdateUrls(contentDependencies, document.DocumentNode.SelectNodes("//img"), "src");
+        UpdateUrls(contentDependencies, document.DocumentNode.SelectNodes("//a"), "href");
+
+        return document.DocumentNode.OuterHtml;
+    }
+
+    private void UpdateUrls(ContentDependencies contentDependencies, IEnumerable<HtmlNode> htmlNodes, string attributeName)
+    {
+        if (htmlNodes == null)
         {
-            if (image.Source == null)
+            return;
+        }
+
+        foreach (var htmlNode in htmlNodes)
+        {
+            string? attributeValue = htmlNode.GetAttributeValue(attributeName, null);
+
+            if (attributeValue == null)
             {
                 continue;
             }
 
-            string url = image.Source.Replace("http://localhost", "");
-            string? permaLInkUrl = GetPermalink(contentDependencies, url);
-            if (!string.Equals(url, permaLInkUrl, StringComparison.OrdinalIgnoreCase))
-            {
-                updatedSrcCount++;
-            }
-            image.Source = permaLInkUrl;
-        }
+            string? permaLinkUrl = GetPermalink(contentDependencies, attributeValue);
 
-        foreach (var link in doc.Links.ToList().OfType<IHtmlAnchorElement>())
-        {
-            if (link.Href == null)
+            if (permaLinkUrl == null)
             {
                 continue;
             }
 
-            string url = link.Href.Replace("http://localhost", "");
-            string? permaLInkUrl = GetPermalink(contentDependencies, url);
-            if (!string.Equals(url, permaLInkUrl, StringComparison.OrdinalIgnoreCase))
-            {
-                updatedHrefCount++;
-            }
-
-            if (permaLInkUrl != null)
-            {
-                link.Href = permaLInkUrl;
-            }
+            htmlNode.SetAttributeValue(attributeName, permaLinkUrl);
         }
-
-        if (updatedSrcCount > 0)
-        {
-            logger.LogInformation("\tPermalinks created {Count}", updatedSrcCount);
-        }
-
-        if (updatedHrefCount > 0)
-        {
-            logger.LogInformation("\tHrefs updated {Count}", updatedHrefCount);
-        }
-
-        if (doc.Body == null)
-        {
-            return html;
-        }
-
-        return doc.Body.InnerHtml;
     }
 
     private string? GetPermalink(ContentDependencies contentDependencies, string url)
