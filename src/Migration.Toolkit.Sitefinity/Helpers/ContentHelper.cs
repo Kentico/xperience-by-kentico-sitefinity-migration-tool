@@ -1,4 +1,6 @@
-﻿using CMS.ContentEngine;
+﻿using System.Text.Json;
+
+using CMS.ContentEngine;
 using CMS.ContentEngine.Internal;
 using CMS.Helpers;
 
@@ -124,6 +126,29 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
                     if (fieldType is HtmlFieldType)
                     {
                         data = UpdateImageUrls(contentDependencies, ValidationHelper.GetString(data, ""));
+                    }
+
+                    if (fieldType is LinkFieldType)
+                    {
+                        var links = JsonSerializer.Deserialize<IEnumerable<Link>>(ValidationHelper.GetString(data, ""), new JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true
+                        });
+
+                        if (links != null)
+                        {
+                            foreach (var link in links)
+                            {
+                                if (link.Href == null)
+                                {
+                                    continue;
+                                }
+
+                                link.Href = GetPermalink(contentDependencies, link.Href);
+                            }
+                        }
+
+                        data = JsonSerializer.Serialize(links);
                     }
 
                     contentItemData.Add(field.Name, data);
