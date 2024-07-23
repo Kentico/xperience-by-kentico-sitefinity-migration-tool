@@ -15,8 +15,13 @@ namespace Migration.Toolkit.Sitefinity.Configuration
         /// Root path where the child pages will be created in XbyK.
         /// </summary>
         public required string PageRootPath { get; set; }
+        /// <summary>
+        /// UrlName of item used as the detail page data.
+        /// </summary>
         public string? ItemUrlName { get; set; }
-
+        /// <summary>
+        /// Type of the page template. Either Listing or Detail.
+        /// </summary>
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public required PageTemplateType PageTemplateType { get; set; }
     }
