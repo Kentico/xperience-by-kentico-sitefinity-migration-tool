@@ -107,7 +107,7 @@ internal class ContentItemSimplifiedModelAdapter(ILogger<ContentItemSimplifiedMo
 
         foreach (var pageConfig in pageConfigs)
         {
-            if (pageConfig.PageTemplateType.Equals("Listing"))
+            if (pageConfig.PageTemplateType == PageTemplateType.Listing)
             {
                 var listingPage = dependenciesModel.WebPages?.Values.FirstOrDefault(x => x.PageData?.TreePath?.Equals(pageConfig.PageRootPath) ?? false);
 
@@ -139,7 +139,7 @@ internal class ContentItemSimplifiedModelAdapter(ILogger<ContentItemSimplifiedMo
                 return listingChildPageContentItem;
             }
 
-            if (pageConfig.PageTemplateType.Equals("Detail") && (pageConfig.PageRootPath.Equals(source.Url) || (pageConfig.ItemUrlName != null && pageConfig.ItemUrlName.Equals(source.Url))))
+            if (pageConfig.PageTemplateType == PageTemplateType.Detail && (pageConfig.PageRootPath.Equals(source.Url) || (pageConfig.ItemUrlName != null && pageConfig.ItemUrlName.Equals(source.Url))))
             {
                 var detailPage = dependenciesModel.WebPages?.Values.FirstOrDefault(x => (x.PageData?.TreePath?.Equals(pageConfig.PageRootPath) ?? false) || (x.PageData?.TreePath?.Equals(pageConfig.ItemUrlName) ?? false));
 
