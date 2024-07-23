@@ -589,6 +589,7 @@
       "migration.toolkit.sitefinity": {
         "type": "Project",
         "dependencies": {
+          "HtmlAgilityPack": "[1.11.61, )",
           "Kentico.Xperience.UMT": "[1.2.0, )",
           "Migration.Toolkit.Sitefinity.Data": "[1.0.0-prerelease-1, )"
         }
@@ -611,6 +612,12 @@
           "System.Buffers": "4.5.1",
           "System.Text.Encoding.CodePages": "6.0.0"
         }
+      },
+      "HtmlAgilityPack": {
+        "type": "CentralTransitive",
+        "requested": "[1.11.61, )",
+        "resolved": "1.11.61",
+        "contentHash": "hqZASeEFHS9quHvfZSwaULoAJLWkOYVPiQjc3P9J4pQS8vSYzrP3bxe04Vm7vYYuxwbQhq9hCSVvZVLTyRaNaQ=="
       },
       "Kentico.Xperience.Core": {
         "type": "CentralTransitive",
