@@ -10,9 +10,9 @@
       },
       "Kentico.Xperience.UMT": {
         "type": "Direct",
-        "requested": "[1.2.0, )",
-        "resolved": "1.2.0",
-        "contentHash": "SWyfFkK3J4SHFQ+LW3KwACUuHwNUtZ6sUZnTtaWkBbrzXRcczCbXRI4Cm4hp3Qiq1VuawsCrjcvGhHga32L6uw==",
+        "requested": "[1.2.1, )",
+        "resolved": "1.2.1",
+        "contentHash": "3EzSRkYymKk4Lq0NhuPQVUwLl7C/uyZS4ha5qFsUrJfpnZVfRCZQUWZvqYcPd5+YgK/1HX4KeQ5KLOcZmJb/Cg==",
         "dependencies": {
           "Kentico.Xperience.Core": "29.2.0",
           "Microsoft.Bcl.AsyncInterfaces": "8.0.0"

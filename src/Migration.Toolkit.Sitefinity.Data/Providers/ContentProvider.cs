@@ -66,27 +66,21 @@ internal class ContentProvider(IRestClient restClient, ILogger<ContentProvider> 
             {
                 item.DataClassGuid = typeDefinition.DataClassGuid;
                 item.TypeName = typeDefinition.SitefinityTypeName;
+                item.Culture = defaultCulture.Culture;
+
+                if (versions != null)
+                {
+                    var version = versions.FirstOrDefault(x => x.ItemId == item.Id);
+
+                    if (version != null)
+                    {
+                        item.Owner = version.Owner;
+                        item.ChangeType = version.ChangeType;
+                    }
+                }
 
                 contentItems.Add(item.Id, item);
             }
-        }
-
-        foreach (var contentItem in contentItems)
-        {
-            if (versions == null)
-            {
-                break;
-            }
-
-            var version = versions.FirstOrDefault(x => x.ItemId == contentItem.Key);
-
-            if (version != null)
-            {
-                contentItem.Value.Owner = version.Owner;
-                contentItem.Value.ChangeType = version.ChangeType;
-            }
-
-            contentItem.Value.Culture = defaultCulture.Culture;
         }
 
         return contentItems;
@@ -138,17 +132,17 @@ internal class ContentProvider(IRestClient restClient, ILogger<ContentProvider> 
 
         foreach (var page in sitefinityPages)
         {
-            if (pageNodes == null)
+            if (pageNodes != null)
             {
-                break;
+                var pageNode = pageNodes.FirstOrDefault(x => x.Id == page.Id);
+
+                if (pageNode != null)
+                {
+                    page.Owner = pageNode.Owner;
+                }
             }
 
-            var pageNode = pageNodes.FirstOrDefault(x => x.Id == page.Id);
-
-            if (pageNode != null)
-            {
-                page.Owner = pageNode.Owner;
-            }
+            page.Culture = culture.Culture;
 
             pages.Add(page.Id, page);
         }
