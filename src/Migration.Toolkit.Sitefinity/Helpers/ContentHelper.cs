@@ -56,7 +56,7 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
             {
                 foreach (var alternateLanguageContentItem in cultureSdkItem.AlternateLanguageContentItems)
                 {
-                    if (alternateLanguageContentItem.Culture == null)
+                    if (alternateLanguageContentItem.Culture == null || string.IsNullOrEmpty(alternateLanguageContentItem.UrlName) || alternateLanguageContentItem.UrlName.Equals(cultureSdkItem.UrlName))
                     {
                         continue;
                     }
