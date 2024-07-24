@@ -37,7 +37,7 @@ public partial class SitefinityVersionChange
     /// The date and time when the version change was created.
     /// </summary>
     [Column("date_created")]
-    public DateTime DateCreated { get; set; }
+    public DateTime? DateCreated { get; set; }
 
     /// <summary>
     /// The version number of the version change.

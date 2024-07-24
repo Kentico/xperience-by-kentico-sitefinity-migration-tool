@@ -66,5 +66,7 @@ internal interface IContentHelper
     /// <returns>Updated path.</returns>
     public string RemovePathSegmentsFromStart(string path, int numberOfSegments);
 
+    public string GetRelativeUrl(string url);
+
     public string UpdateImageUrls(ContentDependencies contentDependencies, string html);
 }

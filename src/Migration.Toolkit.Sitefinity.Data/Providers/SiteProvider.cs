@@ -12,8 +12,14 @@ internal class SiteProvider(SitefinityDataConfiguration configuration, ILogger<S
 {
     public IEnumerable<Site> GetSites()
     {
-        string siteFolder = Environment.CurrentDirectory + configuration.SitefinityModuleDeploymentFolderPath + "\\Multisite\\Content";
-        if (!Directory.Exists(siteFolder))
+        string siteFolder = configuration.SitefinityModuleDeploymentFolderPath + "\\Multisite\\Content";
+
+        if (!Path.IsPathRooted(configuration.SitefinityModuleDeploymentFolderPath))
+        {
+            siteFolder = Environment.CurrentDirectory + configuration.SitefinityModuleDeploymentFolderPath + "\\Multisite\\Content";
+        }
+
+        if (string.IsNullOrEmpty(siteFolder) || !Directory.Exists(siteFolder))
         {
             logger.LogError("Sitefinity site folder does not exist. {SiteFolder}", siteFolder);
             return [];

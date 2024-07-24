@@ -254,9 +254,9 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
         return pageUrls;
     }
 
-    private static string GetUrl(ICultureSdkItem source, string? rootPath, string? pagePath)
+    private string GetUrl(ICultureSdkItem source, string? rootPath, string? pagePath)
     {
-        string pageUrl = source.Url;
+        string pageUrl = GetRelativeUrl(source.Url);
 
         if (!string.IsNullOrEmpty(pagePath))
         {
@@ -283,6 +283,21 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
         }
         string newPath = $"/{string.Join("/", segments.TakeLast(remainingSegments))}";
         return newPath;
+    }
+
+    public string GetRelativeUrl(string url)
+    {
+        if (url.StartsWith('/'))
+        {
+            return url;
+        }
+
+        if (Uri.TryCreate(url, UriKind.Absolute, out var absoluteUri))
+        {
+            return absoluteUri.PathAndQuery;
+        }
+
+        return url;
     }
 
     public string UpdateImageUrls(ContentDependencies contentDependencies, string html)
