@@ -125,7 +125,7 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
 
                     if (fieldType is HtmlFieldType)
                     {
-                        data = UpdateImageUrls(contentDependencies, ValidationHelper.GetString(data, ""));
+                        data = UpdateUrlsToPermanent(contentDependencies, ValidationHelper.GetString(data, ""));
                     }
 
                     if (fieldType is LinkFieldType)
@@ -300,18 +300,18 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
         return url;
     }
 
-    public string UpdateImageUrls(ContentDependencies contentDependencies, string html)
+    public string UpdateUrlsToPermanent(IMediaDependencies mediaDependencies, string html)
     {
         var document = new HtmlDocument();
         document.LoadHtml(html);
 
-        UpdateUrls(contentDependencies, document.DocumentNode.SelectNodes("//img"), "src");
-        UpdateUrls(contentDependencies, document.DocumentNode.SelectNodes("//a"), "href");
+        UpdateUrls(mediaDependencies, document.DocumentNode.SelectNodes("//img"), "src");
+        UpdateUrls(mediaDependencies, document.DocumentNode.SelectNodes("//a"), "href");
 
         return document.DocumentNode.OuterHtml;
     }
 
-    private void UpdateUrls(ContentDependencies contentDependencies, IEnumerable<HtmlNode> htmlNodes, string attributeName)
+    private void UpdateUrls(IMediaDependencies mediaDependencies, IEnumerable<HtmlNode> htmlNodes, string attributeName)
     {
         if (htmlNodes == null)
         {
@@ -327,7 +327,7 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
                 continue;
             }
 
-            string? permaLinkUrl = GetPermalink(contentDependencies, attributeValue);
+            string? permaLinkUrl = GetPermalink(mediaDependencies, attributeValue);
 
             if (permaLinkUrl == null)
             {
@@ -338,7 +338,7 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
         }
     }
 
-    private string? GetPermalink(ContentDependencies contentDependencies, string url)
+    private string? GetPermalink(IMediaDependencies mediaDependencies, string url)
     {
         url = url.TrimStart('~');
 
@@ -351,12 +351,12 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
 
         if (Uri.TryCreate(url, UriKind.Absolute, out var absoluteUri))
         {
-            mediaFile = contentDependencies.MediaFiles.Values.FirstOrDefault(x => x.DataSourceUrl == URLHelper.RemoveQuery(absoluteUri.ToString()));
+            mediaFile = mediaDependencies.MediaFiles.Values.FirstOrDefault(x => x.DataSourceUrl == URLHelper.RemoveQuery(absoluteUri.ToString()));
         }
 
         if (Uri.TryCreate(url, UriKind.Relative, out var relativeUri))
         {
-            mediaFile = contentDependencies.MediaFiles.Values.FirstOrDefault(x => x.DataSourceUrl == "https://" + dataConfiguration.SitefinitySiteDomain + URLHelper.RemoveQuery(url));
+            mediaFile = mediaDependencies.MediaFiles.Values.FirstOrDefault(x => x.DataSourceUrl == "https://" + dataConfiguration.SitefinitySiteDomain + URLHelper.RemoveQuery(url));
         }
 
         if (mediaFile == null)

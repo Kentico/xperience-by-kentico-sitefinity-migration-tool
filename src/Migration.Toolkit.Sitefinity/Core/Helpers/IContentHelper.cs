@@ -66,7 +66,18 @@ internal interface IContentHelper
     /// <returns>Updated path.</returns>
     public string RemovePathSegmentsFromStart(string path, int numberOfSegments);
 
+    /// <summary>
+    /// Makes absolute urls as relative. Handles both absolute and relative urls.
+    /// </summary>
+    /// <param name="url">Absolute or relatvie url.</param>
+    /// <returns>Relative url.</returns>
     public string GetRelativeUrl(string url);
 
-    public string UpdateImageUrls(ContentDependencies contentDependencies, string html);
+    /// <summary>
+    /// Updates all image and link urls to the media's permanent urls.
+    /// </summary>
+    /// <param name="mediaDependencies">Required media files to process urls.</param>
+    /// <param name="html">Html to be processed.</param>
+    /// <returns>Html with media permanent urls where applicable.</returns>
+    public string UpdateUrlsToPermanent(IMediaDependencies mediaDependencies, string html);
 }
