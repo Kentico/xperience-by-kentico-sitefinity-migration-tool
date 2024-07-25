@@ -4,6 +4,8 @@ using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Sitefinity.Abstractions;
 using Migration.Toolkit.Sitefinity.Core;
 
+using Progress.Sitefinity.RestSdk.Dto;
+
 namespace Migration.Toolkit.Sitefinity.FieldTypes;
 /// <summary>
 /// Field type for Sitefinity Date field: "Telerik.Sitefinity.Web.UI.Fields.DateField".
@@ -18,4 +20,5 @@ public class DateFieldType : FieldTypeBase, IFieldType
     {
         ControlName = "Kentico.Administration.DateTimeInput"
     };
+    public override object GetData(SdkItem sdkItem, string fieldName) => sdkItem.GetValue<DateTime>(fieldName);
 }

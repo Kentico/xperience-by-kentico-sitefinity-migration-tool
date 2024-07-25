@@ -1,8 +1,8 @@
 ﻿using Kentico.Xperience.UMT.Model;
 using Kentico.Xperience.UMT.Services;
 
-using Migration.Tookit.Data.Models;
 using Migration.Toolkit.Data.Core.Providers;
+using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Sitefinity.Core.Adapters;
 using Migration.Toolkit.Sitefinity.Core.Services;
 using Migration.Toolkit.Sitefinity.Model;
@@ -12,7 +12,7 @@ internal class MediaImportService(IImportService kenticoImportService,
                                     IMediaLibraryImportService mediaLibraryImportService,
                                     IUserImportService userImportService,
                                             IMediaProvider mediaProvider,
-                                            IUmtAdapter<Media, MediaFileDependencies, MediaFileModel> adapter) : IMediaImportService
+                                            IUmtAdapterWithDependencies<Media, MediaFileDependencies, MediaFileModel> adapter) : IMediaImportService
 {
     public IEnumerable<MediaFileModel> Get(MediaFileDependencies dependenciesModel)
     {
@@ -38,12 +38,19 @@ internal class MediaImportService(IImportService kenticoImportService,
             Users = userResult.ImportedModels
         };
 
+        return Import(userResult.Observer, dependencies);
+    }
+
+    public SitefinityImportResult<MediaFileModel> StartImportWithDependencies(ImportStateObserver observer, MediaFileDependencies dependenciesModel) => Import(observer, dependenciesModel);
+
+    private SitefinityImportResult<MediaFileModel> Import(ImportStateObserver observer, MediaFileDependencies dependencies)
+    {
         var mediaFiles = Get(dependencies);
 
         return new SitefinityImportResult<MediaFileModel>
         {
             ImportedModels = mediaFiles.ToDictionary(x => x.FileGUID),
-            Observer = kenticoImportService.StartImport(mediaFiles, userResult.Observer)
+            Observer = kenticoImportService.StartImport(mediaFiles, observer)
         };
     }
 }

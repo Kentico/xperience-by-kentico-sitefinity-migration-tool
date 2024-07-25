@@ -3,16 +3,17 @@ using Kentico.Xperience.UMT.Model;
 
 using Microsoft.Extensions.DependencyInjection;
 
-using Migration.Tookit.Data.Models;
 using Migration.Toolkit.Data.Configuration;
 using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Sitefinity.Adapters;
 using Migration.Toolkit.Sitefinity.Configuration;
 using Migration.Toolkit.Sitefinity.Core.Adapters;
 using Migration.Toolkit.Sitefinity.Core.Factories;
+using Migration.Toolkit.Sitefinity.Core.Helpers;
 using Migration.Toolkit.Sitefinity.Core.Services;
 using Migration.Toolkit.Sitefinity.Data;
 using Migration.Toolkit.Sitefinity.Factories;
+using Migration.Toolkit.Sitefinity.Helpers;
 using Migration.Toolkit.Sitefinity.Model;
 using Migration.Toolkit.Sitefinity.Services;
 
@@ -45,12 +46,24 @@ public static class ServiceCollectionExtensions
         services.AddTransient<ISitefinityImportService, SitefinityImportService>();
         services.AddTransient<IMediaLibraryImportService, MediaLibraryImportService>();
         services.AddTransient<IMediaImportService, MediaImportService>();
+        services.AddTransient<IWebPageImportService, WebPageImportService>();
+        services.AddTransient<IContentItemImportService, ContentItemImportService>();
+        services.AddTransient<IChannelImportService, ChannelImportService>();
+        services.AddTransient<IContentLanguageImportService, ContentLanguageImportService>();
 
         // Adapters
         services.AddTransient<IUmtAdapter<User, UserInfoModel>, UserInfoModelAdapter>();
-        services.AddTransient<IUmtAdapter<SitefinityType, DataClassModel>, DataClassModelAdapter>();
+        services.AddTransient<IUmtAdapterWithDependencies<SitefinityType, DataClassDependencies>, DataClassModelAdapter>();
         services.AddTransient<IUmtAdapter<Library, MediaLibraryModel>, MediaLibraryModelAdapter>();
-        services.AddTransient<IUmtAdapter<Media, MediaFileDependencies, MediaFileModel>, MediaModelAdapter>();
+        services.AddTransient<IUmtAdapterWithDependencies<Media, MediaFileDependencies, MediaFileModel>, MediaModelAdapter>();
+        services.AddTransient<IUmtAdapterWithDependencies<Page, ContentDependencies, ContentItemSimplifiedModel>, WebPageModelAdapter>();
+        services.AddTransient<IUmtAdapterWithDependencies<ContentItem, ContentDependencies, ContentItemSimplifiedModel>, ContentItemSimplifiedModelAdapter>();
+        services.AddTransient<IUmtAdapterWithDependencies<Site, ChannelDependencies>, ChannelModelAdapter>();
+        services.AddTransient<IUmtAdapter<SystemCulture, ContentLanguageModel>, ContentLanguageModelAdapter>();
+
+        // Helpers
+        services.AddSingleton<IContentHelper, ContentHelper>();
+        services.AddSingleton<ITypeHelper, TypeHelper>();
 
         // Factories
         services.AddSingleton<IFieldTypeFactory, FieldTypeFactory>();

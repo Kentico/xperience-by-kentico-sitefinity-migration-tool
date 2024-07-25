@@ -12,7 +12,7 @@
         "SpecialType": 0,
         "MediaType": "",
         "FieldTypeDisplayName": "ShortText",
-        "IsRequired": true,
+        "IsRequired": false,
         "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.TextField",
         "Id": "cc37434e-84b0-406b-9bc0-3a91bb20200e"
       },

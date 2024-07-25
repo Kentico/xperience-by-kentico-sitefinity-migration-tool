@@ -1,8 +1,6 @@
-﻿using Migration.Toolkit.Data.Models;
+﻿using Progress.Sitefinity.RestSdk.Dto;
 
-using Progress.Sitefinity.RestSdk.Dto;
-
-namespace Migration.Tookit.Data.Models;
+namespace Migration.Toolkit.Data.Models;
 /// <summary>
 /// SdkItem model for Sitefinity media. Can be used for images, videos or documents.
 /// </summary>

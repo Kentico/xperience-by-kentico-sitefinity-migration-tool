@@ -10,9 +10,9 @@ public class SitefinityDataConfiguration
     public required string SitefinityConnectionString { get; set; }
 
     /// <summary>
-    /// Sitefinity site url used to create absolute urls.
+    /// Sitefinity site domain used to determine which site data to import.
     /// </summary>
-    public required string SitefinitySiteUrl { get; set; }
+    public required string SitefinitySiteDomain { get; set; }
 
     /// <summary>
     /// Sitefinity site url used to build the rest api url.

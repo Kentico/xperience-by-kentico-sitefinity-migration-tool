@@ -10,7 +10,7 @@
     <PackageVersion Include="Kentico.Xperience.Admin" Version="28.4.2" />
     <PackageVersion Include="Kentico.Xperience.Core" Version="29.1.0" />
     <PackageVersion Include="Kentico.Xperience.ImageProcessing" Version="29.1.0" />
-    <PackageVersion Include="Kentico.Xperience.UMT" Version="1.1.0" />
+    <PackageVersion Include="Kentico.Xperience.UMT" Version="1.2.1" />
     <PackageVersion Include="Kentico.Xperience.WebApp" Version="28.4.2" />
     <PackageVersion Include="kentico.xperience.azurestorage" Version="28.4.2" />
     <PackageVersion Include="kentico.xperience.imageprocessing" Version="28.4.2" />

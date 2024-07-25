@@ -4,5 +4,8 @@
 /// </summary>
 public interface ISitefinityModel
 {
-    Guid Id { get; set; }
+    /// <summary>
+    /// The unique identifier of the model.
+    /// </summary>
+    Guid Id { get; }
 }

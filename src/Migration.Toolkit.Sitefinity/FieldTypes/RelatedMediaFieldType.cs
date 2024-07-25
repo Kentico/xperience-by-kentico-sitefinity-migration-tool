@@ -1,8 +1,13 @@
-﻿using Kentico.Xperience.UMT.Model;
+﻿using System.Text.Json;
+
+using Kentico.Xperience.UMT.Model;
 
 using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Sitefinity.Abstractions;
 using Migration.Toolkit.Sitefinity.Core;
+using Migration.Toolkit.Sitefinity.Model;
+
+using Progress.Sitefinity.RestSdk.Dto;
 
 namespace Migration.Toolkit.Sitefinity.FieldTypes;
 /// <summary>
@@ -23,4 +28,30 @@ public class RelatedMediaFieldType : FieldTypeBase, IFieldType
             { "MaximumAssets", !string.IsNullOrEmpty(sitefinityField.MaxNumberRange) && sitefinityField.MaxNumberRange.Equals("0") ? "100" : sitefinityField.MaxNumberRange }
         }
     };
+    public override object GetData(SdkItem sdkItem, string fieldName)
+    {
+        var relatedData = sdkItem.GetValue<IEnumerable<ImageDto>>(fieldName);
+
+        var contentRelatedItems = new List<ImageRelatedItem>();
+
+        foreach (var item in relatedData)
+        {
+            if (Guid.TryParse(item.Id, out var result))
+            {
+                contentRelatedItems.Add(new ImageRelatedItem
+                {
+                    Identifier = result,
+                    Name = item.Title,
+                    Size = item.TotalSize,
+                    Dimensions = new Dimensions
+                    {
+                        Width = item.Width,
+                        Height = item.Height
+                    }
+                });
+            }
+        }
+
+        return JsonSerializer.Serialize(contentRelatedItems);
+    }
 }

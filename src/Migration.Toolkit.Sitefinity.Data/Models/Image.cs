@@ -1,4 +1,4 @@
-﻿namespace Migration.Tookit.Data.Models;
+namespace Migration.Toolkit.Data.Models;
 /// <summary>
 /// SdkItem model for Sitefinity images.
 /// </summary>

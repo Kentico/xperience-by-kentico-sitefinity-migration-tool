@@ -1,8 +1,12 @@
-﻿using Kentico.Xperience.UMT.Model;
+﻿using System.Text.Json;
+
+using Kentico.Xperience.UMT.Model;
 
 using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Sitefinity.Abstractions;
 using Migration.Toolkit.Sitefinity.Core;
+
+using Progress.Sitefinity.RestSdk.Dto;
 
 namespace Migration.Toolkit.Sitefinity.FieldTypes;
 /// <summary>
@@ -18,4 +22,11 @@ public class AddressFieldType : FieldTypeBase, IFieldType
     {
         ControlName = "Kentico.Administration.TextArea"
     };
+
+    public override object GetData(SdkItem sdkItem, string fieldName)
+    {
+        var address = sdkItem.GetValue<Address>(fieldName);
+
+        return JsonSerializer.Serialize(address);
+    }
 }

@@ -9,8 +9,8 @@ using Migration.Toolkit.Data.Models;
 namespace Migration.Toolkit.Data.Providers;
 internal class TypeProvider(SitefinityDataConfiguration configuration, ILogger<TypeProvider> logger) : ITypeProvider
 {
-    private readonly string[] excludedFileNames = new string[] { "version.sf", "configs.sf", "widgetTemplates.sf" };
-    private readonly string[] sitefinityTypeDirectories = new string[] { "Blogs", "Events", "Lists", "News" };
+    private readonly string[] excludedFileNames = ["version.sf", "configs.sf", "widgetTemplates.sf"];
+    private readonly string[] sitefinityTypeDirectories = ["Blogs", "Events", "Lists", "News"];
     private readonly string staticSitefinityTypesDirectory = Environment.CurrentDirectory + "\\StaticSitefinityTypes";
 
     public IEnumerable<SitefinityType> GetAllTypes()
@@ -105,7 +105,7 @@ internal class TypeProvider(SitefinityDataConfiguration configuration, ILogger<T
 
         foreach (var sitefinityType in sitefinityTypes)
         {
-            var existingType = staticSitefinityTypes.FirstOrDefault(x => x.Name == sitefinityType.Name);
+            var existingType = staticSitefinityTypes.Find(x => x.Name == sitefinityType.Name);
 
             if (existingType != null && existingType.Fields != null && sitefinityType.Fields != null)
             {
@@ -116,7 +116,7 @@ internal class TypeProvider(SitefinityDataConfiguration configuration, ILogger<T
         return staticSitefinityTypes;
     }
 
-    private IEnumerable<SitefinityType> GetStaticSitefinityTypes()
+    private List<StaticSitefinityType> GetStaticSitefinityTypes()
     {
         if (!Directory.Exists(staticSitefinityTypesDirectory))
         {

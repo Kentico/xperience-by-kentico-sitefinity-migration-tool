@@ -1,16 +1,17 @@
-﻿using CMS.Helpers;
+using CMS.Helpers;
 
 using Kentico.Xperience.UMT.Model;
 
 using Microsoft.Extensions.Logging;
 
-using Migration.Tookit.Data.Models;
 using Migration.Toolkit.Data.Configuration;
+using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Sitefinity.Abstractions;
+using Migration.Toolkit.Sitefinity.Core.Helpers;
 using Migration.Toolkit.Sitefinity.Model;
 
 namespace Migration.Toolkit.Sitefinity.Adapters;
-internal class MediaModelAdapter(ILogger<MediaLibraryModelAdapter> logger, SitefinityDataConfiguration sitefinityDataConfiguration) : UmtAdapterBase<Media, MediaFileDependencies, MediaFileModel>(logger)
+internal class MediaModelAdapter(ILogger<MediaLibraryModelAdapter> logger, SitefinityDataConfiguration sitefinityDataConfiguration, IContentHelper contentHelper) : UmtAdapterBaseWithDependencies<Media, MediaFileDependencies, MediaFileModel>(logger)
 {
     protected override MediaFileModel? AdaptInternal(Media source, MediaFileDependencies mediaFileDependencies)
     {
@@ -27,9 +28,7 @@ internal class MediaModelAdapter(ILogger<MediaLibraryModelAdapter> logger, Sitef
         users.TryGetValue(ValidationHelper.GetGuid(source.CreatedBy, Guid.Empty), out var createdByUser);
         users.TryGetValue(ValidationHelper.GetGuid(source.LastModifiedBy, Guid.Empty), out var modifiedByUser);
 
-        var uri = new Uri(sitefinityDataConfiguration.SitefinitySiteUrl + source.ItemDefaultUrl, UriKind.Absolute);
-
-        string mediaPath = uri.Segments.Skip(4).SkipLast(1).Join("/");
+        string mediaPath = contentHelper.RemovePathSegmentsFromStart(URLHelper.RemoveQuery(source.ItemDefaultUrl), 4).TrimStart('/') + source.Extension;
 
         var mediaFile = new MediaFileModel
         {
@@ -47,7 +46,7 @@ internal class MediaModelAdapter(ILogger<MediaLibraryModelAdapter> logger, Sitef
             FileCreatedByUserGuid = createdByUser?.UserGUID,
             DataSourceUrl = Uri.IsWellFormedUriString(source.Url, UriKind.Absolute)
             ? source.Url
-            : sitefinityDataConfiguration.SitefinitySiteUrl + source.Url,
+            : "https://" + sitefinityDataConfiguration.SitefinitySiteDomain + source.Url,
         };
 
         if (source is Image image)

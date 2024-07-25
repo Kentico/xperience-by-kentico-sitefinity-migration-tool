@@ -59,6 +59,8 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IUserProvider, UserProvider>();
         services.AddTransient<ITypeProvider, TypeProvider>();
         services.AddTransient<IMediaProvider, MediaProvider>();
+        services.AddTransient<IContentProvider, ContentProvider>();
+        services.AddTransient<ISiteProvider, SiteProvider>();
 
         return services;
     }
