@@ -29,6 +29,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddSingleton(configuration);
 
+        // Sitefinity RestSdk Initialization
         services.AddHttpClient("sfservice", (servicesProvider, client) =>
         {
             client.BaseAddress = new Uri(configuration.SitefinityRestApiUrl);
@@ -51,9 +52,13 @@ public static class ServiceCollectionExtensions
             return restClient;
         });
 
+        // Entity Framework Initialization
         services.AddDbContextFactory<SitefinityContext>(options => options.UseSqlServer(configuration.SitefinityConnectionString));
+
+        // Providers
         services.AddTransient<IUserProvider, UserProvider>();
         services.AddTransient<ITypeProvider, TypeProvider>();
+        services.AddTransient<IMediaProvider, MediaProvider>();
 
         return services;
     }

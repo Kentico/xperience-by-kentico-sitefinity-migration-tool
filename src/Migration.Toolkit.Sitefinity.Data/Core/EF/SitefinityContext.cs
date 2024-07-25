@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+using Migration.Tookit.Data.Models;
 using Migration.Toolkit.Data.Models;
 
 namespace Migration.Toolkit.Data.Core.EF;
 /// <summary>
-/// Entity Framework Context for Sitefinity database
+/// Entity Framework Context for Sitefinity database.
 /// </summary>
 public partial class SitefinityContext : DbContext
 {
@@ -14,5 +15,6 @@ public partial class SitefinityContext : DbContext
     }
 
     public virtual DbSet<User> Users { get; set; }
+    public virtual DbSet<SitefinityMediaContent> MediaContent { get; set; }
 
 }

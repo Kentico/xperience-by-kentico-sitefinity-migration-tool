@@ -7,7 +7,7 @@ using Migration.Toolkit.Sitefinity.Core;
 
 namespace Migration.Toolkit.Sitefinity.FieldTypes;
 /// <summary>
-/// Field type for Sitefinity RelatedData field: "Telerik.Sitefinity.Web.UI.Fields.RelatedDataField"
+/// Field type for Sitefinity RelatedData field: "Telerik.Sitefinity.Web.UI.Fields.RelatedDataField".
 /// </summary>
 public class RelatedDataFieldType : FieldTypeBase, IFieldType
 {
@@ -18,6 +18,7 @@ public class RelatedDataFieldType : FieldTypeBase, IFieldType
     public RelatedDataFieldType(ITypeProvider typeProvider) => sitefinityTypes = typeProvider.GetAllTypes();
 
     public override string GetColumnType(Field sitefinityField) => "contentitemreference";
+
     public override FormFieldSettings GetSettings(Field sitefinityField)
     {
         var allowedType = sitefinityTypes.FirstOrDefault(x => $"{x.ClassNamespace}.{x.Name}".Equals(sitefinityField.RelatedDataType));
@@ -32,5 +33,4 @@ public class RelatedDataFieldType : FieldTypeBase, IFieldType
             }
         };
     }
-
 }

@@ -1,13 +1,8 @@
-﻿#pragma warning disable S1135 // this is sample, todos are here for end user
-// See https://aka.ms/new-console-template for more information
-
-using System.Text.Json;
+﻿using System.Text.Json;
 
 using CMS.Core;
 using CMS.DataEngine;
-//using CMS.DataEngine;
 
-//using Kentico.Xperience.UMT;
 using Kentico.Xperience.UMT.Services;
 
 using Microsoft.Extensions.Configuration;
@@ -15,7 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 using Migration.Toolkit.Data.Configuration;
-//using Microsoft.Extensions.Logging;
 
 using Migration.Toolkit.Sitefinity;
 using Migration.Toolkit.Sitefinity.Configuration;
@@ -36,7 +30,8 @@ services.AddLogging(b => b.AddDebug().AddSimpleConsole(options => options.Single
 services.AddSitefinityMigrationToolkit(new SitefinityDataConfiguration
 {
     SitefinityConnectionString = root.GetValue<string>("ConnectionStrings:SitefinityConnectionString") ?? "",
-    SitefinityRestApiUrl = root.GetValue<string>("Sitefinity:Url") ?? "" + root.GetValue<string>("Sitefinity:WebServicePath") ?? "",
+    SitefinitySiteUrl = root.GetValue<string>("Sitefinity:Url") ?? "",
+    SitefinityRestApiUrl = root.GetValue<string>("Sitefinity:Url") + root.GetValue<string>("Sitefinity:WebServicePath"),
     SitefinityModuleDeploymentFolderPath = root.GetValue<string>("Sitefinity:ModuleDeploymentFolderPath") ?? "",
 }, new SitefinityImportConfiguration
 {
@@ -59,11 +54,10 @@ importObserver.ImportedInfo += (model, info) => Console.WriteLine($"{model.Print
 importObserver.Exception += (model, uniqueId, exception) => Console.WriteLine($"Error in model {model.PrintMe()}: '{uniqueId}': {exception}");
 
 // initiate import
-var observer = importService.StartImportContentTypes(importObserver);
+var observer = importService.StartImportMedia(importObserver);
 
 // wait until import finishes
 await observer.ImportCompletedTask;
 
 Console.WriteLine("Finished!");
 
-#pragma warning restore S1135
