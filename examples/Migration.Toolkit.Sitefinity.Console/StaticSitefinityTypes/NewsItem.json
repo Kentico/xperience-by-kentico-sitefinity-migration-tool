@@ -1,0 +1,262 @@
+[
+  {
+    "Id": "f9431069-02a4-480a-b5d9-5e89cb3b4b68",
+    "DisplayName": "News",
+    "ClassName": "NewsItem",
+    "Namespace": "Telerik.Sitefinity.News.Model",
+    "Fields": [
+      {
+        "Name": "Content",
+        "Title": "Content",
+        "FieldType": 2,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "LongText",
+        "IsRequired": false,
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.HtmlField",
+        "Id": "170b1ed9-baa5-462f-b858-f04652281632"
+      },
+      {
+        "Name": "Summary",
+        "Title": "Summary",
+        "FieldType": 1,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "ShortText",
+        "IsRequired": false,
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.TextField",
+        "DBLength": "4000",
+        "Id": "6a9a749d-856f-40ba-8ec7-f5e2c4697c98"
+      },
+      {
+        "Name": "ItemDefaultUrl",
+        "Title": "ItemDefaultUrl",
+        "FieldType": 1,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "ShortText",
+        "IsRequired": false,
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.TextField",
+        "DBLength": "510",
+        "Id": "05b53185-d33d-45ab-9461-5edb7327ba3c"
+      },
+      {
+        "Name": "SourceName",
+        "Title": "source name",
+        "FieldType": 1,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "ShortText",
+        "IsRequired": false,
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.TextField",
+        "Id": "a1d99d1c-481d-46df-82cc-f395575b2460"
+      },
+      {
+        "Name": "SourceSite",
+        "Title": "source site",
+        "FieldType": 1,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "ShortText",
+        "IsRequired": false,
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.TextField",
+        "Id": "628b5e4e-bab2-4c6e-ab65-da1e2384a276"
+      },
+      {
+        "Name": "ApprovalWorkflowState",
+        "Title": "ApprovalWorkflowState",
+        "FieldType": 1,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "ShortText",
+        "IsRequired": false,
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.TextField",
+        "Id": "e645196a-80d0-4286-8c6a-e4ff41348e44"
+      },
+      {
+        "Name": "Visible",
+        "Title": "Visible",
+        "FieldType": 4,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "YesNo",
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.ChoiceField",
+        "Id": "591f50ad-11a7-44ca-9451-7cfa9c0a6c47"
+      },
+      {
+        "Name": "AllowTrackBacks",
+        "Title": "AllowTrackBacks",
+        "FieldType": 4,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "YesNo",
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.ChoiceField",
+        "Id": "094647a6-37b4-4b7c-8f82-551d67ba4157"
+      },
+      {
+        "Name": "AllowComments",
+        "Title": "AllowComments",
+        "FieldType": 4,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "YesNo",
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.ChoiceField",
+        "Id": "543ec49b-bbb9-40fa-a25d-e1adb3b74b4b"
+      },
+      {
+        "Name": "ApproveComments",
+        "Title": "ApproveComments",
+        "FieldType": 4,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "YesNo",
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.ChoiceField",
+        "Id": "214243dc-b831-4103-a60f-6851f6f5ce64"
+      },
+      {
+        "Name": "EmailAuthor",
+        "Title": "EmailAuthor",
+        "FieldType": 4,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "YesNo",
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.ChoiceField",
+        "Id": "ef1a0d01-07de-4b5a-b5f6-d5a6e02c04b3"
+      },
+      {
+        "Name": "Title",
+        "Title": "Title",
+        "FieldType": 1,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "ShortText",
+        "IsRequired": true,
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.TextField",
+        "Id": "28766472-ebc0-4e34-807a-650809476b21"
+      },
+      {
+        "Name": "Description",
+        "Title": "Description",
+        "FieldType": 1,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "LongText",
+        "IsRequired": false,
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.TextField",
+        "Id": "c545af77-1618-4ee8-9bd3-855891d76964"
+      },
+      {
+        "Name": "ViewsCount",
+        "Title": "ViewsCount",
+        "FieldType": 7,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "Number",
+        "DBType": "NUMERIC",
+        "AllowNulls": true,
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.TextField",
+        "Id": "5ef8259b-b94e-4dfc-b42a-8d8e72a526d7"
+      },
+      {
+        "Name": "VotesCount",
+        "Title": "VotesCount",
+        "FieldType": 7,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "Number",
+        "DBType": "NUMERIC",
+        "AllowNulls": true,
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.TextField",
+        "Id": "15b28285-1fc5-48c5-937e-db131e370d1e"
+      },
+      {
+        "Name": "VotesSum",
+        "Title": "VotesSum",
+        "FieldType": 7,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "Number",
+        "DBType": "NUMERIC",
+        "AllowNulls": true,
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.TextField",
+        "DecimalPlacesCount": 10,
+        "Id": "ed10a59d-6c45-413a-8103-3c62fc4a5416"
+      },
+      {
+        "Name": "Version",
+        "Title": "Version",
+        "FieldType": 7,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "Number",
+        "DBType": "NUMERIC",
+        "AllowNulls": true,
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.TextField",
+        "Id": "80c52912-8221-47fc-b3ed-a45d9d9dd0e2"
+      },
+      {
+        "Name": "UrlName",
+        "Title": "URL Name",
+        "FieldType": 0,
+        "SpecialType": 1,
+        "IsTransient": true,
+        "FieldTypeDisplayName": "Unknown",
+        "IsRequired": true,
+        "Ordinal": 2,
+        "RegularExpression": "^[\\p{L}\\-_\\.!~*'()\\d]+$",
+        "Id": "42976b60-974f-4ea7-b1f8-05d3f2321fe4"
+      },
+      {
+        "Name": "Author",
+        "Title": "Author",
+        "FieldType": 0,
+        "SpecialType": 4,
+        "Id": "3986ad1d-cf7c-49d9-ad2f-c6006a917674"
+      },
+      {
+        "Name": "PublicationDate",
+        "Title": "Publication date",
+        "FieldType": 0,
+        "SpecialType": 3,
+        "Id": "351a794f-6abd-4d38-af8a-4eda0ce2c8b3"
+      },
+      {
+        "Name": "ExpirationDate",
+        "Title": "Expiration date",
+        "FieldType": 0,
+        "SpecialType": 3,
+        "Id": "03eea988-f4cf-4ccc-896b-608545f966fa"
+      },
+      {
+        "Name": "LastModified",
+        "Title": "Last modified",
+        "FieldType": 0,
+        "SpecialType": 8,
+        "Id": "756e3de3-979f-4353-ad3f-466659ff31e8"
+      },
+      {
+        "Name": "DateCreated",
+        "Title": "Created on",
+        "FieldType": 0,
+        "SpecialType": 9,
+        "IsTransient": true,
+        "FieldTypeDisplayName": "Unknown",
+        "Ordinal": 8,
+        "Id": "2b145e5a-7691-427f-b597-2f374848db77"
+      },
+      {
+        "Name": "IncludeInSitemap",
+        "Title": "Include in sitemap",
+        "FieldType": 0,
+        "SpecialType": 7,
+        "Id": "11b146b7-4d68-49b2-9056-7cdde5fa5538"
+      },
+      {
+        "Name": "Status",
+        "Title": "Status",
+        "DBType": "int",
+        "Id": "ab964d68-cc53-46de-92f0-51bdee0c3a8e"
+      }
+    ]
+  }
+]

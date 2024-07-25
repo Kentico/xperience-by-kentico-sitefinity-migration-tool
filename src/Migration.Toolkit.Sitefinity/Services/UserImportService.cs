@@ -1,38 +1,32 @@
-using CMS.Helpers;
-
-using Kentico.Xperience.UMT.Model;
+﻿using Kentico.Xperience.UMT.Model;
 using Kentico.Xperience.UMT.Services;
 
-using Migration.Tookit.Data.Core.Providers;
-using Migration.Tookit.Sitefinity.Core.Services;
+using Migration.Toolkit.Data.Core.Providers;
+using Migration.Toolkit.Data.Models;
+using Migration.Toolkit.Sitefinity.Core.Adapters;
+using Migration.Toolkit.Sitefinity.Core.Services;
+using Migration.Toolkit.Sitefinity.Model;
 
-namespace Migration.Tookit.Sitefinity.Services;
-internal class UserImportService(IImportService kenticoImportService, IUserProvider userProvider) : IUserImportService
+namespace Migration.Toolkit.Sitefinity.Services;
+internal class UserImportService(IImportService kenticoImportService,
+                                    IUserProvider userProvider,
+                                    IUmtAdapter<User, UserInfoModel> mapper) : IUserImportService
 {
     public IEnumerable<UserInfoModel> Get()
     {
         var users = userProvider.GetUsers();
-        var random = new Random();
 
-        return users.Select(user => new UserInfoModel
-        {
-            UserGUID = ValidationHelper.GetGuid(user.Id, Guid.Empty),
-            UserName = user.UserName,
-            Email = user.Email,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            UserPassword = SecurityHelper.GetSHA2Hash("ImportTemp" + random.Next()),
-            UserEnabled = true,
-            UserIsPendingRegistration = false,
-            UserIsExternal = false,
-            UserAdministrationAccess = user.IsBackendUser
-        });
+        return mapper.Adapt(users);
     }
 
-    public ImportStateObserver StartImport(ImportStateObserver observer)
+    public SitefinityImportResult<UserInfoModel> StartImport(ImportStateObserver observer)
     {
-        var users = Get();
+        var importedModels = Get();
 
-        return kenticoImportService.StartImport(users, observer);
+        return new SitefinityImportResult<UserInfoModel>
+        {
+            ImportedModels = importedModels.ToDictionary(x => x.UserGUID),
+            Observer = kenticoImportService.StartImport(importedModels, observer)
+        };
     }
 }

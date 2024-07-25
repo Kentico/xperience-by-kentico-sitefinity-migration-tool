@@ -1,0 +1,448 @@
+[
+  {
+    "DisplayName": "Blog",
+    "ClassName": "Blog",
+    "Id": "8199a34f-a520-4f42-a8f8-40af7ace2433",
+    "Namespace": "Telerik.Sitefinity.Blogs.Model",
+    "Fields": [
+      {
+        "Name": "Visible",
+        "Title": "Visible",
+        "FieldType": 4,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "YesNo",
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.ChoiceField",
+        "Id": "dfd1cf1a-a750-4b12-859f-4386f52883b4"
+      },
+      {
+        "Name": "AllowTrackBacks",
+        "Title": "AllowTrackBacks",
+        "FieldType": 4,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "YesNo",
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.ChoiceField",
+        "Id": "6a8925b1-5bd1-47f4-950a-524e64d44b73"
+      },
+      {
+        "Name": "AllowComments",
+        "Title": "AllowComments",
+        "FieldType": 4,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "YesNo",
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.ChoiceField",
+        "Id": "c22e2528-51c2-46dc-9e08-e01e7762dd6f"
+      },
+      {
+        "Name": "ApproveComments",
+        "Title": "ApproveComments",
+        "FieldType": 4,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "YesNo",
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.ChoiceField",
+        "Id": "ae35d5db-6027-4ad2-b821-4431bc7af95d"
+      },
+      {
+        "Name": "EmailAuthor",
+        "Title": "EmailAuthor",
+        "FieldType": 4,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "YesNo",
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.ChoiceField",
+        "Id": "eaee11fa-6607-44f1-afc7-72f603be6a16"
+      },
+      {
+        "Name": "Title",
+        "Title": "Title",
+        "FieldType": 1,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "ShortText",
+        "IsRequired": true,
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.TextField",
+        "Id": "6de124fd-dcf2-434a-835a-b1a197cd0ca7"
+      },
+      {
+        "Name": "Description",
+        "Title": "Description",
+        "FieldType": 1,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "LongText",
+        "IsRequired": false,
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.TextField",
+        "Id": "bd5f866a-c1a0-43e3-8901-a637f97cd8ee"
+      },
+      {
+        "Name": "ViewsCount",
+        "Title": "ViewsCount",
+        "FieldType": 7,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "Number",
+        "DBType": "NUMERIC",
+        "AllowNulls": true,
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.TextField",
+        "Id": "c0ea9e1d-b19b-431f-a3e9-e88eb82f2e64"
+      },
+      {
+        "Name": "VotesCount",
+        "Title": "VotesCount",
+        "FieldType": 7,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "Number",
+        "DBType": "NUMERIC",
+        "AllowNulls": true,
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.TextField",
+        "Id": "aa64bf4f-3fd8-45f5-9c4a-bf8383c97f58"
+      },
+      {
+        "Name": "VotesSum",
+        "Title": "VotesSum",
+        "FieldType": 7,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "Number",
+        "DBType": "NUMERIC",
+        "AllowNulls": true,
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.TextField",
+        "DecimalPlacesCount": 10,
+        "Id": "c2970a2b-bbfb-4e76-9121-a9fb94762687"
+      },
+      {
+        "Name": "Version",
+        "Title": "Version",
+        "FieldType": 7,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "Number",
+        "DBType": "NUMERIC",
+        "AllowNulls": true,
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.TextField",
+        "Id": "4741967d-09f4-4ba5-ab43-145e9836296c"
+      },
+      {
+        "Name": "UrlName",
+        "Title": "URL Name",
+        "FieldType": 0,
+        "SpecialType": 1,
+        "IsTransient": true,
+        "FieldTypeDisplayName": "Unknown",
+        "IsRequired": true,
+        "Ordinal": 2,
+        "RegularExpression": "^[\\p{L}\\-_\\.!~*'()\\d]+$",
+        "Id": "c5a1d3a6-abbe-4645-b57e-b25c726496bf"
+      },
+      {
+        "Name": "Author",
+        "Title": "Author",
+        "FieldType": 0,
+        "SpecialType": 4,
+        "Id": "ae06d11e-b394-4b27-aedb-303c2f9cc735"
+      },
+      {
+        "Name": "PublicationDate",
+        "Title": "Publication date",
+        "FieldType": 0,
+        "SpecialType": 3,
+        "Id": "c07846a3-7216-4f2c-9e19-2c0796c6620d"
+      },
+      {
+        "Name": "ExpirationDate",
+        "Title": "Expiration date",
+        "FieldType": 0,
+        "SpecialType": 3,
+        "Id": "58e7f0dd-c9c2-4a8d-a79a-54723b97b3f0"
+      },
+      {
+        "Name": "DateCreated",
+        "Title": "Created on",
+        "FieldType": 0,
+        "SpecialType": 9,
+        "IsTransient": true,
+        "FieldTypeDisplayName": "Unknown",
+        "Ordinal": 8,
+        "Id": "3bfd1c32-7244-496a-a39f-bc1e6580d8d8"
+      },
+      {
+        "Name": "IncludeInSitemap",
+        "Title": "Include in sitemap",
+        "FieldType": 0,
+        "SpecialType": 7,
+        "Id": "c6374d50-d18a-48be-946c-eda08a7be183"
+      },
+      {
+        "Name": "Status",
+        "Title": "Status",
+        "DBType": "int",
+        "Id": "8b92ac6e-61c4-4e18-96b5-8be92a107c89"
+      }
+    ]
+  },
+  {
+    "DisplayName": "Blog Post",
+    "ClassName": "BlogPost",
+    "Id": "ff63ce09-095a-4201-8431-d2ef41a146ba",
+    "ParentModuleTypeId": "8199a34f-a520-4f42-a8f8-40af7ace2433",
+    "Namespace": "Telerik.Sitefinity.Blogs.Model",
+    "Fields": [
+      {
+        "Name": "Content",
+        "Title": "Content",
+        "FieldType": 2,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "LongText",
+        "IsRequired": false,
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.HtmlField",
+        "Id": "9d88a4a8-ffef-4dc3-b429-835c6ceb961b"
+      },
+      {
+        "Name": "Summary",
+        "Title": "Summary",
+        "FieldType": 1,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "ShortText",
+        "IsRequired": false,
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.TextField",
+        "DBLength": "4000",
+        "Id": "baa96066-93a8-4e74-b3e9-ce8d082dd3f5"
+      },
+      {
+        "Name": "ItemDefaultUrl",
+        "Title": "ItemDefaultUrl",
+        "FieldType": 1,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "ShortText",
+        "IsRequired": false,
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.TextField",
+        "DBLength": "510",
+        "Id": "81668300-3101-41fb-9a1d-0add17d06b0e"
+      },
+      {
+        "Name": "SourceName",
+        "Title": "source name",
+        "FieldType": 1,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "ShortText",
+        "IsRequired": false,
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.TextField",
+        "Id": "4179259c-c891-434d-b928-604dea672561"
+      },
+      {
+        "Name": "SourceSite",
+        "Title": "source site",
+        "FieldType": 1,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "ShortText",
+        "IsRequired": false,
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.TextField",
+        "Id": "53628bd2-52d2-41e4-bbe8-4d1cb0dccf7b"
+      },
+      {
+        "Name": "ApprovalWorkflowState",
+        "Title": "ApprovalWorkflowState",
+        "FieldType": 1,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "ShortText",
+        "IsRequired": false,
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.TextField",
+        "Id": "372dc719-7be5-4736-8df6-9e27916fdf91"
+      },
+      {
+        "Name": "Visible",
+        "Title": "Visible",
+        "FieldType": 4,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "YesNo",
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.ChoiceField",
+        "Id": "41ce0e3a-d486-4fec-b520-d00ccf309ea6"
+      },
+      {
+        "Name": "AllowTrackBacks",
+        "Title": "AllowTrackBacks",
+        "FieldType": 4,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "YesNo",
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.ChoiceField",
+        "Id": "eec63074-de57-40e3-9d85-06d02c3c9d5f"
+      },
+      {
+        "Name": "AllowComments",
+        "Title": "AllowComments",
+        "FieldType": 4,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "YesNo",
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.ChoiceField",
+        "Id": "a9a5a2e6-d691-40a9-8878-fed2df3a8746"
+      },
+      {
+        "Name": "ApproveComments",
+        "Title": "ApproveComments",
+        "FieldType": 4,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "YesNo",
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.ChoiceField",
+        "Id": "fafbd44d-4c86-480b-8396-c2c395685f3d"
+      },
+      {
+        "Name": "EmailAuthor",
+        "Title": "EmailAuthor",
+        "FieldType": 4,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "YesNo",
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.ChoiceField",
+        "Id": "c54ce656-26c2-4662-bada-a487ed721454"
+      },
+      {
+        "Name": "Title",
+        "Title": "Title",
+        "FieldType": 1,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "ShortText",
+        "IsRequired": true,
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.TextField",
+        "Id": "929d51f6-ea6e-43f4-a6c1-661ece23e50b"
+      },
+      {
+        "Name": "Description",
+        "Title": "Description",
+        "FieldType": 1,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "ShortText",
+        "IsRequired": false,
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.TextField",
+        "Id": "f52732d5-5dec-47c5-95c2-ad02deb4f5fd"
+      },
+      {
+        "Name": "ViewsCount",
+        "Title": "ViewsCount",
+        "FieldType": 7,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "Number",
+        "DBType": "NUMERIC",
+        "AllowNulls": true,
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.TextField",
+        "Id": "21ad9256-7daa-45a8-bc1c-9a76dd4131f2"
+      },
+      {
+        "Name": "VotesCount",
+        "Title": "VotesCount",
+        "FieldType": 7,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "Number",
+        "DBType": "NUMERIC",
+        "AllowNulls": true,
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.TextField",
+        "Id": "57e4771c-b873-4f22-a551-021c55a1be76"
+      },
+      {
+        "Name": "VotesSum",
+        "Title": "VotesSum",
+        "FieldType": 7,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "Number",
+        "DBType": "NUMERIC",
+        "AllowNulls": true,
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.TextField",
+        "DecimalPlacesCount": 10,
+        "Id": "682bb6f1-5d52-4467-a2e2-86d0331af933"
+      },
+      {
+        "Name": "Version",
+        "Title": "Version",
+        "FieldType": 7,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "Number",
+        "DBType": "NUMERIC",
+        "AllowNulls": true,
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.TextField",
+        "Id": "41210f2a-46a7-4f89-8e56-171f35f9a080"
+      },
+      {
+        "Name": "UrlName",
+        "Title": "URL Name",
+        "FieldType": 0,
+        "SpecialType": 1,
+        "IsTransient": true,
+        "FieldTypeDisplayName": "Unknown",
+        "IsRequired": true,
+        "Ordinal": 2,
+        "RegularExpression": "^[\\p{L}\\-_\\.!~*'()\\d]+$",
+        "Id": "21cb5502-dfe7-4077-848e-2fc0fcc5633f"
+      },
+      {
+        "Name": "Author",
+        "Title": "Author",
+        "FieldType": 0,
+        "SpecialType": 4,
+        "Id": "7371c1d0-7c2d-4aa3-9a0c-6abf6b1d8738"
+      },
+      {
+        "Name": "PublicationDate",
+        "Title": "Publication date",
+        "FieldType": 0,
+        "SpecialType": 3,
+        "Id": "77c03d06-12bb-4109-a4fe-48b4e95da3ea"
+      },
+      {
+        "Name": "ExpirationDate",
+        "Title": "Expiration date",
+        "FieldType": 0,
+        "SpecialType": 3,
+        "Id": "f37aa5c1-fc51-4fc5-8b83-b8112704f794"
+      },
+      {
+        "Name": "LastModified",
+        "Title": "Last modified",
+        "FieldType": 0,
+        "SpecialType": 8,
+        "Id": "c4c1d61c-8524-46bb-a436-a73e9ea9093b"
+      },
+      {
+        "Name": "DateCreated",
+        "Title": "Created on",
+        "FieldType": 0,
+        "SpecialType": 9,
+        "IsTransient": true,
+        "FieldTypeDisplayName": "Unknown",
+        "Ordinal": 8,
+        "Id": "7b3a861f-de14-44ed-856c-d0ae551698bc"
+      },
+      {
+        "Name": "IncludeInSitemap",
+        "Title": "Include in sitemap",
+        "FieldType": 0,
+        "SpecialType": 7,
+        "Id": "de825707-5349-4310-862b-997f41b619b2"
+      },
+      {
+        "Name": "Status",
+        "Title": "Status",
+        "DBType": "int",
+        "Id": "21dab4f3-2382-4838-876d-20c6b55a00dc"
+      }
+    ]
+  }
+]

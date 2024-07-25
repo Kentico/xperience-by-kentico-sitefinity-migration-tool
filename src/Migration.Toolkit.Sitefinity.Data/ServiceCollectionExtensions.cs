@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-using Migration.Tookit.Data.Configuration;
-using Migration.Tookit.Data.Core.EF;
-using Migration.Tookit.Data.Core.Providers;
-using Migration.Tookit.Data.Providers;
+using Migration.Toolkit.Data.Configuration;
+using Migration.Toolkit.Data.Core.EF;
+using Migration.Toolkit.Data.Core.Providers;
+using Migration.Toolkit.Data.Providers;
 
 using Progress.Sitefinity.RestSdk;
 using Progress.Sitefinity.RestSdk.Client;
@@ -20,13 +20,16 @@ public static class ServiceCollectionExtensions
     /// Adding the required dependencies and providers to the service collection for pulling data from Sitefinity site
     /// </summary>
     /// <param name="services">Service collection</param>
-    /// <param name="configuration">Sitefinity toolkit configuration used for connections</param>
+    /// <param name="configuration">Sitefinity data configuration used for connections</param>
     /// <returns>Service collection</returns>
-    public static IServiceCollection AddSitefinityData(this IServiceCollection services, SitefinityToolkitConfiguration configuration) =>
+    public static IServiceCollection AddSitefinityData(this IServiceCollection services, SitefinityDataConfiguration configuration) =>
         RegisterServices(services, configuration);
 
-    private static IServiceCollection RegisterServices(IServiceCollection services, SitefinityToolkitConfiguration configuration)
+    private static IServiceCollection RegisterServices(IServiceCollection services, SitefinityDataConfiguration configuration)
     {
+        services.AddSingleton(configuration);
+
+        // Sitefinity RestSdk Initialization
         services.AddHttpClient("sfservice", (servicesProvider, client) =>
         {
             client.BaseAddress = new Uri(configuration.SitefinityRestApiUrl);
@@ -49,8 +52,15 @@ public static class ServiceCollectionExtensions
             return restClient;
         });
 
+        // Entity Framework Initialization
         services.AddDbContextFactory<SitefinityContext>(options => options.UseSqlServer(configuration.SitefinityConnectionString));
+
+        // Providers
         services.AddTransient<IUserProvider, UserProvider>();
+        services.AddTransient<ITypeProvider, TypeProvider>();
+        services.AddTransient<IMediaProvider, MediaProvider>();
+        services.AddTransient<IContentProvider, ContentProvider>();
+        services.AddTransient<ISiteProvider, SiteProvider>();
 
         return services;
     }
