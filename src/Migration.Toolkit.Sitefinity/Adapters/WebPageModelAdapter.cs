@@ -43,7 +43,7 @@ internal class WebPageModelAdapter(ILogger<WebPageModelAdapter> logger, IContent
             PageUrls = contentHelper.GetPageUrls(dependenciesModel, source),
             PageGuid = source.Id,
             ParentGuid = ValidationHelper.GetGuid(source.ParentId, Guid.Empty),
-            TreePath = source.ViewUrl
+            TreePath = contentHelper.GetRelativeUrl(source.ViewUrl)
         };
 
         var pageContentItem = new ContentItemSimplifiedModel

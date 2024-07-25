@@ -72,15 +72,28 @@ internal class DataClassModelAdapter(ILogger<DataClassModelAdapter> logger, Site
 
             var fieldType = fieldTypeFactory.CreateFieldType(field.WidgetTypeName);
 
+            string? columnName = !string.IsNullOrEmpty(field.ColumnName) ? field.ColumnName : field.Name;
+
+            if (string.IsNullOrEmpty(columnName))
+            {
+                columnName = field.FieldName;
+            }
+
+            if (string.IsNullOrEmpty(columnName))
+            {
+                logger.LogWarning("Field {FieldId} does not have a column name.", field.Id);
+                continue;
+            }
+
             var formField = new FormField
             {
                 AllowEmpty = !field.IsRequired,
-                Column = !string.IsNullOrEmpty(field.ColumnName) ? field.ColumnName : field.Name,
+                Column = columnName,
                 ColumnType = fieldType.GetColumnType(field),
                 Enabled = true,
                 Guid = field.Id,
                 Visible = true,
-                Properties = MapProperties(field),
+                Properties = MapProperties(field, columnName),
                 Settings = fieldType.GetSettings(field),
                 ColumnSize = ValidationHelper.GetInteger(fieldType.GetColumnSize(field), 255),
             };
@@ -93,8 +106,8 @@ internal class DataClassModelAdapter(ILogger<DataClassModelAdapter> logger, Site
         return formFields;
     }
 
-    private static FormFieldProperties MapProperties(Field field) => new()
+    private static FormFieldProperties MapProperties(Field field, string defaultName) => new()
     {
-        FieldCaption = field.Title
+        FieldCaption = string.IsNullOrEmpty(field.Title) ? defaultName : field.Title
     };
 }

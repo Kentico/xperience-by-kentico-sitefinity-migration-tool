@@ -228,7 +228,7 @@
         "MediaType": "",
         "FieldTypeDisplayName": "LongText",
         "IsRequired": false,
-        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.TextField",
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.HtmlField",
         "Id": "198dafed-5826-4e58-8690-fea1a81708c6"
       },
       {

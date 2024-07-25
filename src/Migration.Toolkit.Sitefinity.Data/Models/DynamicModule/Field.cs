@@ -173,4 +173,6 @@ public class Field
     /// The number of decimal places for the field
     /// </summary>
     public int? DecimalPlacesCount { get; set; }
+
+    public string? FieldName { get; set; }
 }

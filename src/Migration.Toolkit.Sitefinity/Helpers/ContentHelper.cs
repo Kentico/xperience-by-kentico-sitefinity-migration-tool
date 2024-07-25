@@ -1,6 +1,10 @@
-﻿using CMS.ContentEngine;
+﻿using System.Text.Json;
+
+using CMS.ContentEngine;
 using CMS.ContentEngine.Internal;
 using CMS.Helpers;
+
+using HtmlAgilityPack;
 
 using Kentico.Xperience.UMT.Model;
 
@@ -11,6 +15,7 @@ using Migration.Toolkit.Data.Core.Providers;
 using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Sitefinity.Core.Factories;
 using Migration.Toolkit.Sitefinity.Core.Helpers;
+using Migration.Toolkit.Sitefinity.FieldTypes;
 using Migration.Toolkit.Sitefinity.Model;
 
 using Progress.Sitefinity.RestSdk.Dto;
@@ -42,7 +47,7 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
 
             if (ValidationHelper.GetBoolean(culture.ContentLanguageIsDefault, false))
             {
-                var contentLanguageData = GetLanguageDataInternal(culture.ContentLanguageName, cultureSdkItem, dataClassModel, createdByUser);
+                var contentLanguageData = GetLanguageDataInternal(contentDependencies, culture.ContentLanguageName, cultureSdkItem, dataClassModel, createdByUser);
 
                 if (contentLanguageData == null)
                 {
@@ -63,7 +68,7 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
 
                     if (alternateLanguageContentItem.Culture.Equals(culture.ContentLanguageCultureFormat))
                     {
-                        var contentLanguageData = GetLanguageDataInternal(culture.ContentLanguageName, alternateLanguageContentItem, dataClassModel, createdByUser);
+                        var contentLanguageData = GetLanguageDataInternal(contentDependencies, culture.ContentLanguageName, alternateLanguageContentItem, dataClassModel, createdByUser);
 
                         if (contentLanguageData == null)
                         {
@@ -80,7 +85,7 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
         return languageData;
     }
 
-    private ContentItemLanguageData? GetLanguageDataInternal(string languageName, ICultureSdkItem cultureSdkItem, DataClassModel dataClassModel, UserInfoModel? user)
+    private ContentItemLanguageData? GetLanguageDataInternal(ContentDependencies contentDependencies, string languageName, ICultureSdkItem cultureSdkItem, DataClassModel dataClassModel, UserInfoModel? user)
     {
         if (string.IsNullOrEmpty(cultureSdkItem.UrlName))
         {
@@ -116,7 +121,37 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
             {
                 if (cultureSdkItem is SdkItem sdkItem)
                 {
-                    contentItemData.Add(field.Name, fieldType.GetData(sdkItem, field.Name));
+                    object data = fieldType.GetData(sdkItem, field.Name);
+
+                    if (fieldType is HtmlFieldType)
+                    {
+                        data = UpdateUrlsToPermanent(contentDependencies, ValidationHelper.GetString(data, ""));
+                    }
+
+                    if (fieldType is LinkFieldType)
+                    {
+                        var links = JsonSerializer.Deserialize<IEnumerable<Link>>(ValidationHelper.GetString(data, ""), new JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true
+                        });
+
+                        if (links != null)
+                        {
+                            foreach (var link in links)
+                            {
+                                if (link.Href == null)
+                                {
+                                    continue;
+                                }
+
+                                link.Href = GetPermalink(contentDependencies, link.Href);
+                            }
+                        }
+
+                        data = JsonSerializer.Serialize(links);
+                    }
+
+                    contentItemData.Add(field.Name, data);
                 }
             }
             catch (Exception ex)
@@ -219,9 +254,9 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
         return pageUrls;
     }
 
-    private static string GetUrl(ICultureSdkItem source, string? rootPath, string? pagePath)
+    private string GetUrl(ICultureSdkItem source, string? rootPath, string? pagePath)
     {
-        string pageUrl = source.Url;
+        string pageUrl = GetRelativeUrl(source.Url);
 
         if (!string.IsNullOrEmpty(pagePath))
         {
@@ -248,5 +283,88 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
         }
         string newPath = $"/{string.Join("/", segments.TakeLast(remainingSegments))}";
         return newPath;
+    }
+
+    public string GetRelativeUrl(string url)
+    {
+        if (url.StartsWith('/'))
+        {
+            return url;
+        }
+
+        if (Uri.TryCreate(url, UriKind.Absolute, out var absoluteUri))
+        {
+            return absoluteUri.PathAndQuery;
+        }
+
+        return url;
+    }
+
+    public string UpdateUrlsToPermanent(IMediaDependencies mediaDependencies, string html)
+    {
+        var document = new HtmlDocument();
+        document.LoadHtml(html);
+
+        UpdateUrls(mediaDependencies, document.DocumentNode.SelectNodes("//img"), "src");
+        UpdateUrls(mediaDependencies, document.DocumentNode.SelectNodes("//a"), "href");
+
+        return document.DocumentNode.OuterHtml;
+    }
+
+    private void UpdateUrls(IMediaDependencies mediaDependencies, IEnumerable<HtmlNode> htmlNodes, string attributeName)
+    {
+        if (htmlNodes == null)
+        {
+            return;
+        }
+
+        foreach (var htmlNode in htmlNodes)
+        {
+            string? attributeValue = htmlNode.GetAttributeValue(attributeName, null);
+
+            if (attributeValue == null)
+            {
+                continue;
+            }
+
+            string? permaLinkUrl = GetPermalink(mediaDependencies, attributeValue);
+
+            if (permaLinkUrl == null)
+            {
+                continue;
+            }
+
+            htmlNode.SetAttributeValue(attributeName, permaLinkUrl);
+        }
+    }
+
+    private string? GetPermalink(IMediaDependencies mediaDependencies, string url)
+    {
+        url = url.TrimStart('~');
+
+        if (url.StartsWith("tel:", StringComparison.OrdinalIgnoreCase) || url.StartsWith("mailto:", StringComparison.OrdinalIgnoreCase))
+        {
+            return url;
+        }
+
+        MediaFileModel? mediaFile = null;
+
+        if (Uri.TryCreate(url, UriKind.Absolute, out var absoluteUri))
+        {
+            mediaFile = mediaDependencies.MediaFiles.Values.FirstOrDefault(x => x.DataSourceUrl == URLHelper.RemoveQuery(absoluteUri.ToString()));
+        }
+
+        if (Uri.TryCreate(url, UriKind.Relative, out var relativeUri))
+        {
+            mediaFile = mediaDependencies.MediaFiles.Values.FirstOrDefault(x => x.DataSourceUrl == "https://" + dataConfiguration.SitefinitySiteDomain + URLHelper.RemoveQuery(url));
+        }
+
+        if (mediaFile == null)
+        {
+            logger.LogInformation("Could not find media file for {PathAndQuery}", url);
+            return url;
+        }
+
+        return $"/getmedia/{mediaFile.FileGUID}/{mediaFile.FileName}{URLHelper.GetQuery(url)}";
     }
 }

@@ -45,8 +45,8 @@ internal class MediaModelAdapter(ILogger<MediaLibraryModelAdapter> logger, Sitef
             FileModifiedByUserGuid = modifiedByUser?.UserGUID,
             FileCreatedByUserGuid = createdByUser?.UserGUID,
             DataSourceUrl = Uri.IsWellFormedUriString(source.Url, UriKind.Absolute)
-            ? source.Url
-            : "https://" + sitefinityDataConfiguration.SitefinitySiteDomain + source.Url,
+            ? URLHelper.RemoveQuery(source.Url)
+            : "https://" + sitefinityDataConfiguration.SitefinitySiteDomain + URLHelper.RemoveQuery(source.Url),
         };
 
         if (source is Image image)

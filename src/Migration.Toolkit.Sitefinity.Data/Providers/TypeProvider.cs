@@ -25,8 +25,14 @@ internal class TypeProvider(SitefinityDataConfiguration configuration, ILogger<T
 
     public IEnumerable<SitefinityType> GetDynamicModuleTypes()
     {
-        string dynamicModulesPath = Environment.CurrentDirectory + configuration.SitefinityModuleDeploymentFolderPath + "\\Dynamic modules";
-        if (!Directory.Exists(dynamicModulesPath))
+        string dynamicModulesPath = configuration.SitefinityModuleDeploymentFolderPath + "\\Dynamic modules";
+
+        if (!Path.IsPathRooted(configuration.SitefinityModuleDeploymentFolderPath))
+        {
+            dynamicModulesPath = Environment.CurrentDirectory + configuration.SitefinityModuleDeploymentFolderPath + "\\Dynamic modules";
+        }
+
+        if (string.IsNullOrEmpty(dynamicModulesPath) || !Directory.Exists(dynamicModulesPath))
         {
             logger.LogError("Sitefinity module deployment folder does not exist. {DynamicModulesPath}", dynamicModulesPath);
             return [];
@@ -67,8 +73,14 @@ internal class TypeProvider(SitefinityDataConfiguration configuration, ILogger<T
 
     public IEnumerable<SitefinityType> GetSitefinityTypes()
     {
-        string deploymentFolderPath = Environment.CurrentDirectory + configuration.SitefinityModuleDeploymentFolderPath;
-        if (!Directory.Exists(deploymentFolderPath))
+        string deploymentFolderPath = configuration.SitefinityModuleDeploymentFolderPath;
+
+        if (!Path.IsPathRooted(configuration.SitefinityModuleDeploymentFolderPath))
+        {
+            deploymentFolderPath = Environment.CurrentDirectory + configuration.SitefinityModuleDeploymentFolderPath;
+        }
+
+        if (string.IsNullOrEmpty(deploymentFolderPath) || !Directory.Exists(deploymentFolderPath))
         {
             logger.LogError("Sitefinity module deployment folder does not exist. {DeploymentFolderPath}", deploymentFolderPath);
             return [];
