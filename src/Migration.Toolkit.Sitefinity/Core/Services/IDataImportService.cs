@@ -1,6 +1,4 @@
-﻿using Kentico.Xperience.UMT.Services;
-
-namespace Migration.Tookit.Sitefinity.Core.Services;
+namespace Migration.Toolkit.Sitefinity.Core.Services;
 /// <summary>
 /// Base class for all import services
 /// </summary>
@@ -8,5 +6,4 @@ namespace Migration.Tookit.Sitefinity.Core.Services;
 public interface IDataImportService<out T> where T : class
 {
     IEnumerable<T> Get();
-    ImportStateObserver StartImport(ImportStateObserver observer);
 }

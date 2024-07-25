@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-using Migration.Tookit.Data.Core.EF;
-using Migration.Tookit.Data.Core.Providers;
-using Migration.Tookit.Data.Models;
+using Migration.Toolkit.Data.Core.EF;
+using Migration.Toolkit.Data.Core.Providers;
+using Migration.Toolkit.Data.Models;
 
-namespace Migration.Tookit.Data.Providers;
+namespace Migration.Toolkit.Data.Providers;
 internal class UserProvider(IDbContextFactory<SitefinityContext> sitefinityContext) : IUserProvider
 {
     public IEnumerable<User> GetUsers()

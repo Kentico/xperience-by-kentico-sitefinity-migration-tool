@@ -1,15 +1,13 @@
 ﻿using Kentico.Xperience.UMT.Services;
 
-using Migration.Tookit.Sitefinity.Core.Services;
+using Migration.Toolkit.Sitefinity.Core.Services;
 
-namespace Migration.Tookit.Sitefinity.Services;
-public class SitefinityImportService(IImportService kenticoImportService,
-                                        IUserImportService userProvider) : ISitefinityImportService
+namespace Migration.Toolkit.Sitefinity.Services;
+internal class SitefinityImportService(IUserImportService userImportService,
+                                        IDataClassImportService contentTypeImportService) : ISitefinityImportService
 {
-    public ImportStateObserver StartImportUsers(ImportStateObserver observer)
-    {
-        var users = userProvider.Get();
+    public ImportStateObserver StartImportUsers(ImportStateObserver observer) => userImportService.StartImport(observer);
 
-        return kenticoImportService.StartImport(users, observer);
-    }
+
+    public ImportStateObserver StartImportContentTypes(ImportStateObserver observer) => contentTypeImportService.StartImport(observer);
 }

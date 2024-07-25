@@ -1,0 +1,32 @@
+﻿[
+  {
+    "DisplayName": "Content Block",
+    "ClassName": "ContentItem",
+    "Id": "58b134d5-ea60-4917-9847-6913abbd22b6",
+    "Namespace": "Telerik.Sitefinity.GenericContent.Model",
+    "Fields": [
+      {
+        "Name": "Title",
+        "Title": "Title",
+        "FieldType": 1,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "ShortText",
+        "IsRequired": true,
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.TextField",
+        "Id": "d634c9c6-a091-4f26-a80f-4dfe44491e6a"
+      },
+      {
+        "Name": "Content",
+        "Title": "Content",
+        "FieldType": 1,
+        "SpecialType": 0,
+        "MediaType": "",
+        "FieldTypeDisplayName": "LongText",
+        "IsRequired": false,
+        "WidgetTypeName": "Telerik.Sitefinity.Web.UI.Fields.TextField",
+        "Id": "34592d41-5294-41e5-bc4f-49e635d876d7"
+      }
+    ]
+  }
+]
