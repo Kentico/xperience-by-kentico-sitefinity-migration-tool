@@ -6,9 +6,9 @@
    - ` git clone -v "https://github.com/Kentico/xperience-by-kentico-sitecore-migration-tool.git" "{YOUR PATH}"`
 
 2. Modify the console application's configuration file `/examples/Migration.Toolkit.Sitefinity.Console/appsettings.json`
-   - The details for configuration options can be found below.
+   - See [Configuration File Options](#configuration-file-options)
 3. Modify code for any additional customizations
-   - Entity Framework is included. Add additional custom models to Migration.Toolkit.Sitefinity.Data.Core.EF.SitefinityContext for any custom tables. An additional import service will need to be created. See other import services.
+   - Entity Framework is included. Add additional custom models to Migration.Toolkit.Sitefinity.Data.Core.EF.SitefinityContext for any custom tables. An additional import service will need to be created. See other import services under `/src/Migration.Toolkit.Sitefinity/Services`.
    - Use the RestSdkBase when creating a provider that calls the rest api endpoints. This will ensure the rest client is running and provides methods to call the rest client.
    - Add additional field types for custom field types. See '/src/Migration.Toolkit.Sitefinity/FieldTypes' for OOB field types in Sitefinity. Using the IFieldType, will automatically add it to the import processing. You can also use the FieldTypeBase to handle the defaults.
 4. Set up Sitefinity
@@ -36,7 +36,7 @@
 11. As a good practice, backup XbyK database before each remigation attempt in case there is a need to go back to an earlier version
 12. If necessary, creating a new, empty XbyK database is very simple using `dotnet kentico-xperience-dbmanager`. Be sure to adjust connection string in appsettings.json if the details change.
 
-## Details about the configuration file options
+## Configuration File Options
 
 ```
 {
@@ -122,7 +122,7 @@ Sitefinity allows users to add a listing widget for any particular static or dyn
 }
 ```
 
-Sitefinity also allows the user to use the same widget as a detail view. This allows the content editor to select a particular item and render the content as if the structured content was part of the page itself. If the item being shown also had child items, they would typically render in a listing as part of the content. To import a content item as a detail page and the structured content to be associated with that page, the detail template type will need to be added to the configuration. For example, a user may have a page named "/blog-one" that contains the blog detail widget with the "/blog-1" content item selected. The page would render the content for "/blog-1" and show any child blog items as a listing. When navigating to those blog items, the "/blog-one" url will be prepended. For example, "/blog-one/blog-item-1". To mimic this behavior in XbyK, you would add the following record.
+Sitefinity also allows the user to use the same widget as a detail view. This allows the content editor to select a particular item and render the content as if the structured content was part of the page itself. If the item being shown also had child items, they would typically render in a listing as part of the content. To import a content item as a detail page and the structured content to be associated with that page, the detail template type will need to be added to the configuration. For example, a user may have a page named "/blog-one" that contains the blog detail widget with the "/blog-1" content item selected. The page would render the content for "/blog-1" and show any child blog items as a listing. Sitfinity will automatically add the "/blog-one" to the beginning of the each item's urls. For example, "/blog-one/blog-item-1". To mimic this behavior in XbyK, you would add the following record.
 
 ```
 {

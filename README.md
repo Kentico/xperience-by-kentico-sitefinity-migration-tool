@@ -27,22 +27,9 @@ The Sitefinity Migration Tool transfers content and other data from **Sitefinity
 - [Progress Sitefinity CMS 14.4](https://www.progress.com/documentation/sitefinity-cms/144/sitefinity-cms-documentation)
 - [XbyK Universal Migration Tool](https://github.com/Kentico/xperience-by-kentico-universal-migration-tool)
 
-## Quick Start
+## Setup Instructions
 
-1. Download this package from the repository [Releases](https://github.com/Kentico/xperience-by-kentico-sitefinity-migration-tool/releases)
-1. Check XbyK and Sitefinity settings to ensure proper communication. See [Usage Guide](./docs/Usage-Guide.md) for details.
-1. Navigate to the configuration file `/examples/Migration.Toolkit.Sitefinity.Console/appsettings.json`, update settings as needed. The details for configuration options can be found in the [Usage Guide](./docs/Usage-Guide.md).
-1. Execute the run command from an elevated command prompt in the folder `/examples/Migration.Toolkit.Sitefinity.Console`:
-
-```
-dotnet run
-```
-
-5. View migrated multi-lingual content, users, pages, and media in your XbyK instance.
-
-## Full Instructions
-
-View the [Usage Guide](./docs/Usage-Guide.md) for more detailed instructions.
+View the [Usage Guide](./docs/Usage-Guide.md) for detailed instructions.
 
 ## Contributing
 
