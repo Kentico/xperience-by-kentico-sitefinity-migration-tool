@@ -10,17 +10,22 @@
 3. Modify code for any additional customizations
    - Entity Framework is included. Add additional custom models to Migration.Toolkit.Sitefinity.Data.Core.EF.SitefinityContext for any custom tables. An additional import service will need to be created. See other import services under `/src/Migration.Toolkit.Sitefinity/Services`.
    - Use the RestSdkBase when creating a provider that calls the rest api endpoints. This will ensure the rest client is running and provides methods to call the rest client.
-   - Add additional field types for custom field types. See '/src/Migration.Toolkit.Sitefinity/FieldTypes' for OOB field types in Sitefinity. Using the IFieldType, will automatically add it to the import processing. You can also use the FieldTypeBase to handle the defaults.
+   - Add additional field types for custom field types. See `/src/Migration.Toolkit.Sitefinity/FieldTypes` for out-of-the-box field types in Sitefinity. Using the `IFieldType`, will automatically add it to the import processing. You can also use the `FieldTypeBase` to handle the defaults.
 4. Set up Sitefinity
-   - Ensure 'Deployment Mode' is set to 'source'. This feature will export the content type definitions from the database and store them on the disk. Like XbyK's Continuous Integration (CI) files. ![alt text](image-5.png)
+   - Ensure _Deployment Mode_ is set to _Source_. This feature will export the content type definitions from the database and store them on the disk. Like XbyK's Continuous Integration (CI) files. ![alt text](image-5.png)  
      [More information in the Sitefinity docs.](https://www.progress.com/documentation/sitefinity-cms/deployment-mode)
    - Once this is set, there is a menu item under _Administration_ for Export / Import ![alt text](image.png)
-   - Use Sitefinity's 'Export for Deployment' feature to create content type files. In the main navigation under _Administration » Export / Import_ Select 'Export for Deployment' from the left navigation and click 'Export'. The path displayed here will be the value of ModuleDeploymentFolderPath in the appsettings.json file. Ensure you use the full path to the folder in the setting. The default value for this path is ~\App_Data\Sitefinity\Deployment ![alt text](image-6.png)
-   - Check the default language for source Sitefinity site, it must match what is in XbyK. Look in _Administration >> Settings >> Basic >> Language_![alt text](image-2.png)
-   - Make sure the Sitefinity content API is set to allow all content and is enabled. View the web service configuration under _Administration >> Web services >> Default_ ![alt text](image-4.png) In the configuration options for 'Default' make sure all content types are selected and 'This service is active' is checked/true.
-     ![alt text](image-1.png)
+   - Use Sitefinity's _Export for Deployment_ feature to create content type files. In the main navigation under _Administration » Export / Import_ Select _Export for Deployment_ from the left navigation and select _Export_. The path displayed here will be the value of `ModuleDeploymentFolderPath` in the `appsettings.json` file. Ensure you use the full path to the folder in the setting. The default value for this path is `~\App_Data\Sitefinity\Deployment`  
+     ![alt text](image-6.png)
+   - Check the default language for source Sitefinity site, it must match what is in XbyK. Look in _Administration >> Settings >> Basic >> Language_!  
+     [alt text](image-2.png)
+   - Make sure the Sitefinity content API is set to allow all content and is enabled. View the web service configuration under _Administration >> Web services >> Default_  
+     ![alt text](image-4.png)  
+     In the configuration options for 'Default' make sure all content types are selected and 'This service is active' is checked/true.  
+      ![alt text](image-1.png)
 5. Set up XbyK
-   - Modify the XbyK default language to match the default language of the Sitefinity source site being migrated e.g. 'en-us'. Sitefinity's default English culture is 'en'. ![alt text](image-3.png).
+   - Modify the XbyK default language to match the default language of the Sitefinity source site being migrated e.g. 'en-us'. Sitefinity's default English culture is 'en'.  
+     ![alt text](image-3.png).
 6. Make a back up of your XbyK database in case there are issues with the migration
 7. Execute the `dotnet run` command from an elevated command prompt
 8. Check the destination XbyK admin for correctness
@@ -33,8 +38,8 @@
    - Media Libaries & Media
 9. Adjust the configuration options as needed to correct any migration issues
 10. Remigrate as needed - content will be overwritten in XbyK with changes from Sitefinity - the tool is smart enough to only migrate new or updated content.
-11. As a good practice, backup XbyK database before each remigation attempt in case there is a need to go back to an earlier version
-12. If necessary, creating a new, empty XbyK database is very simple using `dotnet kentico-xperience-dbmanager`. Be sure to adjust connection string in appsettings.json if the details change.
+11. As a good practice, backup the XbyK database before each remigation attempt in case there is a need to go back to an earlier version
+12. If necessary, creating a new, empty XbyK database is very simple using `dotnet kentico-xperience-dbmanager`. Be sure to adjust connection string in `appsettings.json` if the details change.
 
 ## Configuration File Options
 
@@ -82,15 +87,15 @@ Salt copied from XbyK appsettings.json file.
 
 ### ConnectionStrings/CMSConnectionString
 
-Database connection to your destination XbyK instance, commonly copied from \appsettings.json
+Database connection to your destination XbyK instance, commonly copied from `appsettings.json`
 
 ### ConnectionStrings/SitefinityConnectionString
 
-This tool pulls some data from the Sitefinity database directly. Add the database connection to your source Sitefinity instance, commonly copied from \App_Data\Sitefinity\Configuration\Data.config
+This tool pulls some data from the Sitefinity database directly. Add the database connection to your source Sitefinity instance, commonly copied from `\App_Data\Sitefinity\Configuration\Data.config`
 
 ### Sitefinity/Domain
 
-The domain of your running source Sitefinity instance. This tool uses the Sitefinity content API, it is necessary to have it accessible. Do not include the protocol or trailing slash e.g. local.examplesite.com
+The domain of your running source Sitefinity instance. This tool uses the Sitefinity content API, it is necessary to have it accessible. Do not include the protocol or trailing slash e.g. _local.examplesite.com_
 
 ### Sitefinity/WebServicePath
 
@@ -122,7 +127,7 @@ Sitefinity allows users to add a listing widget for any particular static or dyn
 }
 ```
 
-Sitefinity also allows the user to use the same widget as a detail view. This allows the content editor to select a particular item and render the content as if the structured content was part of the page itself. If the item being shown also had child items, they would typically render in a listing as part of the content. To import a content item as a detail page and the structured content to be associated with that page, the detail template type will need to be added to the configuration. For example, a user may have a page named "/blog-one" that contains the blog detail widget with the "/blog-1" content item selected. The page would render the content for "/blog-1" and show any child blog items as a listing. Sitfinity will automatically add the "/blog-one" to the beginning of the each item's urls. For example, "/blog-one/blog-item-1". To mimic this behavior in XbyK, you would add the following record.
+Sitefinity also allows the user to use the same widget as a detail view. This allows the content editor to select a particular item and render the content as if the structured content was part of the page itself. If the item being shown also had child items, they would typically render in a listing as part of the content. To import a content item as a detail page and the structured content to be associated with that page, the detail template type will need to be added to the configuration. For example, a user may have a page named "/blog-one" that contains the blog detail widget with the "/blog-1" content item selected. The page would render the content for "/blog-1" and show any child blog items as a listing. Sitefinity will automatically add the "/blog-one" to the beginning of the each item's urls. For example, "/blog-one/blog-item-1". To mimic this behavior in XbyK, you would add the following record.
 
 ```
 {
