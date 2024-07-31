@@ -12,8 +12,9 @@
    - Use the RestSdkBase when creating a provider that calls the rest api endpoints. This will ensure the rest client is running and provides methods to call the rest client.
    - Add additional field types for custom field types. See `/src/Migration.Toolkit.Sitefinity/FieldTypes` for out-of-the-box field types in Sitefinity. Using the `IFieldType`, will automatically add it to the import processing. You can also use the `FieldTypeBase` to handle the defaults.
 4. Set up Sitefinity
-   - Ensure _Deployment Mode_ is set to _Source_. This feature will export the content type definitions from the database and store them on the disk. Like XbyK's Continuous Integration (CI) files. ![alt text](image-5.png)  
-     [More information in the Sitefinity docs.](https://www.progress.com/documentation/sitefinity-cms/deployment-mode)
+   - Ensure _Deployment Mode_ is set to _Source_. This feature will export the content type definitions from the database and store them on the disk. Like XbyK's [Continuous Integration (CI)](https://docs.kentico.com/x/FAKQC) files.  
+     ![alt text](image-5.png)  
+      [More information in the Sitefinity docs.](https://www.progress.com/documentation/sitefinity-cms/deployment-mode)
    - Once this is set, there is a menu item under _Administration_ for Export / Import ![alt text](image.png)
    - Use Sitefinity's _Export for Deployment_ feature to create content type files. In the main navigation under _Administration » Export / Import_ Select _Export for Deployment_ from the left navigation and select _Export_. The path displayed here will be the value of `ModuleDeploymentFolderPath` in the `appsettings.json` file. Ensure you use the full path to the folder in the setting. The default value for this path is `~\App_Data\Sitefinity\Deployment`  
      ![alt text](image-6.png)
@@ -29,12 +30,12 @@
 6. Make a back up of your XbyK database in case there are issues with the migration
 7. Execute the `dotnet run` command from an elevated command prompt
 8. Check the destination XbyK admin for correctness
-   - Channels/Web Sites
-   - Users
-   - Content Types
-   - Pages
-   - Content Hub Items
-   - Languages
+   - [Web Sites](https://docs.kentico.com/x/34HFC) and other channels
+   - [Users](https://docs.kentico.com/x/8ILWCQ)
+   - [Content types](https://docs.kentico.com/x/gYHWCQ)
+   - [Pages](https://docs.kentico.com/x/JwKQC)
+   - [Content Hub Items](https://docs.kentico.com/x/barWCQ)
+   - [Languages](https://docs.kentico.com/x/OxT_Cw)
    - Media Libaries & Media
 9. Adjust the configuration options as needed to correct any migration issues
 10. Remigrate as needed - content will be overwritten in XbyK with changes from Sitefinity - the tool is smart enough to only migrate new or updated content.
@@ -83,7 +84,7 @@ Common json configuration options for [Microsoft.Extensions.Logging](https://lea
 
 ### CMSHashStringSalt
 
-Salt copied from XbyK appsettings.json file.
+Salt copied from XbyK `appsettings.json` file.
 
 ### ConnectionStrings/CMSConnectionString
 
@@ -115,7 +116,7 @@ Codename prefix for all content types. Typically the name of your site. Do not u
 
 ### Sitefinity/PageContentTypes
 
-A list of types that are considered to be pages such as, news, blogs, etc. Sitefinity allows for content 'detail' pages to be displayed from a single 'listing' page. e.g. A news 'listing' page will link to a large number of news 'detail' pages. This pattern is different in XbyK. To support the strong page types in XbyK you must configure the PageContentTypes. If they are not configured, all content items will be placed in the Content Hub and will no longer have their hierarchical structure or url structure. See below for which PageTemplateType should be used.
+A list of types that are considered to be pages such as, news, blogs, etc. Sitefinity allows for content 'detail' pages to be displayed from a single 'listing' page. e.g. A news 'listing' page will link to a large number of news 'detail' pages. This pattern is different in XbyK. To support the strong [page types](https://docs.kentico.com/x/gYHWCQ) in XbyK you must configure the PageContentTypes. If they are not configured, all content items will be placed in the Content Hub and will no longer have their hierarchical structure or url structure. See below for which PageTemplateType should be used.
 
 Sitefinity allows users to add a listing widget for any particular static or dynamic type. When a listing widget is added to the page, Sitefinity will consider that page url to be the root of the items that are specified for that listing. For example, a news listing widget may be on '/news'. If a user opened a news item with the urlname of '/example-1', the url would be '/news/example-1' and Sitefinity would dynamically render the page for that url. In Sitefinity, the item for '/example-1' would still live in the news content items but in XbyK, we need that content item to live under '/news'. To mimic this behavior in XbyK, you would add the following record.
 
@@ -174,4 +175,4 @@ Complete Example:
 
 ### WebApplicationPhysicalPath
 
-Path to the destination XbyK instance. Needed for the media import. Exclude the trailing slash e.g. c:\develop\my_xby_site
+Path to the destination XbyK instance. Needed for the media import. Exclude the trailing slash e.g. `c:\develop\my_xby_site`
