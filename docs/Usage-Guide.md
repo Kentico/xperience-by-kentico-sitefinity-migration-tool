@@ -18,7 +18,7 @@
    - Use Sitefinity's _Export for Deployment_ feature to create content type files. In the main navigation under _Administration » Export / Import_ Select _Export for Deployment_ from the left navigation and select _Export_. The path displayed here will be the value of `ModuleDeploymentFolderPath` in the `appsettings.json` file. Ensure you use the full path to the folder in the setting. The default value for this path is `~\App_Data\Sitefinity\Deployment`  
      ![alt text](image-6.png)
    - Check the default language for source Sitefinity site, it must match what is in XbyK. Look in _Administration >> Settings >> Basic >> Language_!  
-     [alt text](image-2.png)
+     ![alt text](image-2.png)
    - Make sure the Sitefinity content API is set to allow all content and is enabled. View the web service configuration under _Administration >> Web services >> Default_  
      ![alt text](image-4.png)  
      In the configuration options for 'Default' make sure all content types are selected and 'This service is active' is checked/true.  
