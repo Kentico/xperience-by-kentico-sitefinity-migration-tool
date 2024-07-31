@@ -25,7 +25,7 @@
      In the configuration options for 'Default' make sure all content types are selected and 'This service is active' is checked/true.  
       ![alt text](image-1.png)
 5. Set up XbyK
-   - Modify the XbyK default language to match the default language of the Sitefinity source site being migrated e.g. 'en-us'. Sitefinity's default English culture is 'en'.  
+   - Modify the default 'English' language in XbyK to match the default language of the Sitefinity source site being migrated e.g. 'en-us'. Sitefinity's default English culture is 'en'.  
      ![alt text](image-3.png).
 6. Make a back up of your XbyK database in case there are issues with the migration
 7. Execute the `dotnet run` command from an elevated command prompt
