@@ -1,1 +1,2 @@
-* text eol=crlf
+*.cs text eol=crlf
+*.csproj text eol=crlf

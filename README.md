@@ -16,22 +16,20 @@ The Sitefinity Migration Tool transfers content and other data from **Sitefinity
 
 ## Library Version Matrix
 
-| Xperience Version | Library Version |
-| ----------------- | --------------- |
-| >= 28.4.2         | 1.0.0           |
+| Xperience Version | Sitefinity Version | UMT Version | Library Version |
+| ----------------- | ------------------ | ----------- | --------------- |
+| >= 28.2.0         | 14.4.x             | 1.2.0       | 1.0.0           |
 
 ### Dependencies
 
 - [ASP.NET Core 8.0](https://dotnet.microsoft.com/en-us/download)
 - [Xperience by Kentico](https://docs.kentico.com/changelog)
+- [Progress Sitefinity CMS 14.4](https://www.progress.com/documentation/sitefinity-cms/144/sitefinity-cms-documentation)
+- [XbyK Universal Migration Tool](https://github.com/Kentico/xperience-by-kentico-universal-migration-tool)
 
-## Quick Start
+## Setup Instructions
 
----
-
-## Full Instructions
-
-View the [Usage Guide](./docs/Usage-Guide.md) for more detailed instructions.
+View the [Usage Guide](./docs/Usage-Guide.md) for detailed instructions.
 
 ## Contributing
 
