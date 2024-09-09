@@ -16,6 +16,7 @@ The Sitefinity Migration Tool transfers content and other data from **Sitefinity
 
 | Xperience Version | Sitefinity Version | UMT Version | Library Version |
 | ----------------- | ------------------ | ----------- | --------------- |
+| >= 29.4.2         | 14.4.x             | 1.6.2       | 1.1.0           |
 | >= 28.2.0         | 14.4.x             | 1.2.0       | 1.0.0           |
 
 ### Dependencies
