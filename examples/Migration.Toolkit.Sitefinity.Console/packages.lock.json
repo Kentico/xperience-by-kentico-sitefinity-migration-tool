@@ -592,7 +592,7 @@
         "type": "Project",
         "dependencies": {
           "HtmlAgilityPack": "[1.11.61, )",
-          "Kentico.Xperience.UMT": "[1.6.0, )",
+          "Kentico.Xperience.UMT": "[1.6.2, )",
           "Migration.Toolkit.Sitefinity.Data": "[1.0.0, )"
         }
       },
@@ -624,8 +624,8 @@
       "Kentico.Xperience.Core": {
         "type": "CentralTransitive",
         "requested": "[29.4.2, )",
-        "resolved": "29.4.0",
-        "contentHash": "aOP+wqh6dW/4RwEX3pLLEKfRYg/jnxdJ8TBub7usRFq8Z3lZZV+iyo24s8WLDRazJzBUnIcmXENuDTTLDHvtJQ==",
+        "resolved": "29.4.2",
+        "contentHash": "Y7c91zziLD+kQmg2qYJVDxIa8Obb4URMc10M2JTBZCB4GXL7BmeBxEXFZmEhgyoB6SfddYgPoXCJEppAejkmGg==",
         "dependencies": {
           "AngleSharp": "0.17.1",
           "MailKit": "4.7.1.1",
@@ -645,11 +645,11 @@
       },
       "Kentico.Xperience.UMT": {
         "type": "CentralTransitive",
-        "requested": "[1.6.0, )",
-        "resolved": "1.6.0",
-        "contentHash": "xogZa4TmOkcv4v74RbBRi4GSM1mMbSeuW5XV7ZF2Hnl0MKhHqFVmpllcvvkhEILqaXUtXxgjjsuhVqhu51ZjZA==",
+        "requested": "[1.6.2, )",
+        "resolved": "1.6.2",
+        "contentHash": "IticysqRuQ9bLx/9szwjuRPOzxe+S8XBdN9u93w9otm8575kwTq8a2kwZKBJye6AavSYzpR6EDfVIsyv9SYhHA==",
         "dependencies": {
-          "Kentico.Xperience.Core": "29.4.0",
+          "Kentico.Xperience.Core": "29.4.2",
           "Microsoft.Bcl.AsyncInterfaces": "8.0.0"
         }
       },
