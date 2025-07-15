@@ -27,6 +27,12 @@ internal class UserHelper(ILogger<UserHelper> logger, SitefinityImportConfigurat
         // Get the administrator user from Kentico using the configured name
         var adminUser = Service.Resolve<IUserInfoProvider>().Get(configuration.KenticoAdministratorUserName);
 
+        if (adminUser == null)
+        {
+            logger.LogError("Administrator user '{AdministratorName}' not found in Kentico database. Please ensure the user exists.", configuration.KenticoAdministratorUserName);
+            return null;
+        }
+
         administratorUser = new UserInfoModel
         {
             UserGUID = adminUser.UserGUID,
@@ -51,7 +57,21 @@ internal class UserHelper(ILogger<UserHelper> logger, SitefinityImportConfigurat
         }
 
         var adminUser = GetAdministratorUser();
-        logger.LogWarning("User with GUID {UserGuid} not found. Falling back to user '{AdministratorName}'.", userGuid, adminUser?.UserName);
+
+        if (adminUser == null || adminUser.UserGUID == null)
+        {
+            logger.LogError("User with GUID {UserGuid} not found and administrator user is not available. Cannot proceed with fallback.", userGuid);
+            return null;
+        }
+
+        logger.LogWarning("User with GUID {UserGuid} not found. Falling back to user '{AdministratorName}'.", userGuid, adminUser.UserName);
+
+        // Add the administrator user to the users dictionary with the admin user's GUID
+        // so that the UMT layer can find it when validating
+        if (!users.ContainsKey(adminUser.UserGUID.Value))
+        {
+            users.Add(adminUser.UserGUID.Value, adminUser);
+        }
 
         return adminUser;
     }
