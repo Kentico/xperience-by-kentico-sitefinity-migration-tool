@@ -19,7 +19,7 @@ internal class ContentItemSimplifiedModelAdapter(ILogger<ContentItemSimplifiedMo
 
     protected override ContentItemSimplifiedModel? AdaptInternal(ContentItem source, ContentDependencies dependenciesModel)
     {
-        var rootFolder = ContentFolderInfoProvider.ProviderObject.GetRoot();
+        var rootFolder = ContentFolderInfo.Provider.GetRootAsync(configuration.KenticoWorkspaceName).GetAwaiter().GetResult();
 
         if (rootFolder == null)
         {

@@ -305,8 +305,16 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
         var document = new HtmlDocument();
         document.LoadHtml(html);
 
-        UpdateUrls(mediaDependencies, document.DocumentNode.SelectNodes("//img"), "src");
-        UpdateUrls(mediaDependencies, document.DocumentNode.SelectNodes("//a"), "href");
+        var imgNodes = document.DocumentNode.SelectNodes("//img");
+        if (imgNodes != null)
+        {
+            UpdateUrls(mediaDependencies, imgNodes, "src");
+        }
+        var aNodes = document.DocumentNode.SelectNodes("//a");
+        if (aNodes != null)
+        {
+            UpdateUrls(mediaDependencies, aNodes, "href");
+        }
 
         return document.DocumentNode.OuterHtml;
     }
@@ -320,9 +328,9 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
 
         foreach (var htmlNode in htmlNodes)
         {
-            string? attributeValue = htmlNode.GetAttributeValue(attributeName, null);
+            string? attributeValue = htmlNode.GetAttributeValue(attributeName, string.Empty);
 
-            if (attributeValue == null)
+            if (string.IsNullOrWhiteSpace(attributeValue))
             {
                 continue;
             }
@@ -354,7 +362,7 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
             mediaFile = mediaDependencies.MediaFiles.Values.FirstOrDefault(x => x.DataSourceUrl == URLHelper.RemoveQuery(absoluteUri.ToString()));
         }
 
-        if (Uri.TryCreate(url, UriKind.Relative, out var relativeUri))
+        if (Uri.TryCreate(url, UriKind.Relative, out _))
         {
             mediaFile = mediaDependencies.MediaFiles.Values.FirstOrDefault(x => x.DataSourceUrl == "https://" + dataConfiguration.SitefinitySiteDomain + URLHelper.RemoveQuery(url));
         }

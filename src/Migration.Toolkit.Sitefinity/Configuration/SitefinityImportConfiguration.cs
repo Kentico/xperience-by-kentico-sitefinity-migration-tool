@@ -13,5 +13,9 @@
         /// Used to translate Sitefinity auto routing pages into physical child pages in XbyK.
         /// </summary>
         public IEnumerable<PageContentType>? PageContentTypes { get; set; }
+        /// <summary>
+        /// Kentico workspace name used when importing content items.
+        /// </summary>
+        public required string KenticoWorkspaceName { get; set; }
     }
 }

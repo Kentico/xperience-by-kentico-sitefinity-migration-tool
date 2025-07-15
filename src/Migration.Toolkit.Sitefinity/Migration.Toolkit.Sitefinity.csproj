@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack" />
+    <PackageReference Include="Kentico.Xperience.Core" />
     <PackageReference Include="Kentico.Xperience.UMT" />
   </ItemGroup>
 

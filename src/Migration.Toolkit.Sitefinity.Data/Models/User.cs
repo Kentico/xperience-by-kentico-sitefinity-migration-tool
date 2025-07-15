@@ -34,14 +34,31 @@ public partial class User : ISitefinityModel
     public string? LastName { get; set; }
 
     /// <summary>
-    /// Email address of the user.
+    /// Email address of the user. If not set, falls back to a default value.
     /// </summary>
+    /// <remarks>
+    /// kentico requires email address, some sitefinity users do not have an email so they will default to "{first}/unknown.{last}/unknown.{Id}@default-xbyk-migration.local"
+    /// </remarks>
     [Column("email")]
-    public string? Email { get; set; }
+    public string? Email
+    {
+        get
+        {
+            if (!string.IsNullOrEmpty(email))
+            {
+                return email;
+            }
+            string first = string.IsNullOrEmpty(FirstName) ? "unknown" : FirstName;
+            string last = string.IsNullOrEmpty(LastName) ? "unknown" : LastName;
+            return $"{first}.{last}.{Id}@default-xbyk-migration.local";
+        }
+        set => email = value;
+    }
 
-    /// <summary>
-    /// A value indicating whether the user is a backend user.
-    /// </summary>
+    private string? email;
+    /// <summary>  
+    /// A value indicating whether the user is a backend user.  
+    /// </summary>  
     [Column("is_backend_user")]
     public bool IsBackendUser { get; set; }
 }

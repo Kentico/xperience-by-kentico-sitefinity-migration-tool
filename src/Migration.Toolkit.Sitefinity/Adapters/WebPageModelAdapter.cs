@@ -37,13 +37,20 @@ internal class WebPageModelAdapter(ILogger<WebPageModelAdapter> logger, IContent
 
         var languageData = contentHelper.GetLanguageData(dependenciesModel, source, pageNodeClass, createdByUser);
 
+        if (string.IsNullOrWhiteSpace(source.Url))
+        {
+            string logMessage = $"Blank source.Url for {source.Title}. Skipping content item {source.Id}.";
+            logger.LogError(logMessage, source.Title);
+            return default;
+        }
+
         var pageData = new PageDataModel
         {
             ItemOrder = null,
             PageUrls = contentHelper.GetPageUrls(dependenciesModel, source),
             PageGuid = source.Id,
             ParentGuid = ValidationHelper.GetGuid(source.ParentId, Guid.Empty),
-            TreePath = contentHelper.GetRelativeUrl(source.ViewUrl)
+            TreePath = contentHelper.GetRelativeUrl(source.Url)
         };
 
         var pageContentItem = new ContentItemSimplifiedModel

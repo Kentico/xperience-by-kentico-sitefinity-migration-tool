@@ -33,11 +33,12 @@ services.AddSitefinityMigrationToolkit(new SitefinityDataConfiguration
     SitefinityConnectionString = root.GetValue<string>("ConnectionStrings:SitefinityConnectionString") ?? "",
     SitefinitySiteDomain = root.GetValue<string>("Sitefinity:Domain") ?? "",
     SitefinityRestApiUrl = "https://" + root.GetValue<string>("Sitefinity:Domain") + root.GetValue<string>("Sitefinity:WebServicePath"),
-    SitefinityModuleDeploymentFolderPath = root.GetValue<string>("Sitefinity:ModuleDeploymentFolderPath") ?? "",
+    SitefinityModuleDeploymentFolderPath = root.GetValue<string>("Sitefinity:ModuleDeploymentFolderPath") ?? ""
 }, new SitefinityImportConfiguration
 {
     SitefinityCodeNamePrefix = root.GetValue<string>("Sitefinity:CodeNamePrefix") ?? "",
-    PageContentTypes = root.GetSection("Sitefinity:PageContentTypes").Get<List<PageContentType>>()
+    PageContentTypes = root.GetSection("Sitefinity:PageContentTypes").Get<List<PageContentType>>(),
+    KenticoWorkspaceName = root.GetValue<string>("Sitefinity:KenticoWorkspaceName") ?? "",
 });
 
 var serviceProvider = services.BuildServiceProvider();
