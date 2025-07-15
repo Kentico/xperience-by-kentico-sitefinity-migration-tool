@@ -38,7 +38,8 @@ services.AddSitefinityMigrationToolkit(new SitefinityDataConfiguration
 {
     SitefinityCodeNamePrefix = root.GetValue<string>("Sitefinity:CodeNamePrefix") ?? "",
     PageContentTypes = root.GetSection("Sitefinity:PageContentTypes").Get<List<PageContentType>>(),
-    KenticoWorkspaceName = root.GetValue<string>("Sitefinity:KenticoWorkspaceName") ?? "",
+    KenticoDefaultWorkspaceName = root.GetValue<string>("Sitefinity:KenticoDefaultWorkspaceName") ?? "",
+    KenticoAdministratorUserName = root.GetValue<string>("Sitefinity:KenticoAdministratorUserName") ?? "administrator",
 });
 
 var serviceProvider = services.BuildServiceProvider();

@@ -16,6 +16,10 @@
         /// <summary>
         /// Kentico workspace name used when importing content items.
         /// </summary>
-        public required string KenticoWorkspaceName { get; set; }
+        public required string KenticoDefaultWorkspaceName { get; set; }
+        /// <summary>
+        /// Kentico administrator user name to use as fallback when Sitefinity user is not found.
+        /// </summary>
+        public required string KenticoAdministratorUserName { get; set; }
     }
 }

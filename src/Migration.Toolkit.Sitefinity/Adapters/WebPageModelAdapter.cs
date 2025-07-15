@@ -11,7 +11,10 @@ using Migration.Toolkit.Sitefinity.Core.Helpers;
 using Migration.Toolkit.Sitefinity.Model;
 
 namespace Migration.Toolkit.Sitefinity.Adapters;
-internal class WebPageModelAdapter(ILogger<WebPageModelAdapter> logger, IContentHelper contentHelper, SitefinityDataConfiguration dataConfiguration) : UmtAdapterBaseWithDependencies<Page, ContentDependencies, ContentItemSimplifiedModel>(logger)
+internal class WebPageModelAdapter(ILogger<WebPageModelAdapter> logger,
+                                  IContentHelper contentHelper,
+                                  IUserHelper userHelper,
+                                  SitefinityDataConfiguration dataConfiguration) : UmtAdapterBaseWithDependencies<Page, ContentDependencies, ContentItemSimplifiedModel>(logger)
 {
     protected override ContentItemSimplifiedModel? AdaptInternal(Page source, ContentDependencies dependenciesModel)
     {
@@ -33,7 +36,7 @@ internal class WebPageModelAdapter(ILogger<WebPageModelAdapter> logger, IContent
 
         var users = dependenciesModel.Users;
 
-        users.TryGetValue(ValidationHelper.GetGuid(source.Owner, Guid.Empty), out var createdByUser);
+        var createdByUser = userHelper.GetUserWithFallback(ValidationHelper.GetGuid(source.Owner, Guid.Empty), users);
 
         var languageData = contentHelper.GetLanguageData(dependenciesModel, source, pageNodeClass, createdByUser);
 

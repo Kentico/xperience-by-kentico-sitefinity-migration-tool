@@ -13,13 +13,17 @@ using Migration.Toolkit.Sitefinity.Core.Helpers;
 using Migration.Toolkit.Sitefinity.Model;
 
 namespace Migration.Toolkit.Sitefinity.Adapters;
-internal class ContentItemSimplifiedModelAdapter(ILogger<ContentItemSimplifiedModelAdapter> logger, IContentHelper contentHelper, SitefinityImportConfiguration configuration, SitefinityDataConfiguration dataConfiguration) : UmtAdapterBaseWithDependencies<ContentItem, ContentDependencies, ContentItemSimplifiedModel>(logger)
+internal class ContentItemSimplifiedModelAdapter(ILogger<ContentItemSimplifiedModelAdapter> logger,
+                                                 IContentHelper contentHelper,
+                                                 IUserHelper userHelper,
+                                                 SitefinityImportConfiguration configuration,
+                                                 SitefinityDataConfiguration dataConfiguration) : UmtAdapterBaseWithDependencies<ContentItem, ContentDependencies, ContentItemSimplifiedModel>(logger)
 {
     private readonly Dictionary<Guid, ContentItemSimplifiedModel> detailContentItems = [];
 
     protected override ContentItemSimplifiedModel? AdaptInternal(ContentItem source, ContentDependencies dependenciesModel)
     {
-        var rootFolder = ContentFolderInfo.Provider.GetRootAsync(configuration.KenticoWorkspaceName).GetAwaiter().GetResult();
+        var rootFolder = ContentFolderInfo.Provider.GetRootAsync(configuration.KenticoDefaultWorkspaceName).GetAwaiter().GetResult();
 
         if (rootFolder == null)
         {
@@ -35,7 +39,7 @@ internal class ContentItemSimplifiedModelAdapter(ILogger<ContentItemSimplifiedMo
 
         var users = dependenciesModel.Users;
 
-        users.TryGetValue(ValidationHelper.GetGuid(source.Owner, Guid.Empty), out var createdByUser);
+        var createdByUser = userHelper.GetUserWithFallback(ValidationHelper.GetGuid(source.Owner, Guid.Empty), users);
 
         var languageData = contentHelper.GetLanguageData(dependenciesModel, source, dataClassModel, createdByUser);
 

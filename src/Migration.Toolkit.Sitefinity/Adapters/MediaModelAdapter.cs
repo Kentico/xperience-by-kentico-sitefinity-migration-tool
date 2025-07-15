@@ -11,7 +11,10 @@ using Migration.Toolkit.Sitefinity.Core.Helpers;
 using Migration.Toolkit.Sitefinity.Model;
 
 namespace Migration.Toolkit.Sitefinity.Adapters;
-internal class MediaModelAdapter(ILogger<MediaLibraryModelAdapter> logger, SitefinityDataConfiguration sitefinityDataConfiguration, IContentHelper contentHelper) : UmtAdapterBaseWithDependencies<Media, MediaFileDependencies, MediaFileModel>(logger)
+internal class MediaModelAdapter(ILogger<MediaLibraryModelAdapter> logger,
+                                 SitefinityDataConfiguration sitefinityDataConfiguration,
+                                 IContentHelper contentHelper,
+                                 IUserHelper userHelper) : UmtAdapterBaseWithDependencies<Media, MediaFileDependencies, MediaFileModel>(logger)
 {
     protected override MediaFileModel? AdaptInternal(Media source, MediaFileDependencies mediaFileDependencies)
     {
@@ -25,8 +28,8 @@ internal class MediaModelAdapter(ILogger<MediaLibraryModelAdapter> logger, Sitef
 
         var users = mediaFileDependencies.Users;
 
-        users.TryGetValue(ValidationHelper.GetGuid(source.CreatedBy, Guid.Empty), out var createdByUser);
-        users.TryGetValue(ValidationHelper.GetGuid(source.LastModifiedBy, Guid.Empty), out var modifiedByUser);
+        var createdByUser = userHelper.GetUserWithFallback(ValidationHelper.GetGuid(source.CreatedBy, Guid.Empty), users);
+        var modifiedByUser = userHelper.GetUserWithFallback(ValidationHelper.GetGuid(source.LastModifiedBy, Guid.Empty), users);
 
         string mediaPath = contentHelper.RemovePathSegmentsFromStart(URLHelper.RemoveQuery(source.ItemDefaultUrl), 4).TrimStart('/') + source.Extension;
 
