@@ -14,7 +14,19 @@ internal class UserImportService(IImportService kenticoImportService,
 {
     public IEnumerable<UserInfoModel> Get()
     {
-        var users = userProvider.GetUsers();
+        var users = userProvider.GetUsers().ToList();
+
+        // Group users by email address to detect duplicates
+        var emailGroups = users.GroupBy(u => u.Email?.ToLowerInvariant());
+
+        // Clear email field for users with duplicate email addresses
+        foreach (var group in emailGroups.Where(g => g.Count() > 1))
+        {
+            foreach (var user in group.Skip(1))
+            {
+                user.Email = null; // Clear email to force fallback email generation
+            }
+        }
 
         return mapper.Adapt(users);
     }
