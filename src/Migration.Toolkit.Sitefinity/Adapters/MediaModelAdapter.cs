@@ -28,8 +28,8 @@ internal class MediaModelAdapter(ILogger<MediaLibraryModelAdapter> logger,
 
         var users = mediaFileDependencies.Users;
 
-        var createdByUser = userHelper.GetUserWithFallback(ValidationHelper.GetGuid(source.CreatedBy, Guid.Empty), users);
-        var modifiedByUser = userHelper.GetUserWithFallback(ValidationHelper.GetGuid(source.LastModifiedBy, Guid.Empty), users);
+        users.TryGetValue(ValidationHelper.GetGuid(source.CreatedBy, Guid.Empty), out var createdByUser);
+        users.TryGetValue(ValidationHelper.GetGuid(source.LastModifiedBy, Guid.Empty), out var modifiedByUser);
 
         string mediaPath = contentHelper.RemovePathSegmentsFromStart(URLHelper.RemoveQuery(source.ItemDefaultUrl), 4).TrimStart('/') + source.Extension;
 

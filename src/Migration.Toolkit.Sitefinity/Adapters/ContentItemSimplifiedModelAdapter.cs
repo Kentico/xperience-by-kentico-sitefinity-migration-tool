@@ -39,7 +39,7 @@ internal class ContentItemSimplifiedModelAdapter(ILogger<ContentItemSimplifiedMo
 
         var users = dependenciesModel.Users;
 
-        var createdByUser = userHelper.GetUserWithFallback(ValidationHelper.GetGuid(source.Owner, Guid.Empty), users);
+        users.TryGetValue(ValidationHelper.GetGuid(source.Owner, Guid.Empty), out var createdByUser);
 
         var languageData = contentHelper.GetLanguageData(dependenciesModel, source, dataClassModel, createdByUser);
 
