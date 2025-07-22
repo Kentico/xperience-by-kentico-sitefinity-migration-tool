@@ -16,7 +16,6 @@ namespace Migration.Toolkit.Sitefinity.Services
                                             IContentLanguageImportService contentLanguageImportService,
                                             IChannelImportService channelImportService,
                                             IDataClassImportService dataClassImportService,
-                                            IMediaLibraryImportService mediaLibraryImportService,
                                             IMediaImportService mediaImportService,
                                             IUserImportService userImportService,
                                             IContentProvider contentProvider,
@@ -59,26 +58,16 @@ namespace Migration.Toolkit.Sitefinity.Services
 
             observer.ImportCompletedTask.Wait();
 
-            var mediaLibraries = mediaLibraryImportService.StartImport(observer);
-
-            observer.ImportCompletedTask.Wait();
-
-            var mediaFilesDependencies = new MediaFileDependencies
-            {
-                MediaLibraries = mediaLibraries.ImportedModels,
-                Users = users.ImportedModels
-            };
-
-            var mediaFiles = mediaImportService.StartImportWithDependencies(observer, mediaFilesDependencies);
-
-            observer.ImportCompletedTask.Wait();
-
             var dataClassDependencies = new DataClassDependencies
             {
                 Channels = channels.ImportedModels.Values.OfType<ChannelModel>().ToDictionary(x => x.ChannelGUID)
             };
 
             var dataClasses = dataClassImportService.StartImportWithDependencies(observer, dataClassDependencies);
+
+            observer.ImportCompletedTask.Wait();
+
+            var mediaFiles = mediaImportService.StartImport(observer);
 
             observer.ImportCompletedTask.Wait();
 

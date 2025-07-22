@@ -24,6 +24,9 @@ var root = new ConfigurationBuilder()
 Service.Use<IConfiguration>(root);
 CMS.Base.SystemContext.WebApplicationPhysicalPath = root.GetValue<string>("WebApplicationPhysicalPath");
 
+// Set the current directory to the web application path so assets are written to the correct location
+Directory.SetCurrentDirectory(root.GetValue<string>("WebApplicationPhysicalPath") ?? throw new InvalidOperationException("WebApplicationPhysicalPath must be set"));
+
 CMSApplication.Init();
 
 var services = new ServiceCollection();
@@ -62,7 +65,6 @@ var observer = importService.StartImportContent(importObserver);
 // wait until import finishes
 await observer.ImportCompletedTask;
 
-Console.WriteLine("Clearing Cache...");
 CacheHelper.ClearCache();
 Console.WriteLine("Cache Cleared!");
 

@@ -355,16 +355,17 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
             return url;
         }
 
-        MediaFileModel? mediaFile = null;
+        ContentItemSimplifiedModel? mediaFile = null;
 
         if (Uri.TryCreate(url, UriKind.Absolute, out var absoluteUri))
         {
-            mediaFile = mediaDependencies.MediaFiles.Values.FirstOrDefault(x => x.DataSourceUrl == URLHelper.RemoveQuery(absoluteUri.ToString()));
+            mediaFile = FindMediaFileByUrl(mediaDependencies, URLHelper.RemoveQuery(absoluteUri.ToString()));
         }
 
         if (Uri.TryCreate(url, UriKind.Relative, out _))
         {
-            mediaFile = mediaDependencies.MediaFiles.Values.FirstOrDefault(x => x.DataSourceUrl == "https://" + dataConfiguration.SitefinitySiteDomain + URLHelper.RemoveQuery(url));
+            string fullUrl = "https://" + dataConfiguration.SitefinitySiteDomain + URLHelper.RemoveQuery(url);
+            mediaFile = FindMediaFileByUrl(mediaDependencies, fullUrl);
         }
 
         if (mediaFile == null)
@@ -373,6 +374,31 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
             return url;
         }
 
-        return $"/getmedia/{mediaFile.FileGUID}/{mediaFile.FileName}{URLHelper.GetQuery(url)}";
+        // For content hub assets, use /contentassets/ URL format
+        // The format should be: /contentassets/{content-item-name}/{query-parameters}
+        return $"/contentassets/{mediaFile.Name}{URLHelper.GetQuery(url)}";
     }
+
+    private static ContentItemSimplifiedModel? FindMediaFileByUrl(IMediaDependencies mediaDependencies, string targetUrl) => mediaDependencies.MediaFiles.Values.FirstOrDefault(contentItem =>
+        // Check all language variants for a matching asset URL
+        (contentItem.LanguageData ?? [])
+            .Select(languageData => languageData.ContentItemData)
+            .Where(contentItemData => contentItemData != null)
+            .Any(contentItemData =>
+            {
+                // Check for various asset URL field names based on content type
+                string[] assetUrlFields = new[] { "ImageAssetUrl", "DownloadAssetUrl", "VideoAssetUrl" };
+
+                foreach (string fieldName in assetUrlFields)
+                {
+                    if (contentItemData!.TryGetValue(fieldName, out object? assetUrlValue) &&
+                        assetUrlValue is string assetUrl &&
+                        !string.IsNullOrEmpty(assetUrl) &&
+                        assetUrl.Equals(targetUrl, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }));
 }

@@ -9,48 +9,103 @@ using Migration.Toolkit.Sitefinity.Model;
 
 namespace Migration.Toolkit.Sitefinity.Services;
 internal class MediaImportService(IImportService kenticoImportService,
-                                    IMediaLibraryImportService mediaLibraryImportService,
+                                    IContentLanguageImportService contentLanguageImportService,
                                     IUserImportService userImportService,
-                                            IMediaProvider mediaProvider,
-                                            IUmtAdapterWithDependencies<Media, MediaFileDependencies, MediaFileModel> adapter) : IMediaImportService
+                                    IDataClassImportService dataClassImportService,
+                                    IContentFolderImportService contentFolderImportService,
+                                    ContentFolderManager folderManager,
+                                    IMediaProvider mediaProvider,
+                                    IUmtAdapterWithDependencies<Media, MediaFileDependencies> adapter) : IMediaImportService
 {
-    public IEnumerable<MediaFileModel> Get(MediaFileDependencies dependenciesModel)
+    /// <summary>
+    /// Cached media files to avoid multiple provider calls.
+    /// </summary>
+    private List<Media>? cachedMediaFiles;
+
+    /// <summary>
+    /// Gets all media files from the provider, cached after first call to avoid redundant database/API calls.
+    /// </summary>
+    /// <returns>List of all media files (images, documents, videos)</returns>
+    private List<Media> GetAllMediaFiles()
     {
-        var mediaFiles = new List<Media>();
+        if (cachedMediaFiles == null)
+        {
+            cachedMediaFiles = [];
+            cachedMediaFiles.AddRange(mediaProvider.GetImages());
+            cachedMediaFiles.AddRange(mediaProvider.GetDocuments());
+            cachedMediaFiles.AddRange(mediaProvider.GetVideos());
+        }
 
-        mediaFiles.AddRange(mediaProvider.GetImages());
-
-        mediaFiles.AddRange(mediaProvider.GetDocuments());
-
-        mediaFiles.AddRange(mediaProvider.GetVideos());
-
-        return adapter.Adapt(mediaFiles, dependenciesModel);
+        return cachedMediaFiles;
     }
 
-    public SitefinityImportResult<MediaFileModel> StartImport(ImportStateObserver observer)
+    public IEnumerable<ContentItemSimplifiedModel> Get(MediaFileDependencies dependenciesModel)
     {
-        var mediaLibraryResult = mediaLibraryImportService.StartImport(observer);
-        var userResult = userImportService.StartImport(mediaLibraryResult.Observer);
+        var allMediaFiles = GetAllMediaFiles();
+        return adapter.Adapt(allMediaFiles, dependenciesModel).OfType<ContentItemSimplifiedModel>();
+    }
 
-        var dependencies = new MediaFileDependencies
+    public SitefinityImportResult<ContentItemSimplifiedModel> StartImport(ImportStateObserver observer)
+    {
+        var contentLanguageResults = contentLanguageImportService.StartImport(observer);
+        observer.ImportCompletedTask.Wait();
+
+        var userImportResults = userImportService.StartImport(observer);
+        observer.ImportCompletedTask.Wait();
+
+        var dataClassResults = dataClassImportService.StartImport(observer);
+        observer.ImportCompletedTask.Wait();
+
+        var mediaFileDependencies = new MediaFileDependencies
         {
-            MediaLibraries = mediaLibraryResult.ImportedModels,
-            Users = userResult.ImportedModels
+            ContentFolders = new Dictionary<Guid, ContentFolderModel>(),
+            Users = userImportResults.ImportedModels,
+            DataClasses = dataClassResults.ImportedModels.Values.OfType<DataClassModel>().ToDictionary(x => x.ClassGUID),
+            ContentLanguages = contentLanguageResults.ImportedModels,
+            FolderManager = folderManager
         };
 
-        return Import(userResult.Observer, dependencies);
+        return ImportMediaWithFolders(observer, mediaFileDependencies);
     }
 
-    public SitefinityImportResult<MediaFileModel> StartImportWithDependencies(ImportStateObserver observer, MediaFileDependencies dependenciesModel) => Import(observer, dependenciesModel);
+    public SitefinityImportResult<ContentItemSimplifiedModel> StartImportWithDependencies(ImportStateObserver observer, MediaFileDependencies dependenciesModel) => ImportMediaWithFolders(observer, dependenciesModel);
 
-    private SitefinityImportResult<MediaFileModel> Import(ImportStateObserver observer, MediaFileDependencies dependencies)
+    private SitefinityImportResult<ContentItemSimplifiedModel> ImportMediaWithFolders(ImportStateObserver observer, MediaFileDependencies mediaFileDependencies)
     {
-        var mediaFiles = Get(dependencies);
+        // Clear any previous folder tracking and pre-process media to create folder structure
+        folderManager.ClearCreatedFolders();
 
-        return new SitefinityImportResult<MediaFileModel>
+        // Get all media files once (cached for subsequent calls)
+        var allMediaFiles = GetAllMediaFiles();
+
+        // Run adapter to trigger folder creation (results will be discarded, we just want folders)
+        var tempMediaItems = adapter.Adapt(allMediaFiles, mediaFileDependencies).OfType<ContentItemSimplifiedModel>().ToList();
+
+        // Import all dynamically created folders in hierarchical order
+        var allCreatedFolders = folderManager.GetAllCreatedFolders();
+
+        if (allCreatedFolders.Any())
         {
-            ImportedModels = mediaFiles.ToDictionary(x => x.FileGUID),
-            Observer = kenticoImportService.StartImport(mediaFiles, observer)
+            var folderDependencies = new ContentFolderDependencies
+            {
+                ContentFolders = mediaFileDependencies.ContentFolders
+            };
+            contentFolderImportService.ImportFoldersHierarchically(allCreatedFolders, folderDependencies, observer);
+        }
+
+        // Now import media items using the updated dependencies that include all folders
+        return ImportMediaWithUpdatedDependencies(observer, mediaFileDependencies);
+    }
+
+    private SitefinityImportResult<ContentItemSimplifiedModel> ImportMediaWithUpdatedDependencies(ImportStateObserver observer, MediaFileDependencies mediaDependencies)
+    {
+        // Import media items using the updated dependencies that now include all created folders
+        var importedMediaFiles = Get(mediaDependencies);
+
+        return new SitefinityImportResult<ContentItemSimplifiedModel>
+        {
+            ImportedModels = importedMediaFiles.ToDictionary(x => x.ContentItemGUID),
+            Observer = kenticoImportService.StartImport(importedMediaFiles, observer)
         };
     }
 }
