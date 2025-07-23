@@ -287,6 +287,11 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
 
     public string GetRelativeUrl(string url)
     {
+        if (string.IsNullOrEmpty(url))
+        {
+            return url;
+        }
+
         if (url.StartsWith('/'))
         {
             return url;
@@ -374,9 +379,14 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
             return url;
         }
 
-        // For content hub assets, use /contentassets/ URL format
-        // The format should be: /contentassets/{content-item-name}/{query-parameters}
-        return $"/contentassets/{mediaFile.Name}{URLHelper.GetQuery(url)}";
+        // Extract filename from the original URL
+        string fileName = Path.GetFileName(URLHelper.RemoveQuery(url));
+        if (string.IsNullOrEmpty(fileName))
+        {
+            fileName = mediaFile.Name ?? "file";
+        }
+
+        return $"/getContentAsset/{mediaFile.ContentItemGUID}/{mediaFile.ContentItemGUID}/{fileName}";
     }
 
     private static ContentItemSimplifiedModel? FindMediaFileByUrl(IMediaDependencies mediaDependencies, string targetUrl) => mediaDependencies.MediaFiles.Values.FirstOrDefault(contentItem =>

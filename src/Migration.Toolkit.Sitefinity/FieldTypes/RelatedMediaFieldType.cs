@@ -2,6 +2,9 @@
 
 using Kentico.Xperience.UMT.Model;
 
+using Microsoft.Extensions.Logging;
+
+using Migration.Toolkit.Data.Core.Providers;
 using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Sitefinity.Abstractions;
 using Migration.Toolkit.Sitefinity.Core;
@@ -13,45 +16,112 @@ namespace Migration.Toolkit.Sitefinity.FieldTypes;
 /// <summary>
 /// Field type for Sitefinity Related Media field: "Telerik.Sitefinity.Web.UI.Fields.RelatedMediaField".
 /// </summary>
-public class RelatedMediaFieldType : FieldTypeBase, IFieldType
+public class RelatedMediaFieldType(ITypeProvider typeProvider, ILogger<RelatedMediaFieldType> logger) : FieldTypeBase, IFieldType
 {
+    private IEnumerable<SitefinityType>? sitefinityTypes;
+
     public string SitefinityWidgetTypeName => "Telerik.Sitefinity.Web.UI.Fields.RelatedMediaField";
 
-    public override string GetColumnType(Field sitefinityField) => "assets";
+    public override string GetColumnType(Field sitefinityField) => "contentitemreference";
 
-    public override FormFieldSettings GetSettings(Field sitefinityField) => new()
+    public override FormFieldSettings GetSettings(Field sitefinityField)
     {
-        ControlName = "Kentico.Administration.AssetSelector",
-        CustomProperties = new()
+        sitefinityTypes ??= typeProvider.GetAllTypes();
+
+        // Get the media content types dynamically
+        var mediaContentTypes = sitefinityTypes.Where(x =>
+            x.ClassNamespace == "Migration.Toolkit.Media" &&
+            (x.Name == "Image" || x.Name == "Video" || x.Name == "Download")).ToArray();
+
+        string maxItems = "100"; // Default maximum
+        if (!string.IsNullOrEmpty(sitefinityField.MaxNumberRange) && !sitefinityField.MaxNumberRange.Equals("0"))
         {
-            { "AllowedExtensions", !string.IsNullOrEmpty(sitefinityField.FileExtensions) ? sitefinityField.FileExtensions.Replace(".", "").Replace(',', ';') : "_INHERITED_" },
-            { "MaximumAssets", !string.IsNullOrEmpty(sitefinityField.MaxNumberRange) && sitefinityField.MaxNumberRange.Equals("0") ? "100" : sitefinityField.MaxNumberRange }
+            maxItems = sitefinityField.MaxNumberRange;
         }
-    };
+
+        return new FormFieldSettings
+        {
+            ControlName = "Kentico.Administration.ContentItemSelector",
+            CustomProperties = new Dictionary<string, object?>
+            {
+                { "SelectionType", "contentTypes" },
+                { "AllowedContentItemTypeIdentifiers", $"[\"{string.Join("\", \"", mediaContentTypes.Select(x => x.Id))}\"]" },
+                { "MaximumItems", maxItems },
+                { "MinimumItems", sitefinityField.IsRequired ? "1" : "0" }
+            }
+        };
+    }
+
     public override object GetData(SdkItem sdkItem, string fieldName)
     {
-        var relatedData = sdkItem.GetValue<IEnumerable<ImageDto>>(fieldName);
+        IEnumerable<ImageDto>? relatedData = null;
 
-        var contentRelatedItems = new List<ImageRelatedItem>();
+        try
+        {
+            if (sdkItem.TryGetValue<ImageDto>(fieldName, out var singleItem) && singleItem != null)
+            {
+                relatedData = new[] { singleItem };
+            }
+        }
+        catch
+        {
+            // Intentionally left blank to ignore exceptions when attempting to get single item.
+        }
+
+        // Try to get as single item and wrap in enumerable if enumerable attempt failed
+        if (relatedData == null)
+        {
+            try
+            {
+                if (sdkItem.TryGetValue<IEnumerable<ImageDto>>(fieldName, out var enumerable))
+                {
+                    relatedData = enumerable;
+                }
+            }
+            catch
+            {
+                // Intentionally left blank to ignore exceptions when attempting to get single item.
+            }
+        }
+
+        if (relatedData == null || !relatedData.Any())
+        {
+            logger.LogDebug("No related media data found for field {FieldName} in content item {ContentItemId}", fieldName, sdkItem.Id);
+            return JsonSerializer.Serialize(new List<ContentRelatedItem>());
+        }
+
+        var contentRelatedItems = new List<ContentRelatedItem>();
 
         foreach (var item in relatedData)
         {
-            if (Guid.TryParse(item.Id, out var result))
+            if (Guid.TryParse(item.Id, out var mediaItemGuid))
             {
-                contentRelatedItems.Add(new ImageRelatedItem
+                contentRelatedItems.Add(new ContentRelatedItem
                 {
-                    Identifier = result,
-                    Name = item.Title,
-                    Size = item.TotalSize,
-                    Dimensions = new Dimensions
-                    {
-                        Width = item.Width,
-                        Height = item.Height
-                    }
+                    Identifier = mediaItemGuid
                 });
+            }
+            else
+            {
+                logger.LogWarning("Invalid GUID format for media item ID {MediaItemId} in field {FieldName}", item.Id, fieldName);
             }
         }
 
         return JsonSerializer.Serialize(contentRelatedItems);
+    }
+
+    public override FormField HandleSpecialCase(FormField formField, Field sitefinityField)
+    {
+        // Ensure the field is properly configured as a content item reference field
+        formField.AllowEmpty = !sitefinityField.IsRequired;
+        formField.ColumnType = "contentitemreference";
+        formField.Properties ??= new FormFieldProperties();
+
+        if (string.IsNullOrEmpty(formField.Properties.FieldCaption))
+        {
+            formField.Properties.FieldCaption = string.IsNullOrEmpty(sitefinityField.Title) ? sitefinityField.Name : sitefinityField.Title;
+        }
+
+        return formField;
     }
 }
