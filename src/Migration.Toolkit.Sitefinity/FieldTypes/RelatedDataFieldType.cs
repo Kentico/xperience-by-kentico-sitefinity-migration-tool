@@ -10,11 +10,13 @@ using Migration.Toolkit.Sitefinity.Model;
 
 using Progress.Sitefinity.RestSdk.Dto;
 
+using Microsoft.Extensions.Logging;
+
 namespace Migration.Toolkit.Sitefinity.FieldTypes;
 /// <summary>
 /// Field type for Sitefinity RelatedData field: "Telerik.Sitefinity.Web.UI.Fields.RelatedDataField".
 /// </summary>
-public class RelatedDataFieldType(ITypeProvider typeProvider) : FieldTypeBase, IFieldType
+public class RelatedDataFieldType(ITypeProvider typeProvider, ILogger<RelatedDataFieldType> logger) : FieldTypeBase, IFieldType
 {
     private IEnumerable<SitefinityType>? sitefinityTypes;
 
@@ -51,7 +53,6 @@ public class RelatedDataFieldType(ITypeProvider typeProvider) : FieldTypeBase, I
             };
         }
 
-
         var allowedType = sitefinityTypes.FirstOrDefault(x => $"{x.ClassNamespace}.{x.Name}".Equals(sitefinityField.RelatedDataType));
 
         return new FormFieldSettings
@@ -68,6 +69,11 @@ public class RelatedDataFieldType(ITypeProvider typeProvider) : FieldTypeBase, I
     public override object GetData(SdkItem sdkItem, string fieldName)
     {
         var relatedData = sdkItem.GetValue<IEnumerable<SdkItem>>(fieldName);
+
+        if (relatedData == null)
+        {
+            return JsonSerializer.Serialize(new List<ContentRelatedItem>());
+        }
 
         var contentRelatedItems = new List<ContentRelatedItem>();
 

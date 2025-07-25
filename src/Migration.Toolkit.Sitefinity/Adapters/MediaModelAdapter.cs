@@ -143,7 +143,7 @@ internal class MediaModelAdapter(ILogger<MediaModelAdapter> logger,
 
     private static bool IsImage(Media mediaItem)
     {
-        string[] imageFileExtensions = [".bmp", ".gif", ".ico", ".jpg", ".jpeg", ".png", ".svg", ".tif", ".tiff", ".webp", ".wmf"];
+        string[] imageFileExtensions = [".bmp", ".gif", ".ico", ".jpg", ".jpeg", ".png", ".svg", ".tif", ".tiff", ".webp", ".wmf", ".svg"];
         bool isImage = imageFileExtensions.Contains(mediaItem.Extension?.ToLowerInvariant());
         return isImage;
     }
