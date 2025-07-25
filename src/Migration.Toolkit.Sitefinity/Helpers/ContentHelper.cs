@@ -179,13 +179,15 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
 
     public string GetName(string title, Guid id, int length = 100)
     {
-        string name = $"{ValidationHelper.GetCodeName(title)}-{id}".Replace(".", "-");
-
-        if (name.Length > length)
+        // Use the full GUID and trim the title to fit within the length constraint
+        string guidString = id.ToString();
+        int maxTitleLength = Math.Max(0, length - guidString.Length - 1); // 1 for the hyphen
+        string safeTitle = ValidationHelper.GetCodeName(title);
+        if (safeTitle.Length > maxTitleLength)
         {
-            return name[..length];
+            safeTitle = safeTitle[..maxTitleLength];
         }
-
+        string name = $"{safeTitle}-{guidString}".Replace(".", "-");
         return name;
     }
 
