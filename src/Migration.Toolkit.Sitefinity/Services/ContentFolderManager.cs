@@ -204,7 +204,7 @@ internal class ContentFolderManager(ILogger<ContentFolderManager> logger)
         string pathHash = Convert.ToHexString(hashBytes)[..8]; // Use first 8 characters of hash
 
         // Sanitize the folder name
-        string sanitizedFolderName = ValidationHelper.GetCodeName(folderName);
+        string sanitizedFolderName = ValidationHelper.GetCodeName(folderName).Replace(".", "-");
         if (string.IsNullOrEmpty(sanitizedFolderName))
         {
             sanitizedFolderName = "folder"; // fallback name

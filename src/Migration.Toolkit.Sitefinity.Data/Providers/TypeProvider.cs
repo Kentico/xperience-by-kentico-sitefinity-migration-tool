@@ -102,9 +102,9 @@ internal class TypeProvider(SitefinityDataConfiguration configuration, ILogger<T
         new()
         {
             Id = Guid.Parse("15E39897-1A49-440F-9EF2-D8F6151B3569"),
-            Name = "ImageAssetUrl",
-            Title = "Asset Url",
-            ColumnName = "ImageAssetUrl",
+            Name = "ImageAssetLegacyUrl",
+            Title = "Asset Legacy Url",
+            ColumnName = "ImageAssetLegacyUrl",
             WidgetTypeName = "Kentico.Administration.TextInput",
             IsRequired = false
         }
@@ -143,8 +143,8 @@ internal class TypeProvider(SitefinityDataConfiguration configuration, ILogger<T
         {
             Id = Guid.Parse("30B652D1-D071-4FED-955E-BC7A5E0C260A"),
             Name = "DownloadAssetUrl",
-            Title = "Asset Url",
-            ColumnName = "DownloadAssetUrl",
+            Title = "Asset Legacy Url",
+            ColumnName = "DownloadAssetLegacyUrl",
             WidgetTypeName = "Kentico.Administration.TextInput",
             IsRequired = false
         }
@@ -183,8 +183,8 @@ internal class TypeProvider(SitefinityDataConfiguration configuration, ILogger<T
         {
             Id = Guid.Parse("BF390CBC-437B-4988-AD28-F83EFE25A125"),
             Name = "VideoAssetUrl",
-            Title = "Asset Url",
-            ColumnName = "VideoAssetUrl",
+            Title = "Asset Legacy Url",
+            ColumnName = "VideoAssetLegacyUrl",
             WidgetTypeName = "Kentico.Administration.TextInput",
             IsRequired = false
         }

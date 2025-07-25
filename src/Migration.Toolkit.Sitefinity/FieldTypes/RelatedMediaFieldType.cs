@@ -101,10 +101,6 @@ public class RelatedMediaFieldType(ITypeProvider typeProvider, ILogger<RelatedMe
                     Identifier = mediaItemGuid
                 });
             }
-            else
-            {
-                logger.LogWarning("Invalid GUID format for media item ID {MediaItemId} in field {FieldName}", item.Id, fieldName);
-            }
         }
 
         return JsonSerializer.Serialize(contentRelatedItems);

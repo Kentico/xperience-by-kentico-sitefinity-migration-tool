@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using Newtonsoft.Json.Linq;
 
 using CMS.ContentEngine;
 using CMS.ContentEngine.Internal;
@@ -151,6 +152,12 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
                         data = JsonSerializer.Serialize(links);
                     }
 
+                    // Handle Newtonsoft.Json JToken objects (JArray, JObject, etc.)
+                    if (data is JToken jToken)
+                    {
+                        data = jToken.ToString(); // Serialize JToken to JSON string
+                    }
+
                     contentItemData.Add(field.Name, data);
                 }
             }
@@ -172,7 +179,7 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
 
     public string GetName(string title, Guid id, int length = 100)
     {
-        string name = $"{ValidationHelper.GetCodeName(title)}-{id}";
+        string name = $"{ValidationHelper.GetCodeName(title)}-{id}".Replace(".", "-");
 
         if (name.Length > length)
         {
@@ -353,27 +360,52 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
 
     private string? GetPermalink(IMediaDependencies mediaDependencies, string url)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(url);
+
         url = url.TrimStart('~');
 
-        if (url.StartsWith("tel:", StringComparison.OrdinalIgnoreCase) || url.StartsWith("mailto:", StringComparison.OrdinalIgnoreCase))
+        if (url.StartsWith("tel:", StringComparison.OrdinalIgnoreCase) ||
+            url.StartsWith("mailto:", StringComparison.OrdinalIgnoreCase))
         {
             return url;
         }
 
-        ContentItemSimplifiedModel? mediaFile = null;
-
+        // Only process relative URLs or URLs from the configured domain
         if (Uri.TryCreate(url, UriKind.Absolute, out var absoluteUri))
         {
-            mediaFile = FindMediaFileByUrl(mediaDependencies, URLHelper.RemoveQuery(absoluteUri.ToString()));
-        }
+            string? configuredDomain = dataConfiguration.SitefinitySiteDomain?.TrimEnd('/');
 
-        if (Uri.TryCreate(url, UriKind.Relative, out _))
+            // Extract only the host (e.g., "www.leasefoundation.org")
+            string urlHost = absoluteUri.Host;
+
+            // Check if it does NOT match the configured domain
+            if (!urlHost.Equals(configuredDomain, StringComparison.OrdinalIgnoreCase))
+            {
+                logger.LogDebug("URL {Url} does not belong to configured domain {Domain}. Skipping processing.", url, configuredDomain);
+                return url;
+            }
+        }
+        else if (!Uri.TryCreate(url, UriKind.Relative, out _))
         {
-            string fullUrl = "https://" + dataConfiguration.SitefinitySiteDomain + URLHelper.RemoveQuery(url);
-            mediaFile = FindMediaFileByUrl(mediaDependencies, fullUrl);
+            logger.LogWarning("Invalid URL format: {Url}. Skipping processing.", url);
+            return url;
         }
 
-        if (mediaFile == null)
+        ContentItemSimplifiedModel? mediaFile = null;
+        string urlToSearch = string.Empty;
+
+        if (Uri.TryCreate(url, UriKind.Absolute, out var absoluteUriForSearch))
+        {
+            urlToSearch = URLHelper.RemoveQuery(absoluteUriForSearch.PathAndQuery);
+        }
+        else if (Uri.TryCreate(url, UriKind.Relative, out _))
+        {
+            urlToSearch = URLHelper.RemoveQuery(url);
+        }
+
+        mediaFile = FindMediaFileByUrl(mediaDependencies, urlToSearch);
+
+        if (mediaFile is null)
         {
             logger.LogInformation("Could not find media file for {PathAndQuery}", url);
             return url;
@@ -386,7 +418,70 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
             fileName = mediaFile.Name ?? "file";
         }
 
-        return $"/getContentAsset/{mediaFile.ContentItemGUID}/{mediaFile.ContentItemGUID}/{fileName}";
+        // Get field definition GUIDs dynamically from TypeProvider instead of hardcoding
+        var languageData = mediaFile.LanguageData?.FirstOrDefault();
+        string? assetFieldGuid = null;
+
+        if (languageData?.ContentItemData is not null)
+        {
+            // Get the asset field GUID from TypeProvider based on which field exists in the content item
+            assetFieldGuid = GetAssetFieldGuidFromTypeProvider(languageData.ContentItemData);
+        }
+
+        if (string.IsNullOrEmpty(assetFieldGuid))
+        {
+            logger.LogWarning("Could not determine asset field type for media file {ContentItemGUID}. Using content item GUID as fallback.",
+                mediaFile.ContentItemGUID);
+            assetFieldGuid = mediaFile.ContentItemGUID?.ToString() ?? Guid.Empty.ToString();
+        }
+
+        string permalinkUrl = $"/getContentAsset/{mediaFile.ContentItemGUID}/{assetFieldGuid}/{fileName}";
+
+        // Add language parameter if available
+        if (!string.IsNullOrEmpty(languageData?.LanguageName))
+        {
+            permalinkUrl += $"?language={languageData.LanguageName}";
+        }
+
+        logger.LogDebug("Generated permalink URL: {PermalinkUrl} for original URL: {OriginalUrl}", permalinkUrl, url);
+        return permalinkUrl;
+    }
+
+    /// <summary>
+    /// Gets the asset field GUID from TypeProvider based on which asset field exists in the content item data.
+    /// </summary>
+    /// <param name="contentItemData">The content item data to check for asset fields.</param>
+    /// <returns>The field definition GUID from TypeProvider, or null if not found.</returns>
+    private string? GetAssetFieldGuidFromTypeProvider(Dictionary<string, object?> contentItemData)
+    {
+        // Get media content types from TypeProvider
+        var mediaContentTypes = typeProvider.GetMediaContentTypes();
+
+        // Define the asset field names to look for
+        string[] assetFieldNames = ["ImageAsset", "VideoAsset", "DownloadAsset"];
+
+        foreach (string fieldName in assetFieldNames)
+        {
+            if (contentItemData.ContainsKey(fieldName))
+            {
+                // Find the corresponding field definition in TypeProvider
+                foreach (var contentType in mediaContentTypes)
+                {
+                    if (contentType.Fields != null)
+                    {
+                        var assetField = contentType.Fields.FirstOrDefault(f => f.Name == fieldName);
+                        if (assetField != null)
+                        {
+                            logger.LogDebug("Found asset field {FieldName} with GUID {FieldGuid} from TypeProvider",
+                                fieldName, assetField.Id);
+                            return assetField.Id.ToString();
+                        }
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 
     private static ContentItemSimplifiedModel? FindMediaFileByUrl(IMediaDependencies mediaDependencies, string targetUrl) => mediaDependencies.MediaFiles.Values.FirstOrDefault(contentItem =>
@@ -397,7 +492,7 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
             .Any(contentItemData =>
             {
                 // Check for various asset URL field names based on content type
-                string[] assetUrlFields = new[] { "ImageAssetUrl", "DownloadAssetUrl", "VideoAssetUrl" };
+                string[] assetUrlFields = new[] { "ImageAssetLegacyUrl", "DownloadAssetLegacyUrl", "VideoAssetLegacyUrl" };
 
                 foreach (string fieldName in assetUrlFields)
                 {

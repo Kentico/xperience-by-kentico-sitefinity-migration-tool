@@ -1,4 +1,6 @@
-﻿using CMS.ContentEngine;
+﻿using AngleSharp.Dom;
+
+using CMS.ContentEngine;
 
 using CMS.Helpers;
 
@@ -175,6 +177,17 @@ internal class MediaModelAdapter(ILogger<MediaModelAdapter> logger,
         string title = !string.IsNullOrWhiteSpace(sourceMediaItem.Title) ? sourceMediaItem.Title : sourceMediaItem.UrlName;
         string description = sourceMediaItem.Description ?? string.Empty;
 
+        // Convert absolute URL to relative URL for legacy fields
+        string relativeLegacyUrl = string.Empty;
+        if (Uri.TryCreate(constructedAssetUrl, UriKind.Absolute, out var absoluteUri))
+        {
+            relativeLegacyUrl = URLHelper.RemoveQuery(absoluteUri.PathAndQuery);
+        }
+        else if (Uri.TryCreate(constructedAssetUrl, UriKind.Relative, out _))
+        {
+            relativeLegacyUrl = URLHelper.RemoveQuery(relativeLegacyUrl);
+        }
+
         // Debug logging to help troubleshoot
         Console.WriteLine($"Creating AssetUrlSource - ContentItemGuid: {assetUrlSource.ContentItemGuid}, Identifier: {assetUrlSource.Identifier}, Name: {assetUrlSource.Name}, Extension: {assetUrlSource.Extension}, Url: {assetUrlSource.Url}");
 
@@ -182,21 +195,21 @@ internal class MediaModelAdapter(ILogger<MediaModelAdapter> logger,
         {
             contentItemDataDictionary["ImageTitle"] = title;
             contentItemDataDictionary["ImageDescription"] = description;
-            contentItemDataDictionary["ImageAssetUrl"] = constructedAssetUrl;
+            contentItemDataDictionary["ImageAssetLegacyUrl"] = relativeLegacyUrl;
             contentItemDataDictionary["ImageAsset"] = assetUrlSource;
         }
         else if (IsVideo(sourceMediaItem) || IsAudio(sourceMediaItem))
         {
             contentItemDataDictionary["VideoTitle"] = title;
             contentItemDataDictionary["VideoDescription"] = description;
-            contentItemDataDictionary["VideoAssetUrl"] = constructedAssetUrl;
+            contentItemDataDictionary["VideoAssetLegacyUrl"] = relativeLegacyUrl;
             contentItemDataDictionary["VideoAsset"] = assetUrlSource;
         }
         else // Default to Download
         {
             contentItemDataDictionary["DownloadTitle"] = title;
             contentItemDataDictionary["DownloadDescription"] = description;
-            contentItemDataDictionary["DownloadAssetUrl"] = constructedAssetUrl;
+            contentItemDataDictionary["DownloadAssetLegacyUrl"] = relativeLegacyUrl;
             contentItemDataDictionary["DownloadAsset"] = assetUrlSource;
         }
 

@@ -33,7 +33,7 @@ internal class ChannelModelAdapter(ILogger<ChannelModelAdapter> logger) : UmtAda
         var channel = new ChannelModel
         {
             ChannelDisplayName = source.Name,
-            ChannelName = ValidationHelper.GetCodeName(source.Name),
+            ChannelName = ValidationHelper.GetCodeName(source.Name).Replace(".", "-"),
             ChannelGUID = source.Id,
             ChannelType = ChannelType.Website,
         };
