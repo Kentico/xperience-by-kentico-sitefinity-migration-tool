@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Migration.Toolkit.Data.Configuration;
 using Migration.Toolkit.Data.Core.Providers;
 using Migration.Toolkit.Data.Models;
+using Migration.Toolkit.Sitefinity.Data;
 
 namespace Migration.Toolkit.Data.Providers;
 
@@ -25,6 +26,15 @@ internal class TypeProvider(SitefinityDataConfiguration configuration, ILogger<T
         return sitefinityTypes;
     }
 
+    /// <summary>
+    /// Get the default media content type definitions for Image, Download, Video.
+    /// </summary>
+    /// <returns></returns>
+    /// <remarks>
+    /// The GUIDs for the media content types and their fields are hardcoded to support
+    /// rerunning the migration on a target XbyK instance without corrupting
+    /// type definitions between runs.
+    /// </remarks>
     public IEnumerable<SitefinityType> GetMediaContentTypes()
     {
         var mediaTypes = new List<SitefinityType>();
@@ -35,8 +45,8 @@ internal class TypeProvider(SitefinityDataConfiguration configuration, ILogger<T
         {
             Id = Guid.Parse("4C86237A-A336-4668-A681-DD47D00581F0"),
             DisplayName = "Image",
-            ClassName = "Image",
-            Namespace = "Migration.Toolkit.Media",
+            ClassName = SitefinityMigrationConstants.MigratedImageDefaultTypeName,
+            Namespace = SitefinityMigrationConstants.MigratedFileTypeDefaultNamespace,
             Fields = imageFields,
             LastModified = DateTime.Now
         };
@@ -48,8 +58,8 @@ internal class TypeProvider(SitefinityDataConfiguration configuration, ILogger<T
         {
             Id = Guid.Parse("CC922711-DC5E-412A-947C-3457D495E528"),
             DisplayName = "Download",
-            ClassName = "Download",
-            Namespace = "Migration.Toolkit.Media",
+            ClassName = SitefinityMigrationConstants.MigratedDownloadDefaultTypeName,
+            Namespace = SitefinityMigrationConstants.MigratedFileTypeDefaultNamespace,
             Fields = downloadFields,
             LastModified = DateTime.Now
         };
@@ -61,8 +71,8 @@ internal class TypeProvider(SitefinityDataConfiguration configuration, ILogger<T
         {
             Id = Guid.Parse("65B6339B-F18D-4D2E-AF69-B9C8F7820C32"),
             DisplayName = "Video",
-            ClassName = "Video",
-            Namespace = "Migration.Toolkit.Media",
+            ClassName = SitefinityMigrationConstants.MigratedVideoDefaultTypeName,
+            Namespace = SitefinityMigrationConstants.MigratedFileTypeDefaultNamespace,
             Fields = videoFields,
             LastModified = DateTime.Now
         };

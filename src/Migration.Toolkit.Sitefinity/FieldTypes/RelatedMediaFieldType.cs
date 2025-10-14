@@ -1,5 +1,7 @@
 ﻿using System.Text.Json;
 
+using CMS.DataEngine;
+
 using Kentico.Xperience.UMT.Model;
 
 using Microsoft.Extensions.Logging;
@@ -8,6 +10,7 @@ using Migration.Toolkit.Data.Core.Providers;
 using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Sitefinity.Abstractions;
 using Migration.Toolkit.Sitefinity.Core;
+using Migration.Toolkit.Sitefinity.Data;
 using Migration.Toolkit.Sitefinity.Model;
 
 using Progress.Sitefinity.RestSdk.Dto;
@@ -22,7 +25,7 @@ public class RelatedMediaFieldType(ITypeProvider typeProvider, ILogger<RelatedMe
 
     public string SitefinityWidgetTypeName => "Telerik.Sitefinity.Web.UI.Fields.RelatedMediaField";
 
-    public override string GetColumnType(Field sitefinityField) => "contentitemreference";
+    public override string GetColumnType(Field sitefinityField) => FieldDataType.ContentItemReference;
 
     public override FormFieldSettings GetSettings(Field sitefinityField)
     {
@@ -30,8 +33,10 @@ public class RelatedMediaFieldType(ITypeProvider typeProvider, ILogger<RelatedMe
 
         // Get the media content types dynamically
         var mediaContentTypes = sitefinityTypes.Where(x =>
-            x.ClassNamespace == "Migration.Toolkit.Media" &&
-            (x.Name == "Image" || x.Name == "Video" || x.Name == "Download")).ToArray();
+            x.ClassNamespace == SitefinityMigrationConstants.MigratedFileTypeDefaultNamespace &&
+            (x.Name == SitefinityMigrationConstants.MigratedImageDefaultTypeName
+             || x.Name == SitefinityMigrationConstants.MigratedVideoDefaultTypeName
+             || x.Name == SitefinityMigrationConstants.MigratedDownloadDefaultTypeName)).ToArray();
 
         string maxItems = "100"; // Default maximum
         if (!string.IsNullOrEmpty(sitefinityField.MaxNumberRange) && !sitefinityField.MaxNumberRange.Equals("0"))
@@ -110,7 +115,7 @@ public class RelatedMediaFieldType(ITypeProvider typeProvider, ILogger<RelatedMe
     {
         // Ensure the field is properly configured as a content item reference field
         formField.AllowEmpty = !sitefinityField.IsRequired;
-        formField.ColumnType = "contentitemreference";
+        formField.ColumnType = FieldDataType.ContentItemReference;
         formField.Properties ??= new FormFieldProperties();
 
         if (string.IsNullOrEmpty(formField.Properties.FieldCaption))

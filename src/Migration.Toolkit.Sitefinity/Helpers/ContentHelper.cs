@@ -190,7 +190,7 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
         {
             safeTitle = safeTitle[..maxTitleLength];
         }
-        string name = $"{safeTitle}-{guidString}".Replace(".", "-");
+        string name = $"{safeTitle}-{guidString}".Replace('.', '-');
         return name;
     }
 
