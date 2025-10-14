@@ -11,6 +11,7 @@ using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Sitefinity.Abstractions;
 using Migration.Toolkit.Sitefinity.Configuration;
 using Migration.Toolkit.Sitefinity.Core.Helpers;
+using Migration.Toolkit.Sitefinity.Helpers;
 using Migration.Toolkit.Sitefinity.Model;
 
 namespace Migration.Toolkit.Sitefinity.Adapters;
@@ -132,41 +133,13 @@ internal class MediaModelAdapter(ILogger<MediaModelAdapter> logger,
     {
         string contentType = sourceMediaItem switch
         {
-            _ when IsImage(sourceMediaItem) => $"{configuredCodeNamePrefix}.Image",
-            _ when IsVideo(sourceMediaItem) => $"{configuredCodeNamePrefix}.Video",
-            _ when IsAudio(sourceMediaItem) => $"{configuredCodeNamePrefix}.Video",
-            _ when IsDownload(sourceMediaItem) => $"{configuredCodeNamePrefix}.Download",
+            _ when MediaClassificationHelper.IsImage(sourceMediaItem) => $"{configuredCodeNamePrefix}.Image",
+            _ when MediaClassificationHelper.IsVideo(sourceMediaItem) => $"{configuredCodeNamePrefix}.Video",
+            _ when MediaClassificationHelper.IsAudio(sourceMediaItem) => $"{configuredCodeNamePrefix}.Video",
+            _ when MediaClassificationHelper.IsDownload(sourceMediaItem) => $"{configuredCodeNamePrefix}.Download",
             _ => $"{configuredCodeNamePrefix}.Download" // Default fallback to Download
         };
         return contentType;
-    }
-
-    private static bool IsImage(Media mediaItem)
-    {
-        string[] imageFileExtensions = [".bmp", ".gif", ".ico", ".jpg", ".jpeg", ".png", ".svg", ".tif", ".tiff", ".webp", ".wmf", ".svg"];
-        bool isImage = imageFileExtensions.Contains(mediaItem.Extension?.ToLowerInvariant());
-        return isImage;
-    }
-
-    private static bool IsVideo(Media mediaItem)
-    {
-        string[] videoFileExtensions = [".3g2", ".3gp", ".asf", ".avi", ".flv", ".m4v", ".mkv", ".mov", ".mp4", ".mpeg", ".mpg", ".ogv", ".swf", ".webm", ".wmv"];
-        bool isVideo = videoFileExtensions.Contains(mediaItem.Extension?.ToLowerInvariant());
-        return isVideo;
-    }
-
-    private static bool IsAudio(Media mediaItem)
-    {
-        string[] audioFileExtensions = [".mid", ".midi", ".mp2", ".mp3", ".mpga", ".ogg", ".wav", ".wma"];
-        bool isAudio = audioFileExtensions.Contains(mediaItem.Extension?.ToLowerInvariant());
-        return isAudio;
-    }
-
-    private static bool IsDownload(Media mediaItem)
-    {
-        string[] downloadFileExtensions = [".7z", ".csv", ".deb", ".dmg", ".doc", ".docx", ".exe", ".gz", ".msg", ".msi", ".odp", ".ods", ".odt", ".pdf", ".pps", ".ppsx", ".ppt", ".pptx", ".rar", ".rpm", ".rtf", ".tar", ".txt", ".wpd", ".xls", ".xlsx", ".xml", ".xps", ".zip"];
-        bool isDownload = downloadFileExtensions.Contains(mediaItem.Extension?.ToLowerInvariant());
-        return isDownload;
     }
 
     private Dictionary<string, object?> CreateContentItemData(Media sourceMediaItem, string constructedAssetUrl)
@@ -191,14 +164,14 @@ internal class MediaModelAdapter(ILogger<MediaModelAdapter> logger,
         logger.LogInformation("Creating AssetUrlSource - ContentItemGuid: {ContentItemGuid}, Identifier: {Identifier}, Name: {Name}, Extension: {Extension}, Url: {Url}",
             assetUrlSource.ContentItemGuid, assetUrlSource.Identifier, assetUrlSource.Name, assetUrlSource.Extension, assetUrlSource.Url);
 
-        if (IsImage(sourceMediaItem))
+        if (MediaClassificationHelper.IsImage(sourceMediaItem))
         {
             contentItemDataDictionary["ImageTitle"] = title;
             contentItemDataDictionary["ImageDescription"] = description;
             contentItemDataDictionary["ImageAssetLegacyUrl"] = relativeLegacyUrl;
             contentItemDataDictionary["ImageAsset"] = assetUrlSource;
         }
-        else if (IsVideo(sourceMediaItem) || IsAudio(sourceMediaItem))
+        else if (MediaClassificationHelper.IsVideo(sourceMediaItem) || MediaClassificationHelper.IsAudio(sourceMediaItem))
         {
             contentItemDataDictionary["VideoTitle"] = title;
             contentItemDataDictionary["VideoDescription"] = description;

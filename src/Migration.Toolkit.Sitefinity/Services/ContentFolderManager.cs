@@ -7,6 +7,7 @@ using Kentico.Xperience.UMT.Model;
 using Microsoft.Extensions.Logging;
 
 using Migration.Toolkit.Data.Models;
+using Migration.Toolkit.Sitefinity.Helpers;
 using Migration.Toolkit.Sitefinity.Model;
 
 namespace Migration.Toolkit.Sitefinity.Services;
@@ -91,10 +92,10 @@ internal class ContentFolderManager(ILogger<ContentFolderManager> logger)
     {
         string folderName = sourceMediaItem switch
         {
-            _ when IsImage(sourceMediaItem) => "images",
-            _ when IsVideo(sourceMediaItem) => "videos",
-            _ when IsAudio(sourceMediaItem) => "videos", // Audio goes to video folder
-            _ when IsDownload(sourceMediaItem) => "downloads",
+            _ when MediaClassificationHelper.IsImage(sourceMediaItem) => "images",
+            _ when MediaClassificationHelper.IsVideo(sourceMediaItem) => "videos",
+            _ when MediaClassificationHelper.IsAudio(sourceMediaItem) => "videos", // Audio goes to video folder
+            _ when MediaClassificationHelper.IsDownload(sourceMediaItem) => "downloads",
             _ => "downloads" // Default fallback
         };
         return folderName;
@@ -230,33 +231,5 @@ internal class ContentFolderManager(ILogger<ContentFolderManager> logger)
         }
 
         return uniqueCodeName;
-    }
-
-    private static bool IsImage(Media mediaItem)
-    {
-        string[] imageFileExtensions = [".bmp", ".gif", ".ico", ".jpg", ".jpeg", ".png", ".svg", ".tif", ".tiff", ".webp", ".wmf", ".svg"];
-        bool isImage = imageFileExtensions.Contains(mediaItem.Extension?.ToLowerInvariant());
-        return isImage;
-    }
-
-    private static bool IsVideo(Media mediaItem)
-    {
-        string[] videoFileExtensions = [".3g2", ".3gp", ".asf", ".avi", ".flv", ".m4v", ".mkv", ".mov", ".mp4", ".mpeg", ".mpg", ".ogv", ".swf", ".webm", ".wmv"];
-        bool isVideo = videoFileExtensions.Contains(mediaItem.Extension?.ToLowerInvariant());
-        return isVideo;
-    }
-
-    private static bool IsAudio(Media mediaItem)
-    {
-        string[] audioFileExtensions = [".mid", ".midi", ".mp2", ".mp3", ".mpga", ".ogg", ".wav", ".wma"];
-        bool isAudio = audioFileExtensions.Contains(mediaItem.Extension?.ToLowerInvariant());
-        return isAudio;
-    }
-
-    private static bool IsDownload(Media mediaItem)
-    {
-        string[] downloadFileExtensions = [".7z", ".csv", ".deb", ".dmg", ".doc", ".docx", ".exe", ".gz", ".msg", ".msi", ".odp", ".ods", ".odt", ".pdf", ".pps", ".ppsx", ".ppt", ".pptx", ".rar", ".rpm", ".rtf", ".tar", ".txt", ".wpd", ".xls", ".xlsx", ".xml", ".xps", ".zip"];
-        bool isDownload = downloadFileExtensions.Contains(mediaItem.Extension?.ToLowerInvariant());
-        return isDownload;
     }
 }
