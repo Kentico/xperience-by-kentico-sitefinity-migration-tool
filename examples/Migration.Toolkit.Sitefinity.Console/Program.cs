@@ -47,17 +47,27 @@ services.AddSitefinityMigrationToolkit(new SitefinityDataConfiguration
 
 var serviceProvider = services.BuildServiceProvider();
 var importService = serviceProvider.GetRequiredService<ISitefinityImportService>();
+var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
 
 var importObserver = new ImportStateObserver();
 
 // listen to validation errors
-importObserver.ValidationError += (model, uniqueId, errors) => Console.WriteLine($"Validation error in model '{model.PrintMe()}': {JsonSerializer.Serialize(errors)}");
+importObserver.ValidationError += (model, uniqueId, errors) =>
+    logger.LogError("Validation error in model '{Model}': {Errors}",
+                    model.PrintMe(),
+                    JsonSerializer.Serialize(errors));
 
 // listen to successfully adapted and persisted objects
-importObserver.ImportedInfo += (model, info) => Console.WriteLine($"{model.PrintMe()} imported");
+importObserver.ImportedInfo += (model, info) =>
+    logger.LogInformation("{Model} imported",
+                          model.PrintMe());
 
 // listen for exception occurence
-importObserver.Exception += (model, uniqueId, exception) => Console.WriteLine($"Error in model {model.PrintMe()}: '{uniqueId}': {exception}");
+importObserver.Exception += (model, uniqueId, exception) =>
+    logger.LogError(exception,
+                    "Error in model {Model}: '{UniqueId}'",
+                    model.PrintMe(),
+                    uniqueId);
 
 // initiate import
 var observer = importService.StartImportContent(importObserver);
@@ -66,7 +76,6 @@ var observer = importService.StartImportContent(importObserver);
 await observer.ImportCompletedTask;
 
 CacheHelper.ClearCache();
-Console.WriteLine("Cache Cleared!");
-
-Console.WriteLine("Finished!");
+logger.LogInformation("Cache Cleared!");
+logger.LogInformation("Finished!");
 
