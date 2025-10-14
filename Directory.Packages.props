@@ -8,12 +8,12 @@
   <ItemGroup>
     <PackageVersion Include="AngleSharp" Version="0.17.1" />
     <PackageVersion Include="HtmlAgilityPack" Version="1.12.1" />
-    <PackageVersion Include="Kentico.Xperience.Admin" Version="29.4.2" />
-    <PackageVersion Include="Kentico.Xperience.Core" Version="30.6.0" />
-    <PackageVersion Include="Kentico.Xperience.ImageProcessing" Version="29.4.2" />
-    <PackageVersion Include="Kentico.Xperience.UMT" Version="3.8.0" />
-    <PackageVersion Include="Kentico.Xperience.WebApp" Version="29.4.2" />
-    <PackageVersion Include="kentico.xperience.azurestorage" Version="29.4.2" />
+    <PackageVersion Include="Kentico.Xperience.Admin" Version="30.10.1" />
+    <PackageVersion Include="Kentico.Xperience.Core" Version="30.10.1" />
+    <PackageVersion Include="Kentico.Xperience.ImageProcessing" Version="30.10.1" />
+    <PackageVersion Include="Kentico.Xperience.UMT" Version="3.12.0" />
+    <PackageVersion Include="Kentico.Xperience.WebApp" Version="30.10.1" />
+    <PackageVersion Include="kentico.xperience.azurestorage" Version="30.10.1" />
     <PackageVersion Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.7" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.7" />
