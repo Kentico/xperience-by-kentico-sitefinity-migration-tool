@@ -47,7 +47,7 @@
         "type": "Direct",
         "requested": "[14.4.8138.1, )",
         "resolved": "14.4.8138.1",
-        "contentHash": "efn+ji8yp1Ky2TnSYer3tKvi3+iFofVSjx+rr7KmxqaT+C00ALBrhkniaXxPRDErP3sywLkQwEYCVuTNwHmqGQ==",
+        "contentHash": "Hig1DKHsg+x0gw9SlqWHs3JDkY72h+hq/qym1aIBk/q5p5RsllrYv9CZQYvuP7MZ/RuZ56CiDCafzGlEh5iK1g==",
         "dependencies": {
           "Microsoft.Net.Http.Headers": "2.2.8",
           "Newtonsoft.Json": "13.0.2"
