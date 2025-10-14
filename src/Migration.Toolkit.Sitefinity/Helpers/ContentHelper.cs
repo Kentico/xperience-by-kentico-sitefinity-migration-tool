@@ -168,10 +168,11 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
                 logger.LogWarning(ex, "Cannot get data for {FieldName} field.", field.Name);
             }
         }
-
+        string title = cultureSdkItem.Title ?? cultureSdkItem.Id;
+        string truncatedTitle = title.Length > 100 ? title[..100] : title;
         return new ContentItemLanguageData
         {
-            DisplayName = cultureSdkItem.Title.Length > 100 ? cultureSdkItem.Title[..100] : cultureSdkItem.Title,
+            DisplayName = truncatedTitle,
             LanguageName = languageName,
             UserGuid = user?.UserGUID,
             ContentItemData = contentItemData,
