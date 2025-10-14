@@ -11,8 +11,6 @@ internal class UserProvider(IDbContextFactory<SitefinityContext> sitefinityConte
     public IEnumerable<User> GetUsers()
     {
         using var context = sitefinityContext.CreateDbContext();
-        var users = context.Users.ToList();
-
-        return users;
+        return context.Users.ToList();
     }
 }
