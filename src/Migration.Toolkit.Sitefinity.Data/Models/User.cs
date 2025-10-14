@@ -157,6 +157,10 @@ public partial class User : ISitefinityModel
     [GeneratedRegex(@"^[a-zA-Z0-9_\-\.@]+$")]
     private static partial Regex ValidKenticoUserRegex();
 
-    [GeneratedRegex(@"^[a-zA-Z0-9_\-\.@]+$")]
+    /// <summary>
+    /// This email validate regex is copied from XbyK's ValidationHelper.EmailRegExp static property.
+    /// </summary>
+    /// <returns></returns>
+    [GeneratedRegex(@"^[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?$")]
     private static partial Regex IsValidEmailRegex();
 }
