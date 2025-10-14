@@ -4,6 +4,7 @@ using Migration.Toolkit.Sitefinity.Configuration;
 using Migration.Toolkit.Sitefinity.Core.Helpers;
 
 namespace Migration.Toolkit.Sitefinity.Helpers;
+
 internal class TypeHelper(ITypeProvider typeProvider, SitefinityImportConfiguration importConfiguration) : ITypeHelper
 {
     private IEnumerable<SitefinityType>? types;

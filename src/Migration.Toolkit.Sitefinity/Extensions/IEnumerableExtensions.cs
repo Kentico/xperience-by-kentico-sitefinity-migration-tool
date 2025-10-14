@@ -1,6 +1,7 @@
 ﻿using Kentico.Xperience.UMT.Model;
 
 namespace System.Linq;
+
 internal static class IEnumerableExtensions
 {
     /// <summary>

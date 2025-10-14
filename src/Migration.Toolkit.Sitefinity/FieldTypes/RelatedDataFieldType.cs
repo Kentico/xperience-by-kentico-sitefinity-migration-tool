@@ -10,13 +10,11 @@ using Migration.Toolkit.Sitefinity.Model;
 
 using Progress.Sitefinity.RestSdk.Dto;
 
-using Microsoft.Extensions.Logging;
-
 namespace Migration.Toolkit.Sitefinity.FieldTypes;
 /// <summary>
 /// Field type for Sitefinity RelatedData field: "Telerik.Sitefinity.Web.UI.Fields.RelatedDataField".
 /// </summary>
-public class RelatedDataFieldType(ITypeProvider typeProvider, ILogger<RelatedDataFieldType> logger) : FieldTypeBase, IFieldType
+public class RelatedDataFieldType(ITypeProvider typeProvider) : FieldTypeBase, IFieldType
 {
     private IEnumerable<SitefinityType>? sitefinityTypes;
 

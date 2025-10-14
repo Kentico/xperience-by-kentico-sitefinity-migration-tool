@@ -3,6 +3,7 @@
 using Migration.Toolkit.Sitefinity.Core.Models;
 
 namespace Migration.Toolkit.Sitefinity.Model;
+
 internal class ContentDependencies : IImportDependencies, IMediaDependencies
 {
     /// <summary>

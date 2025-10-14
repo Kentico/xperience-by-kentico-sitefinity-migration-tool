@@ -9,6 +9,7 @@ using Migration.Toolkit.Data.Models;
 using Progress.Sitefinity.RestSdk;
 
 namespace Migration.Toolkit.Data.Providers;
+
 internal class MediaProvider(IRestClient restClient, IDbContextFactory<SitefinityContext> sitefinityContext, ILogger<MediaProvider> logger) : RestSdkBase(restClient), IMediaProvider
 {
     private Dictionary<Guid, SitefinityMediaContent>? mediaItems;

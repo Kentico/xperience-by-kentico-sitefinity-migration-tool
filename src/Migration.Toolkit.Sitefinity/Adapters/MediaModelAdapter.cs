@@ -16,11 +16,11 @@ using Migration.Toolkit.Sitefinity.Core.Helpers;
 using Migration.Toolkit.Sitefinity.Model;
 
 namespace Migration.Toolkit.Sitefinity.Adapters;
+
 internal class MediaModelAdapter(ILogger<MediaModelAdapter> logger,
                                  SitefinityDataConfiguration sitefinityDataConfiguration,
                                  SitefinityImportConfiguration configuration,
-                                 IContentHelper contentHelper,
-                                 IUserHelper userHelper) : UmtAdapterBaseWithDependencies<Media, MediaFileDependencies>(logger)
+                                 IContentHelper contentHelper) : UmtAdapterBaseWithDependencies<Media, MediaFileDependencies>(logger)
 {
     protected override IEnumerable<IUmtModel>? AdaptInternal(Media sourceMediaItem, MediaFileDependencies mediaFileDependencies)
     {

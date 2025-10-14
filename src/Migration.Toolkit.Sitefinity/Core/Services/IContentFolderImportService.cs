@@ -1,7 +1,6 @@
 using Kentico.Xperience.UMT.Model;
 using Kentico.Xperience.UMT.Services;
 
-using Migration.Toolkit.Sitefinity.Core.Models;
 using Migration.Toolkit.Sitefinity.Model;
 
 namespace Migration.Toolkit.Sitefinity.Core.Services;
@@ -17,5 +16,5 @@ internal interface IContentFolderImportService : IDataImportServiceWithDependenc
     /// <param name="folders">Folders to import</param>
     /// <param name="dependencies">Dependency objects</param>
     /// <param name="observer">Import observer</param>
-    void ImportFoldersHierarchically(IEnumerable<ContentFolderModel> folders, ContentFolderDependencies dependencies, ImportStateObserver observer);
+    public void ImportFoldersHierarchically(IEnumerable<ContentFolderModel> folders, ContentFolderDependencies dependencies, ImportStateObserver observer);
 }

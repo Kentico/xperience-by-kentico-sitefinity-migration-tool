@@ -7,5 +7,5 @@ public interface ISitefinityModel
     /// <summary>
     /// The unique identifier of the model.
     /// </summary>
-    Guid Id { get; }
+    public Guid Id { get; }
 }

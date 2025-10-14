@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using Newtonsoft.Json.Linq;
 
 using CMS.ContentEngine;
 using CMS.ContentEngine.Internal;
@@ -19,9 +18,12 @@ using Migration.Toolkit.Sitefinity.Core.Helpers;
 using Migration.Toolkit.Sitefinity.FieldTypes;
 using Migration.Toolkit.Sitefinity.Model;
 
+using Newtonsoft.Json.Linq;
+
 using Progress.Sitefinity.RestSdk.Dto;
 
 namespace Migration.Toolkit.Sitefinity.Helpers;
+
 internal class ContentHelper(ILogger<ContentHelper> logger,
                                 ITypeProvider typeProvider,
                                 IFieldTypeFactory fieldTypeFactory,
@@ -393,7 +395,6 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
             return url;
         }
 
-        ContentItemSimplifiedModel? mediaFile = null;
         string urlToSearch = string.Empty;
 
         if (Uri.TryCreate(url, UriKind.Absolute, out var absoluteUriForSearch))
@@ -405,7 +406,7 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
             urlToSearch = URLHelper.RemoveQuery(url);
         }
 
-        mediaFile = FindMediaFileByUrl(mediaDependencies, urlToSearch);
+        var mediaFile = FindMediaFileByUrl(mediaDependencies, urlToSearch);
 
         if (mediaFile is null)
         {
@@ -494,7 +495,7 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
             .Any(contentItemData =>
             {
                 // Check for various asset URL field names based on content type
-                string[] assetUrlFields = new[] { "ImageAssetLegacyUrl", "DownloadAssetLegacyUrl", "VideoAssetLegacyUrl" };
+                string[] assetUrlFields = ["ImageAssetLegacyUrl", "DownloadAssetLegacyUrl", "VideoAssetLegacyUrl"];
 
                 foreach (string fieldName in assetUrlFields)
                 {

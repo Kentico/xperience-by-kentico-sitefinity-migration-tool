@@ -22,7 +22,14 @@ public partial class User : ISitefinityModel
     [Column("user_name")]
     public string? UserName
     {
-        get => userName = GetUserName();
+        get
+        {
+            // Ensure the username is valid for XbyK
+            // GetUserName() uses the field userName as the default value.
+            userName = GetUserName();
+            return userName;
+        }
+
         set => userName = value;
     }
 
@@ -49,7 +56,14 @@ public partial class User : ISitefinityModel
     [Column("email")]
     public string? Email
     {
-        get => email = GetEmail();
+        get
+        {
+            // Ensure the email is valid for XbyK
+            // GetEmail() uses the field email as the default value.
+            email = GetEmail();
+            return email;
+        }
+
         set => email = value;
     }
 
@@ -116,7 +130,7 @@ public partial class User : ISitefinityModel
         }
 
         // Check if username contains only valid characters for Kentico
-        return Regex.IsMatch(username, @"^[a-zA-Z0-9_\-\.@]+$");
+        return ValidKenticoUserRegex().IsMatch(username);
     }
 
     /// <summary>
@@ -131,7 +145,7 @@ public partial class User : ISitefinityModel
             return false;
         }
 
-        if (!Regex.IsMatch(email, @"^[a-zA-Z0-9_\-\.@]+$"))
+        if (!IsValidEmailRegex().IsMatch(email))
         {
             return false;
         }
@@ -139,4 +153,10 @@ public partial class User : ISitefinityModel
         var emailAttribute = new EmailAddressAttribute();
         return emailAttribute.IsValid(email);
     }
+
+    [GeneratedRegex(@"^[a-zA-Z0-9_\-\.@]+$")]
+    private static partial Regex ValidKenticoUserRegex();
+
+    [GeneratedRegex(@"^[a-zA-Z0-9_\-\.@]+$")]
+    private static partial Regex IsValidEmailRegex();
 }

@@ -7,6 +7,7 @@ using Migration.Toolkit.Data.Core.Providers;
 using Migration.Toolkit.Data.Models;
 
 namespace Migration.Toolkit.Data.Providers;
+
 internal class TypeProvider(SitefinityDataConfiguration configuration, ILogger<TypeProvider> logger) : ITypeProvider
 {
     private readonly string[] excludedFileNames = ["version.sf", "configs.sf", "widgetTemplates.sf"];

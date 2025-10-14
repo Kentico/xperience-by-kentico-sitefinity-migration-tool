@@ -5,16 +5,15 @@ using Kentico.Xperience.UMT.Services;
 
 using Migration.Toolkit.Data.Core.Providers;
 using Migration.Toolkit.Data.Models;
-using Migration.Toolkit.Sitefinity.Configuration;
 using Migration.Toolkit.Sitefinity.Core.Adapters;
 using Migration.Toolkit.Sitefinity.Core.Services;
 using Migration.Toolkit.Sitefinity.Model;
 
 namespace Migration.Toolkit.Sitefinity.Services;
+
 internal class DataClassImportService(IImportService kenticoImportService,
                                         IChannelImportService channelImportService,
                                         ITypeProvider typeProvider,
-                                        SitefinityImportConfiguration configuration,
                                         IUmtAdapterWithDependencies<SitefinityType, DataClassDependencies> adapter) : IDataClassImportService
 {
     public IEnumerable<IUmtModel> Get(DataClassDependencies dependenciesModel)

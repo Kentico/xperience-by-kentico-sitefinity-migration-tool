@@ -8,6 +8,7 @@ using Migration.Toolkit.Sitefinity.Core.Services;
 using Migration.Toolkit.Sitefinity.Model;
 
 namespace Migration.Toolkit.Sitefinity.Services;
+
 internal class MediaImportService(IImportService kenticoImportService,
                                     IContentLanguageImportService contentLanguageImportService,
                                     IUserImportService userImportService,
@@ -79,7 +80,7 @@ internal class MediaImportService(IImportService kenticoImportService,
         var allMediaFiles = GetAllMediaFiles();
 
         // Run adapter to trigger folder creation (results will be discarded, we just want folders)
-        var tempMediaItems = adapter.Adapt(allMediaFiles, mediaFileDependencies).OfType<ContentItemSimplifiedModel>().ToList();
+        _ = adapter.Adapt(allMediaFiles, mediaFileDependencies).OfType<ContentItemSimplifiedModel>().ToList();
 
         // Import all dynamically created folders in hierarchical order
         var allCreatedFolders = folderManager.GetAllCreatedFolders();

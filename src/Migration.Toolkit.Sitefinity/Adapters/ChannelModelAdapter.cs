@@ -10,6 +10,7 @@ using Migration.Toolkit.Sitefinity.Abstractions;
 using Migration.Toolkit.Sitefinity.Model;
 
 namespace Migration.Toolkit.Sitefinity.Adapters;
+
 internal class ChannelModelAdapter(ILogger<ChannelModelAdapter> logger) : UmtAdapterBaseWithDependencies<Site, ChannelDependencies>(logger)
 {
     protected override IEnumerable<IUmtModel>? AdaptInternal(Site source, ChannelDependencies channelDependencies)

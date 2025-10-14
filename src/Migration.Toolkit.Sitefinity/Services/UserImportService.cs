@@ -8,6 +8,7 @@ using Migration.Toolkit.Sitefinity.Core.Services;
 using Migration.Toolkit.Sitefinity.Model;
 
 namespace Migration.Toolkit.Sitefinity.Services;
+
 internal class UserImportService(IImportService kenticoImportService,
                                     IUserProvider userProvider,
                                     IUmtAdapter<User, UserInfoModel> mapper) : IUserImportService

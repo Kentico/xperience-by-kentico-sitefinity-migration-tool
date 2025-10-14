@@ -34,7 +34,7 @@ internal class ContentFolderImportService(IImportService kenticoImportService,
     public void ImportFoldersHierarchically(IEnumerable<ContentFolderModel> folders, ContentFolderDependencies dependencies, ImportStateObserver observer)
     {
         var foldersList = folders.ToList();
-        if (!foldersList.Any())
+        if (foldersList.Count == 0)
         {
             logger.LogInformation("No folders to import");
             return;
@@ -76,7 +76,7 @@ internal class ContentFolderImportService(IImportService kenticoImportService,
         var foldersToImport = Get(dependencies);
         var importedFolders = foldersToImport.ToDictionary(x => x.ContentFolderGUID ?? Guid.Empty);
 
-        if (importedFolders.Any())
+        if (importedFolders.Count != 0)
         {
             ImportFoldersHierarchically(foldersToImport, dependencies, observer);
         }

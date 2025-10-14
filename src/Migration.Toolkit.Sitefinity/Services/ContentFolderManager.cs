@@ -1,3 +1,5 @@
+using System.Security.Cryptography;
+
 using CMS.Helpers;
 
 using Kentico.Xperience.UMT.Model;
@@ -120,7 +122,7 @@ internal class ContentFolderManager(ILogger<ContentFolderManager> logger)
         }
 
         // Skip the first two segments (media type and library name) and take everything except the last segment (which is always the filename)
-        string[] pathSegmentsAfterLibrary = urlPathParts.Skip(2).ToArray();
+        string[] pathSegmentsAfterLibrary = [.. urlPathParts.Skip(2)];
 
         // In Sitefinity URLs, the last segment is typically the filename without extension
         // So we should always exclude the last segment from the folder structure
@@ -128,7 +130,7 @@ internal class ContentFolderManager(ILogger<ContentFolderManager> logger)
         if (pathSegmentsAfterLibrary.Length > 1)
         {
             // Remove the last segment (filename) from the segments
-            subfolderSegments = pathSegmentsAfterLibrary.Take(pathSegmentsAfterLibrary.Length - 1).ToArray();
+            subfolderSegments = [.. pathSegmentsAfterLibrary.Take(pathSegmentsAfterLibrary.Length - 1)];
         }
         else
         {
@@ -199,8 +201,7 @@ internal class ContentFolderManager(ILogger<ContentFolderManager> logger)
     private static string GenerateUniqueCodeName(string fullFolderPath, string folderName)
     {
         // Create a hash of the full path to ensure uniqueness
-        using var sha256 = System.Security.Cryptography.SHA256.Create();
-        byte[] hashBytes = sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes(fullFolderPath));
+        byte[] hashBytes = SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(fullFolderPath));
         string pathHash = Convert.ToHexString(hashBytes)[..8]; // Use first 8 characters of hash
 
         // Sanitize the folder name

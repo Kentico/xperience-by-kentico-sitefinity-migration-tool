@@ -12,6 +12,7 @@ using Migration.Toolkit.Sitefinity.Core.Helpers;
 using Migration.Toolkit.Sitefinity.Model;
 
 namespace Migration.Toolkit.Sitefinity.Adapters;
+
 internal class DataClassModelAdapter(ILogger<DataClassModelAdapter> logger, SitefinityImportConfiguration configuration, IFieldTypeFactory fieldTypeFactory, ITypeHelper typeHelper) : UmtAdapterBaseWithDependencies<SitefinityType, DataClassDependencies>(logger)
 {
     protected override IEnumerable<IUmtModel> AdaptInternal(SitefinityType source, DataClassDependencies dependenciesModel)

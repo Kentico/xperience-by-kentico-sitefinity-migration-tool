@@ -60,7 +60,7 @@ public class RelatedMediaFieldType(ITypeProvider typeProvider, ILogger<RelatedMe
         {
             if (sdkItem.TryGetValue<ImageDto>(fieldName, out var singleItem) && singleItem != null)
             {
-                relatedData = new[] { singleItem };
+                relatedData = [singleItem];
             }
         }
         catch

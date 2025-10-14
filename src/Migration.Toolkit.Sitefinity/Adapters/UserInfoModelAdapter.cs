@@ -8,6 +8,7 @@ using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Sitefinity.Abstractions;
 
 namespace Migration.Toolkit.Sitefinity.Adapters;
+
 internal class UserInfoModelAdapter(ILogger<UserInfoModelAdapter> logger) : UmtAdapterBase<User, UserInfoModel>(logger)
 {
     protected override UserInfoModel AdaptInternal(User source)

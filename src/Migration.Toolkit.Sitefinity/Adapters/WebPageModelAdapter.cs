@@ -11,9 +11,9 @@ using Migration.Toolkit.Sitefinity.Core.Helpers;
 using Migration.Toolkit.Sitefinity.Model;
 
 namespace Migration.Toolkit.Sitefinity.Adapters;
+
 internal class WebPageModelAdapter(ILogger<WebPageModelAdapter> logger,
                                   IContentHelper contentHelper,
-                                  IUserHelper userHelper,
                                   SitefinityDataConfiguration dataConfiguration) : UmtAdapterBaseWithDependencies<Page, ContentDependencies, ContentItemSimplifiedModel>(logger)
 {
     protected override ContentItemSimplifiedModel? AdaptInternal(Page source, ContentDependencies dependenciesModel)
@@ -61,7 +61,7 @@ internal class WebPageModelAdapter(ILogger<WebPageModelAdapter> logger,
             ContentItemGUID = source.Id,
             ContentTypeName = pageNodeClass.ClassName,
             Name = contentHelper.GetName(source.Title, source.Id),
-            LanguageData = languageData.ToList(),
+            LanguageData = [.. languageData],
             IsReusable = false,
             PageData = pageData,
             ChannelName = channel.ChannelName,

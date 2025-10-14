@@ -1,4 +1,5 @@
 ﻿namespace Migration.Toolkit.Sitefinity.Model;
+
 internal class ImageRelatedItem
 {
     public Guid Identifier { get; set; }
