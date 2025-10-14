@@ -51,7 +51,7 @@ public class RelatedDataFieldType(ITypeProvider typeProvider) : FieldTypeBase, I
             };
         }
 
-        var allowedType = sitefinityTypes.FirstOrDefault(x => $"{x.ClassNamespace}.{x.Name}".Equals(sitefinityField.RelatedDataType));
+        var allowedType = sitefinityTypes?.FirstOrDefault(x => $"{x.ClassNamespace}.{x.Name}".Equals(sitefinityField.RelatedDataType));
 
         return new FormFieldSettings
         {
