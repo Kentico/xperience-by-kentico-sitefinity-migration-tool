@@ -30,8 +30,8 @@ internal class MediaModelAdapter(ILogger<MediaModelAdapter> logger,
 
     private ContentItemSimplifiedModel? AdaptMediaItem(Media sourceMediaItem, MediaFileDependencies mediaFileDependencies)
     {
-        // Add debugging information
-        Console.WriteLine($"=== PROCESSING MEDIA ITEM === ID: {sourceMediaItem.Id}, Title: {sourceMediaItem.Title}, UrlName: {sourceMediaItem.UrlName}, ItemDefaultUrl: {sourceMediaItem.ItemDefaultUrl}, Url: {sourceMediaItem.Url}, Extension: {sourceMediaItem.Extension}, TotalSize: {sourceMediaItem.TotalSize}, Description: {sourceMediaItem.Description}, CreatedBy: {sourceMediaItem.CreatedBy} ===============================");
+        logger.LogInformation("=== PROCESSING MEDIA ITEM === ID: {Id}, Title: {Title}, UrlName: {UrlName}, ItemDefaultUrl: {ItemDefaultUrl}, Url: {Url}, Extension: {Extension}, TotalSize: {TotalSize}, Description: {Description}, CreatedBy: {CreatedBy} ===============================",
+            sourceMediaItem.Id, sourceMediaItem.Title, sourceMediaItem.UrlName, sourceMediaItem.ItemDefaultUrl, sourceMediaItem.Url, sourceMediaItem.Extension, sourceMediaItem.TotalSize, sourceMediaItem.Description, sourceMediaItem.CreatedBy);
 
         // Validate media item URL
         if (string.IsNullOrEmpty(sourceMediaItem.ItemDefaultUrl))
@@ -77,7 +77,8 @@ internal class MediaModelAdapter(ILogger<MediaModelAdapter> logger,
         };
         var targetFolderGuid = mediaFileDependencies.FolderManager.GetOrCreateOrganizedFolder(sourceMediaItem, folderDependencies);
 
-        Console.WriteLine($"MEDIA ITEM: {sourceMediaItem.ItemDefaultUrl} -> FOLDER GUID: {targetFolderGuid}");
+        logger.LogInformation("MEDIA ITEM: {ItemDefaultUrl} -> FOLDER GUID: {FolderGuid}",
+            sourceMediaItem.ItemDefaultUrl, targetFolderGuid);
 
         // Create asset URL
         string mediaAssetUrl = Uri.IsWellFormedUriString(sourceMediaItem.Url, UriKind.Absolute)
@@ -124,7 +125,8 @@ internal class MediaModelAdapter(ILogger<MediaModelAdapter> logger,
             ContentItemContentFolderGUID = targetFolderGuid
         };
 
-        Console.WriteLine($"Successfully created content item: {adaptedContentItem.Name} with ContentTypeName: {adaptedContentItem.ContentTypeName}");
+        logger.LogInformation("Successfully created content item: {Name} with ContentTypeName: {ContentTypeName}",
+            adaptedContentItem.Name, adaptedContentItem.ContentTypeName);
         return adaptedContentItem;
     }
 
@@ -169,7 +171,7 @@ internal class MediaModelAdapter(ILogger<MediaModelAdapter> logger,
         return isDownload;
     }
 
-    private static Dictionary<string, object?> CreateContentItemData(Media sourceMediaItem, string constructedAssetUrl)
+    private Dictionary<string, object?> CreateContentItemData(Media sourceMediaItem, string constructedAssetUrl)
     {
         var contentItemDataDictionary = new Dictionary<string, object?>();
 
@@ -188,8 +190,8 @@ internal class MediaModelAdapter(ILogger<MediaModelAdapter> logger,
             relativeLegacyUrl = URLHelper.RemoveQuery(relativeLegacyUrl);
         }
 
-        // Debug logging to help troubleshoot
-        Console.WriteLine($"Creating AssetUrlSource - ContentItemGuid: {assetUrlSource.ContentItemGuid}, Identifier: {assetUrlSource.Identifier}, Name: {assetUrlSource.Name}, Extension: {assetUrlSource.Extension}, Url: {assetUrlSource.Url}");
+        logger.LogInformation("Creating AssetUrlSource - ContentItemGuid: {ContentItemGuid}, Identifier: {Identifier}, Name: {Name}, Extension: {Extension}, Url: {Url}",
+            assetUrlSource.ContentItemGuid, assetUrlSource.Identifier, assetUrlSource.Name, assetUrlSource.Extension, assetUrlSource.Url);
 
         if (IsImage(sourceMediaItem))
         {
