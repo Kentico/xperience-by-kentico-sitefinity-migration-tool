@@ -464,28 +464,25 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
         // Define the asset field names to look for
         string[] assetFieldNames = ["ImageAsset", "VideoAsset", "DownloadAsset"];
 
-        foreach (string fieldName in assetFieldNames)
-        {
-            if (contentItemData.ContainsKey(fieldName))
+        return assetFieldNames
+            .Where(contentItemData.ContainsKey)
+            .Select(fieldName =>
             {
-                // Find the corresponding field definition in TypeProvider
-                foreach (var contentType in mediaContentTypes)
-                {
-                    if (contentType.Fields != null)
-                    {
-                        var assetField = contentType.Fields.FirstOrDefault(f => f.Name == fieldName);
-                        if (assetField != null)
-                        {
-                            logger.LogDebug("Found asset field {FieldName} with GUID {FieldGuid} from TypeProvider",
-                                fieldName, assetField.Id);
-                            return assetField.Id.ToString();
-                        }
-                    }
-                }
-            }
-        }
+                var assetField = mediaContentTypes
+                    .Where(contentType => contentType.Fields != null)
+                    .SelectMany(contentType => contentType.Fields!)
+                    .FirstOrDefault(f => f.Name == fieldName);
 
-        return null;
+                if (assetField != null)
+                {
+                    logger.LogDebug("Found asset field {FieldName} with GUID {FieldGuid} from TypeProvider",
+                        fieldName, assetField.Id);
+                    return assetField.Id.ToString();
+                }
+
+                return null;
+            })
+            .FirstOrDefault(guid => guid != null);
     }
 
     private static ContentItemSimplifiedModel? FindMediaFileByUrl(IMediaDependencies mediaDependencies, string targetUrl) => mediaDependencies.MediaFiles.Values.FirstOrDefault(contentItem =>
