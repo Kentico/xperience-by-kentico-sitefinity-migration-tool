@@ -1,4 +1,5 @@
 ﻿namespace Migration.Toolkit.Sitefinity.Model;
+
 internal class Link
 {
     public Guid Id { get; set; }

@@ -12,6 +12,7 @@ using Migration.Toolkit.Sitefinity.Core.Helpers;
 using Migration.Toolkit.Sitefinity.Model;
 
 namespace Migration.Toolkit.Sitefinity.Adapters;
+
 internal class DataClassModelAdapter(ILogger<DataClassModelAdapter> logger, SitefinityImportConfiguration configuration, IFieldTypeFactory fieldTypeFactory, ITypeHelper typeHelper) : UmtAdapterBaseWithDependencies<SitefinityType, DataClassDependencies>(logger)
 {
     protected override IEnumerable<IUmtModel> AdaptInternal(SitefinityType source, DataClassDependencies dependenciesModel)
@@ -85,6 +86,8 @@ internal class DataClassModelAdapter(ILogger<DataClassModelAdapter> logger, Site
                 continue;
             }
 
+            int columnSize = ValidationHelper.GetInteger(fieldType.GetColumnSize(field), 255);
+
             var formField = new FormField
             {
                 AllowEmpty = !field.IsRequired,
@@ -95,7 +98,7 @@ internal class DataClassModelAdapter(ILogger<DataClassModelAdapter> logger, Site
                 Visible = true,
                 Properties = MapProperties(field, columnName),
                 Settings = fieldType.GetSettings(field),
-                ColumnSize = ValidationHelper.GetInteger(fieldType.GetColumnSize(field), 255),
+                ColumnSize = columnSize,
             };
 
             fieldType.HandleSpecialCase(formField, field);

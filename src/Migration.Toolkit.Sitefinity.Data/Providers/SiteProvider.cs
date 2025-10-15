@@ -8,6 +8,7 @@ using Migration.Toolkit.Data.Core.Providers;
 using Migration.Toolkit.Data.Models;
 
 namespace Migration.Toolkit.Data.Providers;
+
 internal class SiteProvider(SitefinityDataConfiguration configuration, ILogger<SiteProvider> logger) : ISiteProvider
 {
     public IEnumerable<Site> GetSites()

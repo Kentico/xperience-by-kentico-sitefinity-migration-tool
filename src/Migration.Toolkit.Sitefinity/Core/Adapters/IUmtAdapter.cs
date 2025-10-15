@@ -4,6 +4,7 @@ using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Sitefinity.Core.Models;
 
 namespace Migration.Toolkit.Sitefinity.Core.Adapters;
+
 /// <summary>
 /// Adapter for adapting Sitefinity models to UMT models.
 /// </summary>
@@ -15,7 +16,7 @@ internal interface IUmtAdapter<in TSourceModel> where TSourceModel : ISitefinity
     /// </summary>
     /// <param name="source">List of source models</param>
     /// <returns>List of adapted models</returns>
-    IEnumerable<IUmtModel> Adapt(IEnumerable<TSourceModel> source);
+    public IEnumerable<IUmtModel> Adapt(IEnumerable<TSourceModel> source);
 }
 
 /// <summary>
@@ -31,7 +32,7 @@ internal interface IUmtAdapterWithDependencies<in TSourceModel, in TDependencies
     /// <param name="source">List of source models</param>
     /// <param name="dependenciesModel">Dependency objects used in adapter</param>
     /// <returns>List of adapted models</returns>
-    IEnumerable<IUmtModel> Adapt(IEnumerable<TSourceModel> source, TDependenciesModel dependenciesModel);
+    public IEnumerable<IUmtModel> Adapt(IEnumerable<TSourceModel> source, TDependenciesModel dependenciesModel);
 }
 
 /// <summary>
@@ -46,7 +47,7 @@ internal interface IUmtAdapter<in TSourceModel, out TTargetModel> where TSourceM
     /// </summary>
     /// <param name="source">List of source models</param>
     /// <returns>List of adapted models</returns>
-    IEnumerable<TTargetModel> Adapt(IEnumerable<TSourceModel> source);
+    public IEnumerable<TTargetModel> Adapt(IEnumerable<TSourceModel> source);
 }
 
 /// <summary>
@@ -63,5 +64,5 @@ internal interface IUmtAdapterWithDependencies<in TSourceModel, in TDependencies
     /// <param name="source">List of source models</param>
     /// <param name="dependenciesModel">Dependency objects used in adapter</param>
     /// <returns>List of adapted models</returns>
-    IEnumerable<TTargetModel> Adapt(IEnumerable<TSourceModel> source, TDependenciesModel dependenciesModel);
+    public IEnumerable<TTargetModel> Adapt(IEnumerable<TSourceModel> source, TDependenciesModel dependenciesModel);
 }

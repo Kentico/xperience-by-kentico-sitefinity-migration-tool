@@ -9,20 +9,10 @@ using Migration.Toolkit.Data.Models;
 using Progress.Sitefinity.RestSdk;
 
 namespace Migration.Toolkit.Data.Providers;
+
 internal class MediaProvider(IRestClient restClient, IDbContextFactory<SitefinityContext> sitefinityContext, ILogger<MediaProvider> logger) : RestSdkBase(restClient), IMediaProvider
 {
     private Dictionary<Guid, SitefinityMediaContent>? mediaItems;
-    public IEnumerable<Library> GetDocumentLibraries()
-    {
-        var getAllArgs = new GetAllArgs
-        {
-            Type = RestClientContentTypes.Libraries
-        };
-
-        var libraries = RestClient.GetItems<Library>(getAllArgs);
-
-        return libraries.Result.Items;
-    }
 
     public IEnumerable<Media> GetDocuments()
     {
@@ -38,18 +28,6 @@ internal class MediaProvider(IRestClient restClient, IDbContextFactory<Sitefinit
         return documents;
     }
 
-    public IEnumerable<Library> GetImageLibraries()
-    {
-        var getAllArgs = new GetAllArgs
-        {
-            Type = "Telerik.Sitefinity.Libraries.Model.Album"
-        };
-
-        var libraries = RestClient.GetItems<Library>(getAllArgs);
-
-        return libraries.Result.Items;
-    }
-
     public IEnumerable<Media> GetImages()
     {
         var getAllArgs = new GetAllArgs
@@ -57,23 +35,11 @@ internal class MediaProvider(IRestClient restClient, IDbContextFactory<Sitefinit
             Type = RestClientContentTypes.Images
         };
 
-        var images = GetUsingBatches<Image>(getAllArgs);
+        var images = GetUsingBatches<Media>(getAllArgs);
 
         SetUserInfo(images);
 
         return images;
-    }
-
-    public IEnumerable<Library> GetVideoLibraries()
-    {
-        var getAllArgs = new GetAllArgs
-        {
-            Type = "Telerik.Sitefinity.Libraries.Model.VideoLibrary"
-        };
-
-        var libraries = RestClient.GetItems<Library>(getAllArgs);
-
-        return libraries.Result.Items;
     }
 
     public IEnumerable<Media> GetVideos()

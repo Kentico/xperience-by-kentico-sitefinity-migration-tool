@@ -10,6 +10,7 @@ using Migration.Toolkit.Sitefinity.Core.Services;
 using Migration.Toolkit.Sitefinity.Model;
 
 namespace Migration.Toolkit.Sitefinity.Services;
+
 internal class DataClassImportService(IImportService kenticoImportService,
                                         IChannelImportService channelImportService,
                                         ITypeProvider typeProvider,
@@ -24,6 +25,9 @@ internal class DataClassImportService(IImportService kenticoImportService,
 
         var staticTypes = typeProvider.GetSitefinityTypes();
         dataClassModels.AddRange(adapter.Adapt(staticTypes, dependenciesModel));
+
+        var mediaTypes = typeProvider.GetMediaContentTypes();
+        dataClassModels.AddRange(adapter.Adapt(mediaTypes, dependenciesModel));
 
         return dataClassModels;
     }

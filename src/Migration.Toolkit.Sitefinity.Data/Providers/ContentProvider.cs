@@ -9,6 +9,7 @@ using Migration.Toolkit.Data.Models;
 using Progress.Sitefinity.RestSdk;
 
 namespace Migration.Toolkit.Data.Providers;
+
 internal class ContentProvider(IRestClient restClient, ILogger<ContentProvider> logger, IDbContextFactory<SitefinityContext> sitefinityContext) : RestSdkBase(restClient), IContentProvider
 {
     private IEnumerable<SitefinityVersionChange>? versions;

@@ -51,8 +51,7 @@ public class RelatedDataFieldType(ITypeProvider typeProvider) : FieldTypeBase, I
             };
         }
 
-
-        var allowedType = sitefinityTypes.FirstOrDefault(x => $"{x.ClassNamespace}.{x.Name}".Equals(sitefinityField.RelatedDataType));
+        var allowedType = sitefinityTypes?.FirstOrDefault(x => $"{x.ClassNamespace}.{x.Name}".Equals(sitefinityField.RelatedDataType));
 
         return new FormFieldSettings
         {
@@ -68,6 +67,11 @@ public class RelatedDataFieldType(ITypeProvider typeProvider) : FieldTypeBase, I
     public override object GetData(SdkItem sdkItem, string fieldName)
     {
         var relatedData = sdkItem.GetValue<IEnumerable<SdkItem>>(fieldName);
+
+        if (relatedData == null)
+        {
+            return JsonSerializer.Serialize(new List<ContentRelatedItem>());
+        }
 
         var contentRelatedItems = new List<ContentRelatedItem>();
 

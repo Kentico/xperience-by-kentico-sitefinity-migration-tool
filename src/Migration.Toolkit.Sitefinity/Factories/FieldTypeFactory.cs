@@ -5,6 +5,7 @@ using Migration.Toolkit.Sitefinity.Core.Factories;
 using Migration.Toolkit.Sitefinity.FieldTypes;
 
 namespace Migration.Toolkit.Sitefinity.Factories;
+
 internal class FieldTypeFactory : IFieldTypeFactory
 {
     private readonly List<IFieldType> fieldTypes = [];

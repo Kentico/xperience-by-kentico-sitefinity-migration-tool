@@ -10,5 +10,5 @@ public interface IUserProvider
     /// Gets all users from Sitefinity using Entity Framework.
     /// </summary>
     /// <returns>List of users</returns>
-    IEnumerable<User> GetUsers();
+    public IEnumerable<User> GetUsers();
 }

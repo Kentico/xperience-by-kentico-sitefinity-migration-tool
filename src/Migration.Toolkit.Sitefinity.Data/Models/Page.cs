@@ -49,6 +49,15 @@ public class Page : PageNodeDto, ISitefinityModel, ICultureSdkItem
     /// <summary>
     /// The URL of the page.
     /// </summary>
+    /// <remarks>
+    /// The sitefinity api sometimes returns an empty ViewUrl, this now falls back to RelativeUrlPath.
+    /// </remarks>
     [JsonIgnore]
-    public string Url => ViewUrl;
+    public string Url =>
+        !string.IsNullOrWhiteSpace(ViewUrl) ? ViewUrl : (RelativeUrlPath ?? string.Empty);
+
+    /// <summary>
+    /// The RelativeUrlPath of the page.
+    /// </summary>
+    public string? RelativeUrlPath { get; set; }
 }

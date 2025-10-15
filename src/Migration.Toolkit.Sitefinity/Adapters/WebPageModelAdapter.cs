@@ -11,7 +11,10 @@ using Migration.Toolkit.Sitefinity.Core.Helpers;
 using Migration.Toolkit.Sitefinity.Model;
 
 namespace Migration.Toolkit.Sitefinity.Adapters;
-internal class WebPageModelAdapter(ILogger<WebPageModelAdapter> logger, IContentHelper contentHelper, SitefinityDataConfiguration dataConfiguration) : UmtAdapterBaseWithDependencies<Page, ContentDependencies, ContentItemSimplifiedModel>(logger)
+
+internal class WebPageModelAdapter(ILogger<WebPageModelAdapter> logger,
+                                  IContentHelper contentHelper,
+                                  SitefinityDataConfiguration dataConfiguration) : UmtAdapterBaseWithDependencies<Page, ContentDependencies, ContentItemSimplifiedModel>(logger)
 {
     protected override ContentItemSimplifiedModel? AdaptInternal(Page source, ContentDependencies dependenciesModel)
     {
@@ -37,13 +40,20 @@ internal class WebPageModelAdapter(ILogger<WebPageModelAdapter> logger, IContent
 
         var languageData = contentHelper.GetLanguageData(dependenciesModel, source, pageNodeClass, createdByUser);
 
+        if (string.IsNullOrWhiteSpace(source.Url))
+        {
+            string logMessage = $"Blank source.Url for {source.Title}. Skipping content item {source.Id}.";
+            logger.LogError(logMessage, source.Title);
+            return default;
+        }
+
         var pageData = new PageDataModel
         {
             ItemOrder = null,
             PageUrls = contentHelper.GetPageUrls(dependenciesModel, source),
             PageGuid = source.Id,
             ParentGuid = ValidationHelper.GetGuid(source.ParentId, Guid.Empty),
-            TreePath = contentHelper.GetRelativeUrl(source.ViewUrl)
+            TreePath = contentHelper.GetRelativeUrl(source.Url)
         };
 
         var pageContentItem = new ContentItemSimplifiedModel
@@ -51,7 +61,7 @@ internal class WebPageModelAdapter(ILogger<WebPageModelAdapter> logger, IContent
             ContentItemGUID = source.Id,
             ContentTypeName = pageNodeClass.ClassName,
             Name = contentHelper.GetName(source.Title, source.Id),
-            LanguageData = languageData.ToList(),
+            LanguageData = [.. languageData],
             IsReusable = false,
             PageData = pageData,
             ChannelName = channel.ChannelName,

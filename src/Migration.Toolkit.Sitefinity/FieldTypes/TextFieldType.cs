@@ -39,6 +39,11 @@ public class TextFieldType : FieldTypeBase, IFieldType
             return "longtext";
         }
 
+        if (sitefinityField.FieldTypeDisplayName.Equals("Classification"))
+        {
+            return "longtext";
+        }
+
         if (sitefinityField.FieldTypeDisplayName.Equals("Number"))
         {
             return "decimal";

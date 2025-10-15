@@ -44,18 +44,20 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IUserImportService, UserImportService>();
         services.AddTransient<IDataClassImportService, DataClassImportService>();
         services.AddTransient<ISitefinityImportService, SitefinityImportService>();
-        services.AddTransient<IMediaLibraryImportService, MediaLibraryImportService>();
         services.AddTransient<IMediaImportService, MediaImportService>();
         services.AddTransient<IWebPageImportService, WebPageImportService>();
         services.AddTransient<IContentItemImportService, ContentItemImportService>();
         services.AddTransient<IChannelImportService, ChannelImportService>();
         services.AddTransient<IContentLanguageImportService, ContentLanguageImportService>();
+        services.AddTransient<IContentFolderImportService, ContentFolderImportService>();
+
+        // Folder Management
+        services.AddScoped<ContentFolderManager>();
 
         // Adapters
         services.AddTransient<IUmtAdapter<User, UserInfoModel>, UserInfoModelAdapter>();
         services.AddTransient<IUmtAdapterWithDependencies<SitefinityType, DataClassDependencies>, DataClassModelAdapter>();
-        services.AddTransient<IUmtAdapter<Library, MediaLibraryModel>, MediaLibraryModelAdapter>();
-        services.AddTransient<IUmtAdapterWithDependencies<Media, MediaFileDependencies, MediaFileModel>, MediaModelAdapter>();
+        services.AddTransient<IUmtAdapterWithDependencies<Media, MediaFileDependencies>, MediaModelAdapter>();
         services.AddTransient<IUmtAdapterWithDependencies<Page, ContentDependencies, ContentItemSimplifiedModel>, WebPageModelAdapter>();
         services.AddTransient<IUmtAdapterWithDependencies<ContentItem, ContentDependencies, ContentItemSimplifiedModel>, ContentItemSimplifiedModelAdapter>();
         services.AddTransient<IUmtAdapterWithDependencies<Site, ChannelDependencies>, ChannelModelAdapter>();
@@ -64,6 +66,7 @@ public static class ServiceCollectionExtensions
         // Helpers
         services.AddSingleton<IContentHelper, ContentHelper>();
         services.AddSingleton<ITypeHelper, TypeHelper>();
+        services.AddSingleton<IUserHelper, UserHelper>();
 
         // Factories
         services.AddSingleton<IFieldTypeFactory, FieldTypeFactory>();

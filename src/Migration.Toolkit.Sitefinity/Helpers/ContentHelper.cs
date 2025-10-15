@@ -18,9 +18,12 @@ using Migration.Toolkit.Sitefinity.Core.Helpers;
 using Migration.Toolkit.Sitefinity.FieldTypes;
 using Migration.Toolkit.Sitefinity.Model;
 
+using Newtonsoft.Json.Linq;
+
 using Progress.Sitefinity.RestSdk.Dto;
 
 namespace Migration.Toolkit.Sitefinity.Helpers;
+
 internal class ContentHelper(ILogger<ContentHelper> logger,
                                 ITypeProvider typeProvider,
                                 IFieldTypeFactory fieldTypeFactory,
@@ -151,6 +154,12 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
                         data = JsonSerializer.Serialize(links);
                     }
 
+                    // Handle Newtonsoft.Json JToken objects (JArray, JObject, etc.)
+                    if (data is JToken jToken)
+                    {
+                        data = jToken.ToString(); // Serialize JToken to JSON string
+                    }
+
                     contentItemData.Add(field.Name, data);
                 }
             }
@@ -159,10 +168,11 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
                 logger.LogWarning(ex, "Cannot get data for {FieldName} field.", field.Name);
             }
         }
-
+        string title = cultureSdkItem.Title ?? cultureSdkItem.Id;
+        string truncatedTitle = title.Length > 100 ? title[..100] : title;
         return new ContentItemLanguageData
         {
-            DisplayName = cultureSdkItem.Title.Length > 100 ? cultureSdkItem.Title[..100] : cultureSdkItem.Title,
+            DisplayName = truncatedTitle,
             LanguageName = languageName,
             UserGuid = user?.UserGUID,
             ContentItemData = contentItemData,
@@ -172,13 +182,15 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
 
     public string GetName(string title, Guid id, int length = 100)
     {
-        string name = $"{ValidationHelper.GetCodeName(title)}-{id}";
-
-        if (name.Length > length)
+        // Use the full GUID and trim the title to fit within the length constraint
+        string guidString = id.ToString();
+        int maxTitleLength = Math.Max(0, length - guidString.Length - 1); // 1 for the hyphen
+        string safeTitle = ValidationHelper.GetCodeName(title);
+        if (safeTitle.Length > maxTitleLength)
         {
-            return name[..length];
+            safeTitle = safeTitle[..maxTitleLength];
         }
-
+        string name = $"{safeTitle}-{guidString}".Replace('.', '-');
         return name;
     }
 
@@ -287,6 +299,11 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
 
     public string GetRelativeUrl(string url)
     {
+        if (string.IsNullOrEmpty(url))
+        {
+            return url;
+        }
+
         if (url.StartsWith('/'))
         {
             return url;
@@ -305,8 +322,16 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
         var document = new HtmlDocument();
         document.LoadHtml(html);
 
-        UpdateUrls(mediaDependencies, document.DocumentNode.SelectNodes("//img"), "src");
-        UpdateUrls(mediaDependencies, document.DocumentNode.SelectNodes("//a"), "href");
+        var imgNodes = document.DocumentNode.SelectNodes("//img");
+        if (imgNodes != null)
+        {
+            UpdateUrls(mediaDependencies, imgNodes, "src");
+        }
+        var aNodes = document.DocumentNode.SelectNodes("//a");
+        if (aNodes != null)
+        {
+            UpdateUrls(mediaDependencies, aNodes, "href");
+        }
 
         return document.DocumentNode.OuterHtml;
     }
@@ -320,9 +345,9 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
 
         foreach (var htmlNode in htmlNodes)
         {
-            string? attributeValue = htmlNode.GetAttributeValue(attributeName, null);
+            string? attributeValue = htmlNode.GetAttributeValue(attributeName, string.Empty);
 
-            if (attributeValue == null)
+            if (string.IsNullOrWhiteSpace(attributeValue))
             {
                 continue;
             }
@@ -340,31 +365,146 @@ internal class ContentHelper(ILogger<ContentHelper> logger,
 
     private string? GetPermalink(IMediaDependencies mediaDependencies, string url)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(url);
+
         url = url.TrimStart('~');
 
-        if (url.StartsWith("tel:", StringComparison.OrdinalIgnoreCase) || url.StartsWith("mailto:", StringComparison.OrdinalIgnoreCase))
+        if (url.StartsWith("tel:", StringComparison.OrdinalIgnoreCase) ||
+            url.StartsWith("mailto:", StringComparison.OrdinalIgnoreCase))
         {
             return url;
         }
 
-        MediaFileModel? mediaFile = null;
-
+        // Only process relative URLs or URLs from the configured domain
         if (Uri.TryCreate(url, UriKind.Absolute, out var absoluteUri))
         {
-            mediaFile = mediaDependencies.MediaFiles.Values.FirstOrDefault(x => x.DataSourceUrl == URLHelper.RemoveQuery(absoluteUri.ToString()));
-        }
+            string? configuredDomain = dataConfiguration.SitefinitySiteDomain?.TrimEnd('/');
 
-        if (Uri.TryCreate(url, UriKind.Relative, out var relativeUri))
+            // Extract only the host (e.g., "www.leasefoundation.org")
+            string urlHost = absoluteUri.Host;
+
+            // Check if it does NOT match the configured domain
+            if (!urlHost.Equals(configuredDomain, StringComparison.OrdinalIgnoreCase))
+            {
+                logger.LogDebug("URL {Url} does not belong to configured domain {Domain}. Skipping processing.", url, configuredDomain);
+                return url;
+            }
+        }
+        else if (!Uri.TryCreate(url, UriKind.Relative, out _))
         {
-            mediaFile = mediaDependencies.MediaFiles.Values.FirstOrDefault(x => x.DataSourceUrl == "https://" + dataConfiguration.SitefinitySiteDomain + URLHelper.RemoveQuery(url));
+            logger.LogWarning("Invalid URL format: {Url}. Skipping processing.", url);
+            return url;
         }
 
-        if (mediaFile == null)
+        string urlToSearch = string.Empty;
+
+        if (Uri.TryCreate(url, UriKind.Absolute, out var absoluteUriForSearch))
+        {
+            urlToSearch = URLHelper.RemoveQuery(absoluteUriForSearch.PathAndQuery);
+        }
+        else if (Uri.TryCreate(url, UriKind.Relative, out _))
+        {
+            urlToSearch = URLHelper.RemoveQuery(url);
+        }
+
+        var mediaFile = FindMediaFileByUrl(mediaDependencies, urlToSearch);
+
+        if (mediaFile is null)
         {
             logger.LogInformation("Could not find media file for {PathAndQuery}", url);
             return url;
         }
 
-        return $"/getmedia/{mediaFile.FileGUID}/{mediaFile.FileName}{URLHelper.GetQuery(url)}";
+        // Extract filename from the original URL
+        string fileName = Path.GetFileName(URLHelper.RemoveQuery(url));
+        if (string.IsNullOrEmpty(fileName))
+        {
+            fileName = mediaFile.Name ?? "file";
+        }
+
+        // Get field definition GUIDs dynamically from TypeProvider instead of hardcoding
+        var languageData = mediaFile.LanguageData?.FirstOrDefault();
+        string? assetFieldGuid = null;
+
+        if (languageData?.ContentItemData is not null)
+        {
+            // Get the asset field GUID from TypeProvider based on which field exists in the content item
+            assetFieldGuid = GetAssetFieldGuidFromTypeProvider(languageData.ContentItemData);
+        }
+
+        if (string.IsNullOrEmpty(assetFieldGuid))
+        {
+            logger.LogWarning("Could not determine asset field type for media file {ContentItemGUID}. Using content item GUID as fallback.",
+                mediaFile.ContentItemGUID);
+            assetFieldGuid = mediaFile.ContentItemGUID?.ToString() ?? Guid.Empty.ToString();
+        }
+
+        string permalinkUrl = $"/getContentAsset/{mediaFile.ContentItemGUID}/{assetFieldGuid}/{fileName}";
+
+        // Add language parameter if available
+        if (!string.IsNullOrEmpty(languageData?.LanguageName))
+        {
+            permalinkUrl += $"?language={languageData.LanguageName}";
+        }
+
+        logger.LogDebug("Generated permalink URL: {PermalinkUrl} for original URL: {OriginalUrl}", permalinkUrl, url);
+        return permalinkUrl;
     }
+
+    /// <summary>
+    /// Gets the asset field GUID from TypeProvider based on which asset field exists in the content item data.
+    /// </summary>
+    /// <param name="contentItemData">The content item data to check for asset fields.</param>
+    /// <returns>The field definition GUID from TypeProvider, or null if not found.</returns>
+    private string? GetAssetFieldGuidFromTypeProvider(Dictionary<string, object?> contentItemData)
+    {
+        // Get media content types from TypeProvider
+        var mediaContentTypes = typeProvider.GetMediaContentTypes();
+
+        // Define the asset field names to look for
+        string[] assetFieldNames = ["ImageAsset", "VideoAsset", "DownloadAsset"];
+
+        return assetFieldNames
+            .Where(contentItemData.ContainsKey)
+            .Select(fieldName =>
+            {
+                var assetField = mediaContentTypes
+                    .Where(contentType => contentType.Fields != null)
+                    .SelectMany(contentType => contentType.Fields!)
+                    .FirstOrDefault(f => f.Name == fieldName);
+
+                if (assetField != null)
+                {
+                    logger.LogDebug("Found asset field {FieldName} with GUID {FieldGuid} from TypeProvider",
+                        fieldName, assetField.Id);
+                    return assetField.Id.ToString();
+                }
+
+                return null;
+            })
+            .FirstOrDefault(guid => guid != null);
+    }
+
+    private static ContentItemSimplifiedModel? FindMediaFileByUrl(IMediaDependencies mediaDependencies, string targetUrl) => mediaDependencies.MediaFiles.Values.FirstOrDefault(contentItem =>
+        // Check all language variants for a matching asset URL
+        (contentItem.LanguageData ?? [])
+            .Select(languageData => languageData.ContentItemData)
+            .Where(contentItemData => contentItemData != null)
+            .Any(contentItemData =>
+            {
+                // Check for various asset URL field names based on content type
+                string[] assetUrlFields = ["ImageAssetLegacyUrl", "DownloadAssetLegacyUrl", "VideoAssetLegacyUrl"];
+
+                foreach (string fieldName in assetUrlFields)
+                {
+                    if (contentItemData!.TryGetValue(fieldName, out object? assetUrlValue) &&
+                        assetUrlValue is string assetUrl &&
+                        !string.IsNullOrEmpty(assetUrl) &&
+                        assetUrl.Equals(targetUrl, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }));
 }

@@ -13,13 +13,17 @@ using Migration.Toolkit.Sitefinity.Core.Helpers;
 using Migration.Toolkit.Sitefinity.Model;
 
 namespace Migration.Toolkit.Sitefinity.Adapters;
-internal class ContentItemSimplifiedModelAdapter(ILogger<ContentItemSimplifiedModelAdapter> logger, IContentHelper contentHelper, SitefinityImportConfiguration configuration, SitefinityDataConfiguration dataConfiguration) : UmtAdapterBaseWithDependencies<ContentItem, ContentDependencies, ContentItemSimplifiedModel>(logger)
+
+internal class ContentItemSimplifiedModelAdapter(ILogger<ContentItemSimplifiedModelAdapter> logger,
+                                                 IContentHelper contentHelper,
+                                                 SitefinityImportConfiguration configuration,
+                                                 SitefinityDataConfiguration dataConfiguration) : UmtAdapterBaseWithDependencies<ContentItem, ContentDependencies, ContentItemSimplifiedModel>(logger)
 {
     private readonly Dictionary<Guid, ContentItemSimplifiedModel> detailContentItems = [];
 
     protected override ContentItemSimplifiedModel? AdaptInternal(ContentItem source, ContentDependencies dependenciesModel)
     {
-        var rootFolder = ContentFolderInfoProvider.ProviderObject.GetRoot();
+        var rootFolder = ContentFolderInfo.Provider.GetRootAsync(configuration.KenticoDefaultWorkspaceName).GetAwaiter().GetResult();
 
         if (rootFolder == null)
         {
@@ -96,7 +100,7 @@ internal class ContentItemSimplifiedModelAdapter(ILogger<ContentItemSimplifiedMo
                 ContentItemGUID = source.Id,
                 ContentTypeName = dataClassModel.ClassName,
                 Name = contentHelper.GetName(source.Title, source.Id),
-                LanguageData = languageData.ToList(),
+                LanguageData = [.. languageData],
                 IsReusable = false,
                 PageData = noPageConfigPageData,
                 ChannelName = channel.ChannelName
@@ -130,7 +134,7 @@ internal class ContentItemSimplifiedModelAdapter(ILogger<ContentItemSimplifiedMo
                     ContentItemGUID = source.Id,
                     ContentTypeName = dataClassModel.ClassName,
                     Name = contentHelper.GetName(source.Title, source.Id),
-                    LanguageData = languageData.ToList(),
+                    LanguageData = [.. languageData],
                     IsReusable = false,
                     PageData = listingChildPageData,
                     ChannelName = channel.ChannelName
@@ -156,7 +160,7 @@ internal class ContentItemSimplifiedModelAdapter(ILogger<ContentItemSimplifiedMo
                 }
 
                 detailPage.ContentTypeName = dataClassModel.ClassName;
-                detailPage.LanguageData = languageData.ToList();
+                detailPage.LanguageData = [.. languageData];
 
                 detailContentItems.Add(source.Id, detailPage);
 
@@ -178,7 +182,7 @@ internal class ContentItemSimplifiedModelAdapter(ILogger<ContentItemSimplifiedMo
             ContentItemGUID = source.Id,
             ContentTypeName = dataClassModel.ClassName,
             Name = contentHelper.GetName(source.Title, source.Id),
-            LanguageData = languageData.ToList(),
+            LanguageData = [.. languageData],
             IsReusable = false,
             PageData = pageData,
             ChannelName = channel.ChannelName
@@ -192,7 +196,7 @@ internal class ContentItemSimplifiedModelAdapter(ILogger<ContentItemSimplifiedMo
         ContentItemGUID = source.Id,
         ContentTypeName = dataClassModel.ClassName,
         Name = contentHelper.GetName(source.Title, source.Id),
-        LanguageData = languageData.ToList(),
+        LanguageData = [.. languageData],
         IsReusable = true,
         ContentItemContentFolderGUID = rootFolder.ContentFolderGUID,
     };

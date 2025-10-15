@@ -82,7 +82,7 @@ public class DynamicChoiceFieldType : FieldTypeBase, IFieldType
         return Default(options);
     }
 
-    private FormFieldSettings Default(IEnumerable<string> options) => new()
+    private static FormFieldSettings Default(IEnumerable<string> options) => new()
     {
         ControlName = "Kentico.Administration.DropDownSelector",
         CustomProperties = new()

@@ -22,28 +22,38 @@ internal abstract class RestSdkBase
 
         RestClient = restClient;
     }
-
     protected IEnumerable<T> GetUsingBatches<T>(GetAllArgs getAllArgs) where T : SdkItem
     {
         var items = new List<T>();
         int skip = 0;
-        int take = 50;
+        const int take = 50;
 
-        getAllArgs.Skip = skip;
-        getAllArgs.Take = take;
-
-        var result = RestClient.GetItems<T>(getAllArgs);
-
-        while (result.Result.Items.Any())
+        while (true)
         {
-            items.AddRange(result.Result.Items);
-
-            skip += take;
             getAllArgs.Skip = skip;
+            getAllArgs.Take = take;
 
-            result = RestClient.GetItems<T>(getAllArgs);
+            try
+            {
+                var result = RestClient.GetItems<T>(getAllArgs);
+
+                var batch = result.Result;
+
+                if (batch.Items.Count == 0)
+                {
+                    break;
+                }
+                items.AddRange(batch.Items);
+                skip += take;
+            }
+            catch (AggregateException)
+            {
+                //Sometimes requests with no results throws this exception. Treating as 0 results and breaking out.
+                break;
+            }
         }
 
         return items;
     }
+
 }

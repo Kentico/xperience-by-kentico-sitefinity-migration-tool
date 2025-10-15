@@ -8,6 +8,7 @@ using Migration.Toolkit.Data.Models;
 using Migration.Toolkit.Sitefinity.Abstractions;
 
 namespace Migration.Toolkit.Sitefinity.Adapters;
+
 internal class ContentLanguageModelAdapter(ILogger<ContentLanguageModelAdapter> logger) : UmtAdapterBase<SystemCulture, ContentLanguageModel>(logger)
 {
     protected override ContentLanguageModel? AdaptInternal(SystemCulture source)
@@ -43,7 +44,7 @@ internal class ContentLanguageModelAdapter(ILogger<ContentLanguageModelAdapter> 
         };
     }
 
-    private ContentLanguageModel? AdaptLanguage(ContentLanguageInfo existing) => new()
+    private static ContentLanguageModel? AdaptLanguage(ContentLanguageInfo existing) => new()
     {
         ContentLanguageDisplayName = existing.ContentLanguageDisplayName,
         ContentLanguageIsDefault = existing.ContentLanguageIsDefault,

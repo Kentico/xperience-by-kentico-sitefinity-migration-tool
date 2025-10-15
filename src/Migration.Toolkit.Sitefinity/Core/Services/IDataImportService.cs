@@ -14,7 +14,7 @@ internal interface IDataImportService
     /// Gets items of IUmtModel
     /// </summary>
     /// <returns>List of IUmtModel</returns>
-    IEnumerable<IUmtModel> Get();
+    public IEnumerable<IUmtModel> Get();
 
 
     /// <summary>
@@ -35,7 +35,7 @@ internal interface IDataImportService<T> where T : class, IUmtModel
     /// Gets items of type <typeparamref name="T"/>.
     /// </summary>
     /// <returns>List of <typeparamref name="T"/></returns>
-    IEnumerable<T> Get();
+    public IEnumerable<T> Get();
 
 
     /// <summary>
@@ -57,7 +57,7 @@ internal interface IDataImportServiceWithDependencies<in TDependencies> where TD
     /// </summary>
     /// <param name="dependenciesModel">Dependency objects used in adapter</param>
     /// <returns>List of IUmtModel</returns>
-    IEnumerable<IUmtModel> Get(TDependencies dependenciesModel);
+    public IEnumerable<IUmtModel> Get(TDependencies dependenciesModel);
 
 
     /// <summary>
@@ -89,7 +89,7 @@ internal interface IDataImportServiceWithDependencies<in TDependencies, T> where
     /// </summary>
     /// <param name="dependenciesModel">Dependency objects used in adapter</param>
     /// <returns>List of <typeparamref name="T"/></returns>
-    IEnumerable<T> Get(TDependencies dependenciesModel);
+    public IEnumerable<T> Get(TDependencies dependenciesModel);
 
 
     /// <summary>

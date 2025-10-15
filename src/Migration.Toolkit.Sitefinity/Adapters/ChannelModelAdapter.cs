@@ -10,6 +10,7 @@ using Migration.Toolkit.Sitefinity.Abstractions;
 using Migration.Toolkit.Sitefinity.Model;
 
 namespace Migration.Toolkit.Sitefinity.Adapters;
+
 internal class ChannelModelAdapter(ILogger<ChannelModelAdapter> logger) : UmtAdapterBaseWithDependencies<Site, ChannelDependencies>(logger)
 {
     protected override IEnumerable<IUmtModel>? AdaptInternal(Site source, ChannelDependencies channelDependencies)
@@ -33,7 +34,7 @@ internal class ChannelModelAdapter(ILogger<ChannelModelAdapter> logger) : UmtAda
         var channel = new ChannelModel
         {
             ChannelDisplayName = source.Name,
-            ChannelName = ValidationHelper.GetCodeName(source.Name),
+            ChannelName = ValidationHelper.GetCodeName(source.Name).Replace('.', '-'),
             ChannelGUID = source.Id,
             ChannelType = ChannelType.Website,
         };

@@ -17,5 +17,5 @@ public class FieldTypeBase
         ControlName = "Kentico.Administration.TextInput"
     };
     public virtual FormField HandleSpecialCase(FormField formField, Field sitefinityField) => formField;
-    public virtual object GetData(SdkItem sdkItem, string fieldName) => sdkItem.GetValue<string>(fieldName);
+    public virtual object GetData(SdkItem sdkItem, string fieldName) => sdkItem.GetValue<object>(fieldName);
 }

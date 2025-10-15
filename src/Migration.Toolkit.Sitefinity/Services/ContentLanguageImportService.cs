@@ -8,6 +8,7 @@ using Migration.Toolkit.Sitefinity.Core.Services;
 using Migration.Toolkit.Sitefinity.Model;
 
 namespace Migration.Toolkit.Sitefinity.Services;
+
 internal class ContentLanguageImportService(IImportService kenticoImportService,
                                                 ISiteProvider siteProvider,
                                                 IUmtAdapter<SystemCulture, ContentLanguageModel> adapter) : IContentLanguageImportService

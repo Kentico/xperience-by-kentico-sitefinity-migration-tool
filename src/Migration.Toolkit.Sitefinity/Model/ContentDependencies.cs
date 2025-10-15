@@ -3,12 +3,13 @@
 using Migration.Toolkit.Sitefinity.Core.Models;
 
 namespace Migration.Toolkit.Sitefinity.Model;
+
 internal class ContentDependencies : IImportDependencies, IMediaDependencies
 {
     /// <summary>
     /// Required media files for content.
     /// </summary>
-    public required IDictionary<Guid, MediaFileModel> MediaFiles { get; set; }
+    public required IDictionary<Guid, ContentItemSimplifiedModel> MediaFiles { get; set; }
     /// <summary>
     /// Required users for content.
     /// </summary>
